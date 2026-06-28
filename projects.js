@@ -1,12 +1,12 @@
 const projectsData = [
   {
-    id: "spk-konseling-pnri",
-    title: "Sistem Pendukung Keputusan (SPK) Konseling PNRI",
+    id: "spk-konseling-pkbi",
+    title: "Sistem Pendukung Keputusan (SPK) Konseling PKBI Sumatera Selatan",
     role: "Web Developer",
     category: "web",
     techStack: ["PHP", "MySQL", "JavaScript", "Bootstrap 5", "CSS3"],
-    shortDescription: "Aplikasi SPK berbasis web full-stack untuk penentuan prioritas antrean konseling di PNRI.",
-    fullDescription: "Aplikasi web full-stack ini dirancang untuk mendigitalisasi layanan konseling di PNRI. Dilengkapi dengan algoritma perhitungan otomatis untuk menentukan prioritas antrean konseling berdasarkan tingkat urgensi masalah klien. Aplikasi ini menyederhanakan administrasi konseling dengan antarmuka yang modern dan responsif.",
+    shortDescription: "Aplikasi SPK berbasis web full-stack untuk penentuan prioritas antrean konseling di PKBI Sumatera Selatan.",
+    fullDescription: "Aplikasi web full-stack ini dirancang untuk mendigitalisasi layanan konseling di PKBI Sumatera Selatan. Dilengkapi dengan algoritma perhitungan otomatis untuk menentukan prioritas antrean konseling berdasarkan tingkat urgensi masalah klien. Aplikasi ini menyederhanakan administrasi konseling dengan antarmuka yang modern dan responsif.",
     features: [
       "Algoritma perhitungan otomatis penentu prioritas antrean konseling berdasarkan data input klien.",
       "Sistem Role Based Access Control (RBAC) lengkap untuk 3 jenis portal pengguna: Admin, Klien, dan Konselor.",
