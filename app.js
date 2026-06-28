@@ -1,32 +1,57 @@
 // ==========================================================================
-// VIRTUAL SPA ROUTING
+// ACTIVE SCROLL LINK HIGHLIGHTING & SMOOTH SCROLL
 // ==========================================================================
-function navigateToPage(pageId) {
-  // Hide all sections
-  document.querySelectorAll('.content-section').forEach(section => {
-    section.classList.remove('active');
+document.addEventListener('DOMContentLoaded', () => {
+  const sections = document.querySelectorAll('main > section');
+  const navItems = document.querySelectorAll('.desktop-nav .nav-item');
+  const drawerLinks = document.querySelectorAll('.drawer-links a');
+
+  // Intersection Observer for scroll spy
+  const observerOptions = {
+    root: null,
+    rootMargin: '-20% 0px -60% 0px', // Trigger when section occupies the center of the viewport
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        
+        // Update Desktop Nav
+        navItems.forEach(item => {
+          const link = item.querySelector('a');
+          if (link.getAttribute('href') === `#${id}`) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
+          }
+        });
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => {
+    observer.observe(section);
   });
 
-  // Show target section
-  const targetSection = document.getElementById(`${pageId}-section`);
-  if (targetSection) {
-    targetSection.classList.add('active');
-    // Scroll to top of main content
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // Update navigation links state
-  document.querySelectorAll('.nav-item').forEach(item => {
-    if (item.getAttribute('data-page') === pageId) {
-      item.classList.add('active');
-    } else {
-      item.classList.remove('active');
-    }
+  // Smooth Scroll for mobile drawer links and auto-close
+  drawerLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href');
+      const targetSection = document.querySelector(targetId);
+      
+      if (targetSection) {
+        // Close drawer
+        document.getElementById('mobileDrawer').classList.remove('active');
+        
+        // Scroll to target
+        targetSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
   });
-
-  // Close mobile sidebar if open
-  document.getElementById('sidebar').classList.remove('active');
-}
+});
 
 // ==========================================================================
 // THEME SWITCHER (DARK / LIGHT MODE)
@@ -34,14 +59,6 @@ function navigateToPage(pageId) {
 function initTheme() {
   const savedTheme = localStorage.getItem('portfolio-theme') || 'dark';
   document.documentElement.setAttribute('data-theme', savedTheme);
-  updateThemeButtonUI(savedTheme);
-}
-
-function updateThemeButtonUI(theme) {
-  const label = document.querySelector('.theme-label');
-  if (label) {
-    label.textContent = theme === 'dark' ? 'Mode Gelap' : 'Mode Terang';
-  }
 }
 
 function toggleTheme() {
@@ -49,7 +66,6 @@ function toggleTheme() {
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', newTheme);
   localStorage.setItem('portfolio-theme', newTheme);
-  updateThemeButtonUI(newTheme);
 }
 
 // ==========================================================================
@@ -59,14 +75,14 @@ const roles = [
   "Full-Stack Web Developer",
   "Android Developer",
   "AI & ML Engineering Enthusiast",
-  "Mahasiswa D4 Manajemen Informatika"
+  "Mahasiswa D4 MI POLSRI"
 ];
 let currentRoleIdx = 0;
 let charIdx = 0;
 let isDeleting = false;
 let typingDelay = 100;
 let erasingDelay = 50;
-let newRoleDelay = 2000; // Delay between roles
+let newRoleDelay = 2000;
 
 function typeAnimation() {
   const typingTextSpan = document.getElementById("typing-text");
@@ -103,10 +119,9 @@ let activeFilter = 'all';
 let searchQuery = '';
 
 function renderProjects() {
-  const featuredGrid = document.getElementById('featuredProjectsGrid');
   const allGrid = document.getElementById('allProjectsGrid');
 
-  // Filter projects data based on inputs
+  // Filter projects data
   const filteredProjects = projectsData.filter(proj => {
     const matchesCategory = activeFilter === 'all' || proj.category === activeFilter;
     const matchesSearch = proj.title.toLowerCase().includes(searchQuery) ||
@@ -116,13 +131,13 @@ function renderProjects() {
     return matchesCategory && matchesSearch;
   });
 
-  // Populate All Projects Page
+  // Populate Grid
   if (allGrid) {
     allGrid.innerHTML = '';
     if (filteredProjects.length === 0) {
       allGrid.innerHTML = `
         <div class="no-projects-msg" style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-secondary);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 15px; color: var(--text-muted);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="12"></line><line x1="11" y1="16" x2="11.01" y2="16"></line></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 15px; color: var(--text-muted);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="12"></line><line x1="11" y1="16" x2="11.01" y2="16"></line></svg>
           <h3>Proyek Tidak Ditemukan</h3>
           <p>Coba kata kunci pencarian atau filter kategori lainnya.</p>
         </div>
@@ -133,15 +148,6 @@ function renderProjects() {
       });
     }
   }
-
-  // Populate Home Page (First 3 matches from dataset)
-  if (featuredGrid) {
-    featuredGrid.innerHTML = '';
-    const featuredProjects = projectsData.slice(0, 3);
-    featuredProjects.forEach(proj => {
-      featuredGrid.appendChild(createProjectCard(proj));
-    });
-  }
 }
 
 function createProjectCard(project) {
@@ -149,14 +155,14 @@ function createProjectCard(project) {
   card.className = 'project-card';
   card.setAttribute('data-id', project.id);
   
-  // Category Icons mapping
+  // Category Icons
   let catIcon = '';
   if (project.category === 'web') {
-    catIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
+    catIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`;
   } else if (project.category === 'mobile') {
-    catIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>`;
+    catIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>`;
   } else {
-    catIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"></path><path d="M12 8V16"></path><path d="M8 12H16"></path></svg>`;
+    catIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>`;
   }
 
   const techTagsHtml = project.techStack.map(tech => `<span class="tech-tag">${tech}</span>`).join('');
@@ -174,12 +180,11 @@ function createProjectCard(project) {
       </div>
       <div class="project-footer">
         <span>Detail Proyek</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
       </div>
     </div>
   `;
 
-  // Bind click event to open Modal
   card.addEventListener('click', () => {
     openProjectModal(project);
   });
@@ -194,13 +199,11 @@ function openProjectModal(project) {
   const modal = document.getElementById('projectModal');
   if (!modal) return;
 
-  // Set modal elements
   document.getElementById('modalRole').textContent = project.role;
   document.getElementById('modalTitle').textContent = project.title;
   document.getElementById('modalDescription').textContent = project.fullDescription;
   document.getElementById('modalArchitecture').textContent = project.architecture;
 
-  // Render tech tags
   const tagsWrap = document.getElementById('modalTechTags');
   tagsWrap.innerHTML = '';
   project.techStack.forEach(tech => {
@@ -210,7 +213,6 @@ function openProjectModal(project) {
     tagsWrap.appendChild(span);
   });
 
-  // Render features list
   const featuresList = document.getElementById('modalFeatures');
   featuresList.innerHTML = '';
   project.features.forEach(feat => {
@@ -219,16 +221,15 @@ function openProjectModal(project) {
     featuresList.appendChild(li);
   });
 
-  // Activate Modal
   modal.classList.add('active');
-  document.body.style.overflow = 'hidden'; // Lock background scroll
+  document.body.style.overflow = 'hidden';
 }
 
 function closeProjectModal() {
   const modal = document.getElementById('projectModal');
   if (modal) {
     modal.classList.remove('active');
-    document.body.style.overflow = 'auto'; // Restore scroll
+    document.body.style.overflow = 'auto';
   }
 }
 
@@ -240,12 +241,10 @@ function handleContactSubmit(event) {
   const form = document.getElementById('contactForm');
   const successMsg = document.getElementById('formSuccessMsg');
 
-  // Simply show success view (simulated)
   if (form && successMsg) {
     form.style.display = 'none';
     successMsg.classList.add('active');
     
-    // Reset form after delay
     setTimeout(() => {
       form.reset();
       form.style.display = 'block';
@@ -258,63 +257,41 @@ function handleContactSubmit(event) {
 // INITIALIZATION & EVENT BINDINGS
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize Dark/Light Theme
   initTheme();
   
-  // Theme Toggle Button
   const toggleBtn = document.getElementById('themeToggle');
   if (toggleBtn) {
     toggleBtn.addEventListener('click', toggleTheme);
   }
 
-  // SPA Sidebar Routing Links
-  document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-      e.preventDefault();
-      const pageId = item.getAttribute('data-page');
-      navigateToPage(pageId);
-      
-      // Update window hash URL
-      window.location.hash = pageId;
-    });
-  });
-
-  // Handle URL hashes on reload (routing)
-  const currentHash = window.location.hash.substring(1);
-  if (currentHash && ['home', 'projects', 'experience', 'education', 'contact'].includes(currentHash)) {
-    navigateToPage(currentHash);
-  } else {
-    navigateToPage('home');
-  }
-
-  // Sidebar Menu Toggle for Mobile
+  // Mobile Drawer Toggle
   const mobileToggle = document.getElementById('mobileNavToggle');
-  const sidebarClose = document.getElementById('sidebarClose');
-  const sidebar = document.getElementById('sidebar');
+  const drawerClose = document.getElementById('drawerClose');
+  const mobileDrawer = document.getElementById('mobileDrawer');
 
-  if (mobileToggle && sidebar) {
+  if (mobileToggle && mobileDrawer) {
     mobileToggle.addEventListener('click', () => {
-      sidebar.classList.add('active');
+      mobileDrawer.classList.add('active');
     });
   }
 
-  if (sidebarClose && sidebar) {
-    sidebarClose.addEventListener('click', () => {
-      sidebar.classList.remove('active');
+  if (drawerClose && mobileDrawer) {
+    drawerClose.addEventListener('click', () => {
+      mobileDrawer.classList.remove('active');
     });
   }
 
-  // Close sidebar if clicked outside (on mobile)
+  // Close drawer when clicking outside
   document.addEventListener('click', (e) => {
-    if (sidebar && sidebar.classList.contains('active')) {
-      const isClickInside = sidebar.contains(e.target) || mobileToggle.contains(e.target);
+    if (mobileDrawer && mobileDrawer.classList.contains('active')) {
+      const isClickInside = mobileDrawer.contains(e.target) || mobileToggle.contains(e.target);
       if (!isClickInside) {
-        sidebar.classList.remove('active');
+        mobileDrawer.classList.remove('active');
       }
     }
   });
 
-  // Modal Close Button & Backdrop Clicks
+  // Modal Close handles
   const modalCloseBtn = document.getElementById('modalClose');
   const modal = document.getElementById('projectModal');
   
@@ -332,7 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Projects filter buttons
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      // Remove active class
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
@@ -350,9 +326,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Start Typing Animation on Hero
   setTimeout(typeAnimation, 1000);
-
-  // Render initial projects grids
   renderProjects();
 });
