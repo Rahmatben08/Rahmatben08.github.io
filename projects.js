@@ -127,21 +127,38 @@ const projectsData = [
     architecture: "Menggunakan pola arsitektur MVVM dengan Android Architecture Components (Room Database, ViewModel, dan Repository Pattern). Hubungan antartabel SQLite diatur menggunakan relasi entitas Room yang aman."
   },
   {
-    id: "mobile-logistik-delivery",
-    title: "Aplikasi Pencatatan & Bukti Pengiriman Logistik",
-    role: "Android Developer",
+    id: "mobile-bioguard",
+    title: "BIO-GUARD: Aplikasi IoT & Pelacakan Rantai Dingin (Mobile PKM-KC)",
+    role: "Ketua Tim & Pengembang Full-Stack (Mobile)",
     category: "mobile",
-    techStack: ["Kotlin", "Android SDK", "Google Maps API", "Camera API", "SQLite"],
-    shortDescription: "Aplikasi Android kurir untuk pencatatan koordinat GPS, foto bukti pengiriman, dan tanda tangan digital.",
-    fullDescription: "Aplikasi mobile operasional kurir pengiriman logistik untuk melacak lokasi pengantaran secara akurat dan mengambil bukti pengiriman di lapangan secara digital dan offline-first.",
+    techStack: ["Kotlin", "Android SDK", "Room DB", "IoT Integration", "Material 3"],
+    shortDescription: "Aplikasi mobile native Android untuk kurir logistik vaksin/obat termolabil, terintegrasi sensor IoT dengan arsitektur Offline-First.",
+    fullDescription: "BIO-GUARD adalah inovasi sistem siber-fisik yang dirancang untuk menjaga integritas dan stabilitas suhu obat termolabil (seperti vaksin) selama proses distribusi. Sistem ini mengintegrasikan perangkat IoT cerdas dengan aplikasi mobile untuk kurir dan dashboard web untuk fasilitas kesehatan. Inovasi utama sistem ini mencakup arsitektur Offline-First dengan mekanisme Store-and-Forward yang mencegah hilangnya data rekam jejak suhu saat armada melewati area tanpa sinyal seluler. Selain itu, proyek ini memanfaatkan Machine Learning untuk memprediksi risiko kerusakan produk berdasarkan sisa jarak tempuh dan kondisi kemacetan lalu lintas.",
     features: [
-      "Fitur tanda tangan digital (Digital Signature Pad) langsung di layar sentuh aplikasi.",
-      "Pengambilan foto bukti penyerahan barang secara aman dengan integrasi Camera API.",
-      "Pelacakan lokasi penyerahan secara presisi menggunakan Google Maps API & Fused Location Provider Services untuk mendapatkan koordinat geolokasi.",
-      "Penyimpanan logistik lokal (offline-first caching) menggunakan SQLite sebelum sinkronisasi data ke cloud server.",
-      "Tampilan peta rute navigasi pengiriman dari gudang ke alamat tujuan klien."
+      "Arsitektur Offline-First dengan mekanisme Store-and-Forward untuk mencegah data hilang di area blank spot seluler.",
+      "Sinkronisasi data suhu & kelembapan real-time dari sensor IoT termolabil via Bluetooth/REST API.",
+      "Pelacakan lokasi kurir secara real-time dan notifikasi peringatan suhu kritis di jalan.",
+      "Pemberian tanda tangan digital (digital signature pad) dan bukti foto penyerahan vaksin/obat.",
+      "State management modern Android menggunakan Kotlin Flow dan LiveData."
     ],
-    architecture: "Menggunakan pola arsitektur MVP/MVVM dengan pemisahan logic pengambilan sensor (kamera dan GPS) dari view. Dependensi diatur secara bersih untuk mendukung kinerja Android yang stabil dan hemat konsumsi baterai."
+    architecture: "Menerapkan Clean Architecture (MVVM) dengan Room Database sebagai local cache untuk mendukung penyimpanan data rekam jejak secara andal saat offline."
+  },
+  {
+    id: "web-bioguard",
+    title: "BIO-GUARD: Dashboard Pemantauan Suhu Rantai Dingin (Web PKM-KC)",
+    role: "Ketua Tim & Pengembang Full-Stack (Web)",
+    category: "web",
+    techStack: ["PHP", "Laravel", "MySQL", "JavaScript ES6+", "Machine Learning"],
+    shortDescription: "Dashboard pemantauan terpusat untuk memvisualisasikan data suhu logistik, sisa jarak tempuh, dan prediksi risiko kerusakan produk.",
+    fullDescription: "BIO-GUARD adalah inovasi sistem siber-fisik yang dirancang untuk menjaga integritas dan stabilitas suhu obat termolabil (seperti vaksin) selama proses distribusi. Sistem ini mengintegrasikan perangkat IoT cerdas dengan aplikasi mobile untuk kurir dan dashboard web untuk fasilitas kesehatan. Inovasi utama sistem ini mencakup arsitektur Offline-First dengan mekanisme Store-and-Forward yang mencegah hilangnya data rekam jejak suhu saat armada melewati area tanpa sinyal seluler. Selain itu, proyek ini memanfaatkan Machine Learning untuk memprediksi risiko kerusakan produk berdasarkan sisa jarak tempuh dan kondisi kemacetan lalu lintas.",
+    features: [
+      "Visualisasi dashboard real-time data logistik rantai dingin (suhu, kelembapan, status armada).",
+      "Integrasi Machine Learning untuk estimasi prediksi risiko kerusakan produk berdasarkan kemacetan & sisa jarak tempuh.",
+      "Grafik data analitik suhu sensor IoT (IoT sensor charts) menggunakan Chart.js/Canvas.",
+      "Sistem alarm peringatan dini via notifikasi web jika terjadi anomali suhu vaksin.",
+      "Ekspor laporan data rekam jejak suhu sesuai kepatuhan standar logistik farmasi."
+    ],
+    architecture: "Backend web berbasis Laravel dengan REST API untuk menerima data logistik dari aplikasi Android kurir, dikombinasikan dengan database MySQL untuk retensi data jangka panjang."
   },
   {
     id: "roccaspace-automation",
