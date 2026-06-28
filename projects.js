@@ -161,6 +161,23 @@ const projectsData = [
     architecture: "Backend web berbasis Laravel dengan REST API untuk menerima data logistik dari aplikasi Android kurir, dikombinasikan dengan database MySQL untuk retensi data jangka panjang."
   },
   {
+    id: "ml-bioguard",
+    title: "BIO-GUARD: Model Machine Learning Prediksi Kerusakan Produk (PKM-KC)",
+    role: "AI / Machine Learning Engineer",
+    category: "web",
+    techStack: ["Python", "Jupyter Notebook", "Scikit-Learn", "Pandas", "Machine Learning"],
+    shortDescription: "Model prediksi risiko kerusakan produk termolabil berbasis Machine Learning menggunakan estimasi jarak tempuh dan kondisi kemacetan.",
+    fullDescription: "BIO-GUARD adalah inovasi sistem siber-fisik yang dirancang untuk menjaga integritas dan stabilitas suhu obat termolabil (seperti vaksin) selama proses distribusi. Sub-proyek ini berfokus pada pengembangan model Machine Learning yang memprediksi risiko degradasi/kerusakan produk secara real-time. Model menganalisis variabel sisa jarak tempuh, perkiraan waktu tempuh (ETA), riwayat fluktuasi suhu sensor IoT, dan tingkat kemacetan lalu lintas jalan raya untuk meminimalkan kegagalan pengiriman rantai dingin.",
+    features: [
+      "Pengembangan algoritma prediksi risiko kerusakan produk termolabil menggunakan model klasifikasi biner dan regresi tingkat risiko.",
+      "Preprocessing data mentah logistik rantai dingin (suhu sensor harian, kelembapan, kelelahan armada).",
+      "Feature engineering untuk estimasi sisa jarak tempuh dan data kemacetan lalu lintas real-time.",
+      "Evaluasi kinerja model ML menggunakan metrik Accuracy, Precision, Recall, dan F1-Score.",
+      "Ekspor model ke format terkompresi (joblib/pickle) untuk diintegrasikan ke REST API dashboard Laravel."
+    ],
+    architecture: "Model dikembangkan menggunakan Python dengan pustaka Scikit-Learn untuk algoritma klasifikasi (seperti Random Forest / Gradient Boosting), Pandas/NumPy untuk data manipulation, serta diintegrasikan via REST API dashboard Laravel."
+  },
+  {
     id: "roccaspace-automation",
     title: "Automasi Ekstraksi & Sinkronisasi Data Admin RoccaSpace ke Google Sheets",
     role: "Backend Developer",
