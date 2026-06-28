@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghali Rahmat Ben Bela - Portfolio IT & Web Developer</title>
+    <meta name="description" content="Portfolio professional Ghali Rahmat Ben Bela, Mahasiswa D4 Manajemen Informatika Politeknik Negeri Sriwijaya. Full-Stack Web & Android Developer.">
+    <meta name="author" content="Ghali Rahmat Ben Bela">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22 fill=%22%232563eb%22 font-family=%22sans-serif%22 font-weight=%22bold%22>GR</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- App Container -->
+    <div class="app-container">
+        
+        <!-- Mobile Header Bar -->
+        <header class="mobile-header">
+            <div class="mobile-logo">
+                <span class="logo-accent">G</span><span>R</span>
+            </div>
+            <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-circle">G</span>
+                    <div class="logo-text">
+                        <span class="name">Ghali Rahmat</span>
+                        <span class="sub">Ben Bela</span>
+                    </div>
+                </div>
+                <button class="sidebar-close" id="sidebarClose">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+
+            <ul class="nav-links">
+                <li class="nav-item active" data-page="home">
+                    <a href="#home">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        <span>Beranda</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-page="projects">
+                    <a href="#projects">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                        <span>Proyek Saya</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-page="experience">
+                    <a href="#experience">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                        <span>Pengalaman</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-page="education">
+                    <a href="#education">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path></svg>
+                        <span>Pendidikan</span>
+                    </a>
+                </li>
+                <li class="nav-item" data-page="contact">
+                    <a href="#contact">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <span>Hubungi</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
+                    <span class="icon-sun">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    </span>
+                    <span class="icon-moon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </span>
+                    <span class="theme-label">Mode Gelap</span>
+                </button>
+                <div class="copyright">
+                    <p>© 2026 Ghali Rahmat</p>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- SECTION 1: HOME -->
+            <section id="home-section" class="content-section active">
+                <div class="hero-container">
+                    <div class="hero-text-content">
+                        <h4 class="hero-subtitle">Halo, Saya</h4>
+                        <h1 class="hero-title">Ghali Rahmat <span class="highlight">Ben Bela</span></h1>
+                        <h2 class="hero-typing-wrap">Saya seorang <span id="typing-text" class="typing"></span></h2>
+                        <p class="hero-description">
+                            Mahasiswa aktif D4 Manajemen Informatika di Politeknik Negeri Sriwijaya dengan rekam jejak pengembangan produk teknologi komprehensif. Berfokus pada Machine Learning, AI Engineering, dan Full-Stack Web/Mobile Development.
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="#projects" class="btn btn-primary" onclick="navigateToPage('projects')">Lihat Proyek</a>
+                            <a href="#contact" class="btn btn-outline" onclick="navigateToPage('contact')">Hubungi Saya</a>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="avatar-card">
+                            <div class="avatar-glow"></div>
+                            <div class="avatar-inner">
+                                <span class="avatar-text">GR</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills Section -->
+                <div class="section-divider"></div>
+                <div class="skills-container">
+                    <h3 class="section-title-sm">Keahlian Utama</h3>
+                    <div class="skills-grid">
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            </div>
+                            <h4>Web Development</h4>
+                            <p>PHP 8, Laravel 11, CodeIgniter 4, JavaScript ES6+, Custom Vanilla CSS, Tailwind CSS, Alpine.js.</p>
+                        </div>
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                            </div>
+                            <h4>Mobile App</h4>
+                            <p>Kotlin, Android SDK Native, Jetpack Compose, Material 3 UI toolkit, Room DB, Firebase integration.</p>
+                        </div>
+                        <div class="skill-card">
+                            <div class="skill-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                            </div>
+                            <h4>AI & Data Science</h4>
+                            <p>Algoritma Machine Learning, AI Engineering, SQL Database (MySQL/MariaDB, SQLite, PDO), Data Science dasar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Projects slider/list -->
+                <div class="section-divider"></div>
+                <div class="featured-container">
+                    <div class="featured-header">
+                        <h3 class="section-title-sm">Proyek Pilihan</h3>
+                        <a href="#projects" class="view-all-link" onclick="navigateToPage('projects')">Tampilkan Semua &rarr;</a>
+                    </div>
+                    <div class="featured-grid" id="featuredProjectsGrid">
+                        <!-- Dynamic Featured Cards (first 3) will be generated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: PROJECTS -->
+            <section id="projects-section" class="content-section">
+                <div class="section-header-hero">
+                    <p class="breadcrumbs">
+                        <span>Beranda</span> &nbsp;/&nbsp; <span>Proyek</span>
+                    </p>
+                    <h1 class="page-title">Proyek Teknologi</h1>
+                    <p class="page-subtitle">Koleksi proyek pengembangan web, aplikasi mobile native Android, dan desain interaktif.</p>
+                </div>
+
+                <!-- Filter & Search Controls -->
+                <div class="projects-control-panel">
+                    <div class="search-bar-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="projectSearchInput" placeholder="Cari proyek berdasarkan nama, stack, fitur...">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">Semua</button>
+                        <button class="filter-btn" data-filter="web">Web App</button>
+                        <button class="filter-btn" data-filter="mobile">Mobile App</button>
+                        <button class="filter-btn" data-filter="design">Design / UI</button>
+                    </div>
+                </div>
+
+                <!-- Projects Grid -->
+                <div class="projects-grid" id="allProjectsGrid">
+                    <!-- Project cards will be populated by JS -->
+                </div>
+            </section>
+
+            <!-- SECTION 3: EXPERIENCE -->
+            <section id="experience-section" class="content-section">
+                <div class="section-header-hero">
+                    <p class="breadcrumbs">
+                        <span>Beranda</span> &nbsp;/&nbsp; <span>Pengalaman</span>
+                    </p>
+                    <h1 class="page-title">Pengalaman Kerja</h1>
+                    <p class="page-subtitle">Karir profesional dan kontribusi administrasi teknis dalam industri.</p>
+                </div>
+
+                <!-- Timeline -->
+                <div class="timeline-container">
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-badge">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                        </div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <span class="timeline-date">Mei 2026 - Sekarang</span>
+                                <h2 class="timeline-role">Officer</h2>
+                                <h3 class="timeline-company">PT Expro Gist Nusantara</h3>
+                            </div>
+                            <div class="timeline-body">
+                                <ul>
+                                    <li>Bertanggung jawab dalam operasional dan administrasi teknis di lingkungan perusahaan secara andal.</li>
+                                    <li>Mendukung kelancaran proses bisnis internal serta koordinasi intensif antar divisi secara efisien.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-badge">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        </div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <span class="timeline-date">Mei 2026 - Sekarang</span>
+                                <h2 class="timeline-role">Staff Administrasi</h2>
+                                <h3 class="timeline-company">Lembaga Sertifikasi Edutech Cendikia Nusantara</h3>
+                            </div>
+                            <div class="timeline-body">
+                                <ul>
+                                    <li>Mengelola administrasi program sertifikasi kompetensi dan dokumentasi operasional harian lembaga secara terstruktur.</li>
+                                    <li>Berkoordinasi aktif dengan peserta pelatihan dan tenaga pengajar/asesor guna kelancaran proses ujian sertifikasi.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 4: EDUCATION -->
+            <section id="education-section" class="content-section">
+                <div class="section-header-hero">
+                    <p class="breadcrumbs">
+                        <span>Beranda</span> &nbsp;/&nbsp; <span>Pendidikan</span>
+                    </p>
+                    <h1 class="page-title">Pendidikan Formal</h1>
+                    <p class="page-subtitle">Riwayat pendidikan akademis di bidang teknologi informasi.</p>
+                </div>
+
+                <div class="timeline-container education">
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-badge edu">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path></svg>
+                        </div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <span class="timeline-date">2024 - Sekarang</span>
+                                <h2 class="timeline-role">D4 Manajemen Informatika</h2>
+                                <h3 class="timeline-company">Politeknik Negeri Sriwijaya (POLSRI)</h3>
+                            </div>
+                            <div class="timeline-body">
+                                <p>Mahasiswa aktif dengan fokus pada pemrograman web/mobile tingkat lanjut, struktur data relasional, manajemen proyek IT, kecerdasan buatan (Artificial Intelligence), serta machine learning pipeline.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 5: CONTACT -->
+            <section id="contact-section" class="content-section">
+                <div class="section-header-hero">
+                    <p class="breadcrumbs">
+                        <span>Beranda</span> &nbsp;/&nbsp; <span>Hubungi</span>
+                    </p>
+                    <h1 class="page-title">Kontak Saya</h1>
+                    <p class="page-subtitle">Ada ide proyek, kolaborasi, atau pertanyaan? Jangan ragu untuk meninggalkan pesan.</p>
+                </div>
+
+                <div class="contact-layout">
+                    <!-- Info Cards -->
+                    <div class="contact-info-panel">
+                        <div class="contact-card">
+                            <div class="contact-card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </div>
+                            <div class="contact-card-content">
+                                <h3>Surel (Email)</h3>
+                                <p><a href="mailto:ghalirahmat46@gmail.com">ghalirahmat46@gmail.com</a></p>
+                            </div>
+                        </div>
+
+                        <div class="contact-card">
+                            <div class="contact-card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                            </div>
+                            <div class="contact-card-content">
+                                <h3>LinkedIn</h3>
+                                <p><a href="https://linkedin.com/in/ghali-rahmat-990271234" target="_blank">linkedin.com/in/ghali-rahmat-990271234</a></p>
+                            </div>
+                        </div>
+
+                        <div class="contact-card">
+                            <div class="contact-card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                            </div>
+                            <div class="contact-card-content">
+                                <h3>Instagram</h3>
+                                <p><a href="https://instagram.com/ghalirahmat" target="_blank">@ghalirahmat</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="contact-form-card">
+                        <h2>Kirim Pesan</h2>
+                        <form id="contactForm" onsubmit="handleContactSubmit(event)">
+                            <div class="form-group">
+                                <label for="formName">Nama Lengkap</label>
+                                <input type="text" id="formName" required placeholder="Masukkan nama Anda">
+                            </div>
+                            <div class="form-group">
+                                <label for="formEmail">Alamat Email</label>
+                                <input type="email" id="formEmail" required placeholder="Masukkan email Anda">
+                            </div>
+                            <div class="form-group">
+                                <label for="formSubject">Subjek</label>
+                                <input type="text" id="formSubject" required placeholder="Subjek pesan">
+                            </div>
+                            <div class="form-group">
+                                <label for="formMessage">Isi Pesan</label>
+                                <textarea id="formMessage" rows="5" required placeholder="Tuliskan pesan Anda di sini..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Kirim Pesan Sekarang</button>
+                        </form>
+                        <div class="form-success-message" id="formSuccessMsg">
+                            <div class="success-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                            <h3>Pesan Terkirim!</h3>
+                            <p>Terima kasih atas pesan Anda. Saya akan segera menghubungi Anda kembali.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Project Detail Modal -->
+    <div class="modal-overlay" id="projectModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <span class="modal-role-badge" id="modalRole">Web Developer</span>
+                    <h2 class="modal-title" id="modalTitle">Sistem Pendukung Keputusan</h2>
+                </div>
+                <button class="modal-close" id="modalClose" aria-label="Close Modal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-left">
+                    <div class="modal-meta-section">
+                        <h3>Deskripsi Proyek</h3>
+                        <p id="modalDescription">Deskripsi proyek akan tampil di sini...</p>
+                    </div>
+
+                    <div class="modal-meta-section">
+                        <h3>Fitur Utama</h3>
+                        <ul class="modal-features-list" id="modalFeatures">
+                            <!-- Populated dynamically -->
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="modal-right">
+                    <div class="modal-meta-section">
+                        <h3>Teknologi</h3>
+                        <div class="modal-tech-tags" id="modalTechTags">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="modal-meta-section">
+                        <h3>Detail Arsitektur</h3>
+                        <p id="modalArchitecture">Detail arsitektur akan tampil di sini...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Files -->
+    <script src="projects.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
