@@ -328,4 +328,124 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setTimeout(typeAnimation, 1000);
   renderProjects();
+  initHero3D(); // Start 3D rendering
 });
+
+// ==========================================================================
+// INTERACTIVE 3D HERO CANVAS (THREE.JS)
+// ==========================================================================
+function initHero3D() {
+  const canvas = document.getElementById('heroCanvas3D');
+  if (!canvas) return;
+
+  const parent = canvas.parentElement;
+  
+  // Scene Setup
+  const scene = new THREE.Scene();
+  
+  // Camera Setup
+  const camera = new THREE.PerspectiveCamera(45, parent.clientWidth / parent.clientHeight, 0.1, 100);
+  camera.position.z = 6.5;
+  
+  // WebGL Renderer with alpha transparency and antialiasing
+  const renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    alpha: true,
+    antialias: true
+  });
+  renderer.setSize(parent.clientWidth, parent.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // 1. Torus Knot (Wireframe) - Indigo Accent
+  const geometry = new THREE.TorusKnotGeometry(1.2, 0.35, 120, 16);
+  const material = new THREE.MeshBasicMaterial({
+    color: 0x6366f1,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.85
+  });
+  const torusKnot = new THREE.Mesh(geometry, material);
+  scene.add(torusKnot);
+
+  // 2. Surrounding Particle Constellation - Cyan Accent
+  const particlesCount = 250;
+  const particlesGeo = new THREE.BufferGeometry();
+  const positions = new Float32Array(particlesCount * 3);
+
+  for (let i = 0; i < particlesCount * 3; i += 3) {
+    // Generate particles in a spherical shell around the torus
+    const u = Math.random();
+    const v = Math.random();
+    const theta = u * 2.0 * Math.PI;
+    const phi = Math.acos(2.0 * v - 1.0);
+    const r = 2.0 + Math.random() * 1.5; // Radius between 2.0 and 3.5
+
+    positions[i] = r * Math.sin(phi) * Math.cos(theta);
+    positions[i+1] = r * Math.sin(phi) * Math.sin(theta);
+    positions[i+2] = r * Math.cos(phi);
+  }
+
+  particlesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  
+  const particlesMat = new THREE.PointsMaterial({
+    size: 0.045,
+    color: 0x06b6d4,
+    transparent: true,
+    opacity: 0.8
+  });
+
+  const particleSystem = new THREE.Points(particlesGeo, particlesMat);
+  scene.add(particleSystem);
+
+  // Interactive mouse tracking
+  let mouseX = 0;
+  let mouseY = 0;
+  let targetX = 0;
+  let targetY = 0;
+
+  window.addEventListener('mousemove', (e) => {
+    // Normalize mouse coordinates from -1 to 1
+    mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+    mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+  });
+
+  // Resize handler
+  window.addEventListener('resize', () => {
+    const w = parent.clientWidth;
+    const h = parent.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+
+  // Animation Loop
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    const elapsedTime = clock.getElapsedTime();
+
+    // Slow default rotation
+    torusKnot.rotation.x = elapsedTime * 0.12;
+    torusKnot.rotation.y = elapsedTime * 0.15;
+
+    particleSystem.rotation.y = -elapsedTime * 0.04;
+    particleSystem.rotation.x = elapsedTime * 0.01;
+
+    // Smooth lerp (interpolation) towards mouse position for parallax effect
+    targetX += (mouseX - targetX) * 0.05;
+    targetY += (mouseY - targetY) * 0.05;
+
+    // Tilt camera/scene slightly based on mouse
+    torusKnot.rotation.y += targetX * 0.4;
+    torusKnot.rotation.x += -targetY * 0.4;
+    
+    particleSystem.rotation.y += targetX * 0.15;
+    particleSystem.rotation.x += -targetY * 0.15;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+}
