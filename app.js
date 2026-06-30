@@ -422,17 +422,18 @@ function initLanyard3D() {
     // Shift left so card appears in RIGHT column of our 2-col hero layout
     // At fov=25 and z=13, the scene width ≈ 2*13*tan(12.5°) ≈ 5.76 units
     // We want card centred at ~x=+2 in scene space, so camera moves left
-    camera.position.set(-camera.aspect * 2.5, 0, 13);
-    camera.lookAt(camera.aspect * 1.2, -1.5, 0);
+    camera.position.set(-camera.aspect * 3.2, 0, 13);
+    camera.lookAt(camera.aspect * 1.8, -2.0, 0);
   }
   setupCamera();
 
-  // ── LIGHTING ─────────────────────────────────────────────────────────────
+  // -- LIGHTING --
   scene.add(new THREE.AmbientLight(0xffffff, Math.PI));
-  [[0,-1,5,2],[−1,−1,1,3],[1,1,1,3],[−10,0,14,10]].forEach(([x,y,z,i])=>{
-    const l = new THREE.DirectionalLight(0xffffff, i);
-    l.position.set(x, y, z);
-    scene.add(l);
+  var lightData = [[0,-1,5,2],[-1,-1,1,3],[1,1,1,3],[-10,0,14,10]];
+  lightData.forEach(function(ld) {
+    var dl = new THREE.DirectionalLight(0xffffff, ld[3]);
+    dl.position.set(ld[0], ld[1], ld[2]);
+    scene.add(dl);
   });
 
   // ── CARD TEXTURE ─────────────────────────────────────────────────────────
@@ -449,6 +450,22 @@ function initLanyard3D() {
   img.onload  = drawCard;
   img.onerror = drawCard;
 
+
+  // Cross-browser roundRect helper (ctx.roundRect not available in all browsers)
+  function rrect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.lineTo(x+w-r, y);
+    ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+    ctx.lineTo(x+w, y+h-r);
+    ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    ctx.lineTo(x+r, y+h);
+    ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+    ctx.lineTo(x, y+r);
+    ctx.quadraticCurveTo(x, y, x+r, y);
+    ctx.closePath();
+  }
+
   function drawCard() {
     // Background
     ctx.fillStyle = '#0d1117';
@@ -457,7 +474,7 @@ function initLanyard3D() {
     // Rounded border
     ctx.strokeStyle = 'rgba(255,255,255,0.15)';
     ctx.lineWidth = 6;
-    ctx.beginPath(); ctx.roundRect(8,8,CW-16,CH-16,30); ctx.stroke();
+    ctx.beginPath(); rrect(8,8,CW-16,CH-16,30); ctx.stroke();
 
     // Top gradient bar
     const g = ctx.createLinearGradient(0,0,CW,0);
@@ -466,7 +483,7 @@ function initLanyard3D() {
 
     // Lanyard hole
     ctx.fillStyle = '#1a1e2b';
-    ctx.beginPath(); ctx.roundRect(CW/2-40,30,80,14,7); ctx.fill();
+    ctx.beginPath(); rrect(CW/2-40,30,80,14,7); ctx.fill();
 
     // Institution
     ctx.fillStyle = '#6e7f8c';
@@ -483,7 +500,7 @@ function initLanyard3D() {
     // Profile photo
     const px=80, py=108, pw=CW-160, ph=270;
     ctx.save();
-    ctx.beginPath(); ctx.roundRect(px,py,pw,ph,16); ctx.clip();
+    ctx.beginPath(); rrect(px,py,pw,ph,16); ctx.clip();
     if (img.complete && img.naturalWidth > 0) ctx.drawImage(img,px,py,pw,ph);
     else { ctx.fillStyle='#1c2333'; ctx.fillRect(px,py,pw,ph); }
     ctx.restore();
@@ -526,7 +543,7 @@ function initLanyard3D() {
 
   // ── SCENE ROOT — matches <group position={[0,4,0]}> ────────────────────
   const root = new THREE.Group();
-  root.position.set(0, 4, 0);
+  root.position.set(0, 3, 0);
   scene.add(root);
 
   // ── CARD BODY (moves with physics) ────────────────────────────────────
@@ -601,7 +618,7 @@ function initLanyard3D() {
   const FIXED = new THREE.Vector3(0, 0, 0);
   const GRAV  = -40;   // exact from App.js gravity={[0,-40,0]}
   const DAMP  = 0.88;
-  const REST  = 1.0;   // rope joint length = 1
+  const REST  = 1.8;   // longer rope for visible strap
   const MAX_SPEED = 50, MIN_SPEED = 10;
 
   const nodes = [
