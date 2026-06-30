@@ -460,8 +460,8 @@ function initLanyard3D() {
 
   const frontTexture = new THREE.CanvasTexture(badgeCanvas);
   const backTexture = new THREE.CanvasTexture(backCanvas);
-  frontTexture.flipY = false;
-  backTexture.flipY = false;
+  frontTexture.flipY = true;
+  backTexture.flipY = true;
 
   function drawBadgeFace() {
     // Clear & background matching theme colors
@@ -830,7 +830,7 @@ function initLanyard3D() {
     const attachPoint = pos.clone().add(new THREE.Vector3(0, 0.8, 0)); // top clip
     const prevRopePoint = ropePoints[segmentCount - 2].pos;
     const strapVec = prevRopePoint.clone().sub(attachPoint);
-    const vY = strapVec.clone().normalize();
+    const vY = strapVec.clone().normalize().multiplyScalar(-1);
     
     // B. Local Z-axis faces the camera (pointing towards Z=1). 
     // We cross vY with camera direction (0, 0, 1) to get local X-axis.
