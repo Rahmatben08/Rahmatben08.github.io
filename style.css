@@ -568,3 +568,16 @@ body {
     }
 }
 
+/* 3D WebGL Lanyard Container */
+.lanyard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+}
+
+#lanyardCanvas3D {
+    outline: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}

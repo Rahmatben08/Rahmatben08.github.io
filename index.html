@@ -114,7 +114,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <!-- Custom Style Fallback -->
-    <link rel="stylesheet" href="style.css?v=1.1.1">
+    <link rel="stylesheet" href="style.css?v=1.1.2">
 </head>
 <body class="font-body-md text-on-surface overflow-x-hidden relative">
 
@@ -205,76 +205,9 @@
                     </div>
                     
                     <!-- Interactive 3D Lanyard Card -->
-                    <div class="lanyard-wrapper hidden md:block" id="lanyardWrapper" style="perspective: 1200px;">
-                        <!-- Curved Hanging Strap (SVG for organic fabric feel) -->
-                        <svg class="lanyard-strap-svg" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 -10 C 25 80, 75 80, 90 -10" stroke="url(#strap-grad)" stroke-width="6" stroke-linecap="round"/>
-                            <path d="M45 42 L 50 52 L 55 42 Z" fill="#1e1b4b"/> <!-- Buckle clip -->
-                            <defs>
-                                <linearGradient id="strap-grad" x1="0" y1="0" x2="1" y2="1">
-                                    <stop offset="0%" stop-color="#4f46e5"/>
-                                    <stop offset="50%" stop-color="#818cf8"/>
-                                    <stop offset="100%" stop-color="#4f46e5"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                        
-                        <!-- Metal Clip Connector -->
-                        <div class="lanyard-clip"></div>
-                        
-                        <!-- Holographic Developer Badge -->
-                        <div class="lanyard-card glass-card rounded-3xl p-5 flex flex-col justify-between items-center relative overflow-hidden" id="lanyardCard" style="transform-style: preserve-3d;">
-                            <!-- Holographic & Glare Overlays -->
-                            <div class="lanyard-hologram"></div>
-                            <div class="lanyard-shine" id="lanyardShine"></div>
-                            <div class="scanlines"></div>
-                            
-                            <!-- Header / Card slot -->
-                            <div class="w-full flex justify-between items-center mb-3" style="transform: translateZ(20px);">
-                                <span class="text-[8px] font-mono text-indigo-accent tracking-widest font-bold uppercase">POLSRI // DEPT. MI</span>
-                                <!-- Status LED -->
-                                <div class="flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
-                                    <span class="text-[7px] font-mono text-emerald-400 font-bold uppercase tracking-wider">ONLINE</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Profile Picture (High 3D Depth) -->
-                            <div class="w-[130px] h-[150px] rounded-2xl overflow-hidden border-2 border-indigo-500/40 shadow-2xl bg-black/40 mb-3 flex items-center justify-center relative group" style="transform: translateZ(50px); transform-style: preserve-3d;">
-                                <img src="profile.jpg" alt="Ghali Rahmat" class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-gradient-to-t from-indigo-950/60 to-transparent"></div>
-                            </div>
-                            
-                            <!-- Card Info (Middle 3D Depth) -->
-                            <div class="space-y-1" style="transform: translateZ(35px);">
-                                <h3 class="font-headline-sm text-lg font-black text-white tracking-wide uppercase drop-shadow-[0_2px_10px_rgba(255,255,255,0.15)]">Ghali Rahmat</h3>
-                                <div class="inline-block px-2.5 py-0.5 bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 rounded-full text-[9px] font-mono uppercase tracking-widest font-semibold">
-                                    Full-Stack Engineer
-                                </div>
-                            </div>
-                            
-                            <!-- Smart Chip & QR Code Section (Low 3D Depth) -->
-                            <div class="w-full flex justify-between items-center mt-3 pt-3 border-t border-white/5" style="transform: translateZ(15px);">
-                                <!-- Gold Smart Card Chip SVG -->
-                                <svg class="w-7 h-5 opacity-80" viewBox="0 0 100 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="100" height="70" rx="10" fill="url(#chip-grad)"/>
-                                    <path d="M30 0 v70 M70 0 v70 M0 35 h100 M30 20 h40 M30 50 h40" stroke="#1f2937" stroke-width="4"/>
-                                    <defs>
-                                        <linearGradient id="chip-grad" x1="0" y1="0" x2="1" y2="1">
-                                            <stop offset="0%" stop-color="#f59e0b"/>
-                                            <stop offset="50%" stop-color="#fbbf24"/>
-                                            <stop offset="100%" stop-color="#b45309"/>
-                                        </linearGradient>
-                                    </defs>
-                                </svg>
-                                
-                                <!-- Pseudo Barcode / Security ID -->
-                                <div class="text-right">
-                                    <div class="text-[7px] text-on-surface-variant font-mono uppercase tracking-wider">DEV LEVEL 3</div>
-                                    <div class="text-[8px] text-white font-mono font-bold">GR-9A9271304</div>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Next-Gen 3D Physics Lanyard Card Container -->
+                    <div class="lanyard-container hidden md:block relative w-[320px] h-[480px]" id="lanyardContainer" style="margin-top: -30px;">
+                        <canvas id="lanyardCanvas3D" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
                     </div>
                 </div>
             </div>
@@ -607,7 +540,7 @@
     </div>
 
     <!-- Script Files -->
-    <script src="projects.js?v=1.1.1"></script>
-    <script src="app.js?v=1.1.1"></script>
+    <script src="projects.js?v=1.1.2"></script>
+    <script src="app.js?v=1.1.2"></script>
 </body>
 </html>

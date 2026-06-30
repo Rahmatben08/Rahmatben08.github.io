@@ -391,187 +391,445 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(typeAnimation, 1000);
   renderBentoTools();
   renderProjects();
-  initHero3D(); // Start 3D rendering
-  initLanyardInteraction(); // Start interactive Lanyard
+  initLanyard3D(); // Start 3D Physics Lanyard rendering
 });
 
 // ==========================================================================
-// INTERACTIVE 3D HERO CANVAS (THREE.JS)
+// INTERACTIVE 3D PHYSICS LANYARD BADGE (WEBGL / THREE.JS)
 // ==========================================================================
-function initHero3D() {
-  const canvas = document.getElementById('heroCanvas3D');
-  if (!canvas) return;
+function initLanyard3D() {
+  const container = document.getElementById('lanyardContainer');
+  const canvas = document.getElementById('lanyardCanvas3D');
+  if (!container || !canvas) return;
 
-  const parent = canvas.parentElement;
-  
-  // Scene Setup
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+
+  // 1. Scene & Camera
   const scene = new THREE.Scene();
-  
-  // Camera Setup
-  const camera = new THREE.PerspectiveCamera(45, parent.clientWidth / parent.clientHeight, 0.1, 100);
-  camera.position.z = 6.5;
-  
-  // WebGL Renderer with alpha transparency and antialiasing
+  const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
+  camera.position.set(0, 0.2, 5.0);
+
+  // 2. WebGL Renderer
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas,
     alpha: true,
     antialias: true
   });
-  renderer.setSize(parent.clientWidth, parent.clientHeight);
+  renderer.setSize(w, h);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
 
-  // 1. Torus Knot (Wireframe) - Indigo Accent
-  const geometry = new THREE.TorusKnotGeometry(1.2, 0.35, 120, 16);
-  const material = new THREE.MeshBasicMaterial({
-    color: 0x6366f1,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.85
-  });
-  const torusKnot = new THREE.Mesh(geometry, material);
-  scene.add(torusKnot);
+  // 3. Lighting (PBR specular highlights)
+  const ambient = new THREE.AmbientLight(0xffffff, 0.85);
+  scene.add(ambient);
 
-  // 2. Surrounding Particle Constellation - Cyan Accent
-  const particlesCount = 250;
-  const particlesGeo = new THREE.BufferGeometry();
-  const positions = new Float32Array(particlesCount * 3);
+  const mainLight = new THREE.PointLight(0xffffff, 2.5, 15);
+  mainLight.position.set(1.5, 2.5, 3.5);
+  scene.add(mainLight);
 
-  for (let i = 0; i < particlesCount * 3; i += 3) {
-    // Generate particles in a spherical shell around the torus
-    const u = Math.random();
-    const v = Math.random();
-    const theta = u * 2.0 * Math.PI;
-    const phi = Math.acos(2.0 * v - 1.0);
-    const r = 2.0 + Math.random() * 1.5; // Radius between 2.0 and 3.5
+  const fillLight = new THREE.DirectionalLight(0x6366f1, 0.7);
+  fillLight.position.set(-2, -1, 1);
+  scene.add(fillLight);
 
-    positions[i] = r * Math.sin(phi) * Math.cos(theta);
-    positions[i+1] = r * Math.sin(phi) * Math.sin(theta);
-    positions[i+2] = r * Math.cos(phi);
+  // 4. Create Badge Textures via HTML5 Canvas
+  const badgeCanvas = document.createElement('canvas');
+  badgeCanvas.width = 512;
+  badgeCanvas.height = 768;
+  const ctx = badgeCanvas.getContext('2d');
+
+  const backCanvas = document.createElement('canvas');
+  backCanvas.width = 512;
+  backCanvas.height = 768;
+  const backCtx = backCanvas.getContext('2d');
+
+  // Load Profile Image
+  let profileImg = new Image();
+  profileImg.src = 'profile.jpg';
+  profileImg.onload = () => {
+    drawBadgeFace();
+  };
+
+  const frontTexture = new THREE.CanvasTexture(badgeCanvas);
+  const backTexture = new THREE.CanvasTexture(backCanvas);
+
+  function drawBadgeFace() {
+    // Clear & background
+    ctx.fillStyle = '#0a0f1d';
+    ctx.fillRect(0, 0, 512, 768);
+
+    // Glowing rim border
+    ctx.strokeStyle = '#6366f1';
+    ctx.lineWidth = 14;
+    ctx.beginPath();
+    ctx.roundRect(15, 15, 482, 738, 45);
+    ctx.stroke();
+
+    // Inner background grids
+    ctx.strokeStyle = 'rgba(99, 102, 241, 0.08)';
+    ctx.lineWidth = 2;
+    for (let i = 40; i < 728; i += 40) {
+      ctx.beginPath(); ctx.moveTo(25, i); ctx.lineTo(487, i); ctx.stroke();
+    }
+
+    // Header slot hole
+    ctx.fillStyle = '#1e293b';
+    ctx.beginPath();
+    ctx.roundRect(206, 45, 100, 20, 10);
+    ctx.fill();
+
+    // Header labels
+    ctx.fillStyle = '#818cf8';
+    ctx.font = 'bold 16px Courier New, monospace';
+    ctx.fillText('POLSRI // DEPT. MI', 50, 95);
+
+    // LED Status Dot
+    ctx.fillStyle = '#10b981';
+    ctx.beginPath(); ctx.arc(430, 90, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#34d399';
+    ctx.font = 'bold 14px Courier New, monospace';
+    ctx.fillText('ONLINE', 345, 95);
+
+    // Draw Profile Picture
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(121, 140, 270, 320, 25);
+    ctx.clip();
+    if (profileImg.complete) {
+      ctx.drawImage(profileImg, 121, 140, 270, 320);
+    } else {
+      ctx.fillStyle = '#1e1b4b';
+      ctx.fillRect(121, 140, 270, 320);
+    }
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.roundRect(121, 140, 270, 320, 25);
+    ctx.stroke();
+
+    // Name text
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 36px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('GHALI RAHMAT', 256, 520);
+
+    // Pill badge for role
+    ctx.fillStyle = 'rgba(99, 102, 241, 0.2)';
+    ctx.beginPath(); ctx.roundRect(116, 550, 280, 40, 20); ctx.fill();
+    ctx.strokeStyle = 'rgba(99, 102, 241, 0.3)';
+    ctx.stroke();
+
+    ctx.fillStyle = '#818cf8';
+    ctx.font = 'bold 18px Courier New, monospace';
+    ctx.fillText('FULL-STACK ENGINEER', 256, 576);
+
+    // Bottom info area
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '12px Courier New, monospace';
+    ctx.fillText('ACCESS: FULL', 50, 670);
+    ctx.fillText('SYS: DEVR-2026', 50, 690);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 15px Courier New, monospace';
+    ctx.fillText('GR-9A9271304', 50, 715);
+
+    // Golden smart chip
+    ctx.fillStyle = '#fbbf24';
+    ctx.beginPath(); ctx.roundRect(390, 650, 70, 50, 8); ctx.fill();
+    ctx.strokeStyle = '#b45309';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    // Grid inside chip
+    ctx.beginPath();
+    ctx.moveTo(415, 650); ctx.lineTo(415, 700);
+    ctx.moveTo(435, 650); ctx.lineTo(435, 700);
+    ctx.moveTo(390, 675); ctx.lineTo(460, 675);
+    ctx.stroke();
+
+    frontTexture.needsUpdate = true;
   }
 
-  particlesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  
-  const particlesMat = new THREE.PointsMaterial({
-    size: 0.045,
-    color: 0x06b6d4,
+  function drawBadgeBack() {
+    backCtx.fillStyle = '#0f172a';
+    backCtx.fillRect(0, 0, 512, 768);
+
+    // Glowing border
+    backCtx.strokeStyle = '#6366f1';
+    backCtx.lineWidth = 14;
+    backCtx.beginPath();
+    backCtx.roundRect(15, 15, 482, 738, 45);
+    backCtx.stroke();
+
+    // Large glowing logo
+    backCtx.fillStyle = '#6366f1';
+    backCtx.font = 'bold 200px Arial, sans-serif';
+    backCtx.textAlign = 'center';
+    backCtx.fillText('G', 256, 460);
+
+    backTexture.needsUpdate = true;
+  }
+
+  drawBadgeFace();
+  drawBadgeBack();
+
+  // 5. 3D Model Construction (Card, Case, Ring, Strap)
+  const cardGroup = new THREE.Group();
+  scene.add(cardGroup);
+
+  const cardGeo = new THREE.PlaneGeometry(2.0, 3.1);
+  const frontMat = new THREE.MeshStandardMaterial({
+    map: frontTexture,
+    roughness: 0.15,
+    metalness: 0.1,
     transparent: true,
-    opacity: 0.8
+    side: THREE.DoubleSide
+  });
+  const backMat = new THREE.MeshStandardMaterial({
+    map: backTexture,
+    roughness: 0.15,
+    metalness: 0.1,
+    transparent: true,
+    side: THREE.DoubleSide
   });
 
-  const particleSystem = new THREE.Points(particlesGeo, particlesMat);
-  scene.add(particleSystem);
+  const frontMesh = new THREE.Mesh(cardGeo, frontMat);
+  const backMesh = new THREE.Mesh(cardGeo, backMat);
+  backMesh.rotation.y = Math.PI;
+  backMesh.position.z = -0.005; // tiny gap
+  cardGroup.add(frontMesh);
+  cardGroup.add(backMesh);
 
-  // Interactive mouse tracking
-  let mouseX = 0;
-  let mouseY = 0;
-  let targetX = 0;
-  let targetY = 0;
-
-  window.addEventListener('mousemove', (e) => {
-    // Normalize mouse coordinates from -1 to 1
-    mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-    mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+  // Glossy plastic protective case
+  const caseGeo = new THREE.BoxGeometry(2.12, 3.22, 0.04);
+  const caseMat = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.25,
+    roughness: 0.1,
+    transmission: 0.9,
+    thickness: 0.05
   });
+  const caseMesh = new THREE.Mesh(caseGeo, caseMat);
+  cardGroup.add(caseMesh);
+
+  // Metallic ring/clip
+  const ringGeo = new THREE.TorusGeometry(0.12, 0.03, 8, 24);
+  const ringMat = new THREE.MeshStandardMaterial({
+    color: 0xe5e7eb,
+    metalness: 0.95,
+    roughness: 0.15
+  });
+  const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+  ringMesh.position.set(0, 1.62, 0);
+  cardGroup.add(ringMesh);
+
+  // Strap (dynamic bending line segments)
+  const strapPointCount = 16;
+  const strapGeo = new THREE.BufferGeometry();
+  const strapPositions = new Float32Array(strapPointCount * 3);
+  strapGeo.setAttribute('position', new THREE.BufferAttribute(strapPositions, 3));
+  
+  const strapMat = new THREE.LineBasicMaterial({
+    color: 0x4f46e5,
+    linewidth: 3
+  });
+  const strapMesh = new THREE.Line(strapGeo, strapMat);
+  scene.add(strapMesh);
+
+  // 6. Physics State variables
+  const anchor = new THREE.Vector3(0, 2.3, 0);
+  let pos = new THREE.Vector3(0, 0, 0);
+  let vel = new THREE.Vector3(0, 0, 0);
+  let rot = new THREE.Vector3(0, 0, 0);
+
+  const restLength = 1.9;
+  const kSpring = 240; // stiffness
+  const kDamping = 0.91; // air drag
+  const gravity = -9.8;
+  const mass = 1.0;
+
+  // Set initial position hanging straight down
+  pos.set(0, anchor.y - restLength, 0);
+
+  // 7. Raycasting & Mouse drag state
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let isDragging = false;
+  let prevMousePos = new THREE.Vector3();
+  const dragPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+  function onMouseDown(e) {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects([caseMesh]);
+
+    if (intersects.length > 0) {
+      isDragging = true;
+      canvas.style.cursor = 'grabbing';
+      
+      // Setup drag plane intersection point
+      const intersection = new THREE.Vector3();
+      raycaster.ray.intersectPlane(dragPlane, intersection);
+      prevMousePos.copy(intersection);
+    }
+  }
+
+  function onMouseMove(e) {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+    // Hover cursor change
+    if (!isDragging) {
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects([caseMesh]);
+      canvas.style.cursor = intersects.length > 0 ? 'grab' : 'default';
+    }
+
+    if (isDragging) {
+      raycaster.setFromCamera(mouse, camera);
+      const currentMousePos = new THREE.Vector3();
+      raycaster.ray.intersectPlane(dragPlane, currentMousePos);
+
+      // Force card position directly to mouse
+      const delta = currentMousePos.clone().sub(prevMousePos);
+      pos.add(delta);
+      
+      // Calculate instantaneous drag velocity
+      vel.copy(delta).multiplyScalar(60.0);
+      prevMousePos.copy(currentMousePos);
+    }
+  }
+
+  function onMouseUp() {
+    if (isDragging) {
+      isDragging = false;
+      canvas.style.cursor = 'grab';
+    }
+  }
+
+  window.addEventListener('mousedown', onMouseDown);
+  window.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('mouseup', onMouseUp);
+
+  // Touch support
+  window.addEventListener('touchstart', (e) => { if (e.touches[0]) onMouseDown(e.touches[0]); });
+  window.addEventListener('touchmove', (e) => { if (e.touches[0]) onMouseMove(e.touches[0]); });
+  window.addEventListener('touchend', onMouseUp);
 
   // Resize handler
   window.addEventListener('resize', () => {
-    const w = parent.clientWidth;
-    const h = parent.clientHeight;
-    camera.aspect = w / h;
+    const wNew = container.clientWidth;
+    const hNew = container.clientHeight;
+    camera.aspect = wNew / hNew;
     camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
+    renderer.setSize(wNew, hNew);
   });
 
-  // Animation Loop
+  // 8. Simulation & Render Loop
   const clock = new THREE.Clock();
 
   function animate() {
     requestAnimationFrame(animate);
 
-    const elapsedTime = clock.getElapsedTime();
+    const dt = Math.min(clock.getDelta(), 0.05);
 
-    // Slow default rotation
-    torusKnot.rotation.x = elapsedTime * 0.12;
-    torusKnot.rotation.y = elapsedTime * 0.15;
+    if (!isDragging) {
+      // 3D Hook / Spring force physics solver
+      const force = new THREE.Vector3(0, gravity * mass, 0); // Gravity
 
-    particleSystem.rotation.y = -elapsedTime * 0.04;
-    particleSystem.rotation.x = elapsedTime * 0.01;
+      // Attachment point at the top clip of card
+      const attachPoint = pos.clone().add(new THREE.Vector3(0, 1.55, 0));
+      const springVec = anchor.clone().sub(attachPoint);
+      const dist = springVec.length();
 
-    // Smooth lerp (interpolation) towards mouse position for parallax effect
-    targetX += (mouseX - targetX) * 0.05;
-    targetY += (mouseY - targetY) * 0.05;
+      // Spring pulls back when stretched beyond rest length
+      if (dist > 0.01) {
+        const forceMag = kSpring * (dist - restLength);
+        force.add(springVec.normalize().multiplyScalar(forceMag));
+      }
 
-    // Tilt camera/scene slightly based on mouse
-    torusKnot.rotation.y += targetX * 0.4;
-    torusKnot.rotation.x += -targetY * 0.4;
+      // Euler Integration
+      const acc = force.divideScalar(mass);
+      vel.add(acc.multiplyScalar(dt));
+      vel.multiplyScalar(kDamping);
+      pos.add(vel.clone().multiplyScalar(dt));
+    } else {
+      // Limit drag distance to avoid infinite spring stretching
+      const attachPoint = pos.clone().add(new THREE.Vector3(0, 1.55, 0));
+      const dist = anchor.distanceTo(attachPoint);
+      if (dist > restLength * 1.5) {
+        const dir = attachPoint.clone().sub(anchor).normalize();
+        pos.copy(anchor.clone().add(dir.multiplyScalar(restLength * 1.5)).sub(new THREE.Vector3(0, 1.55, 0)));
+        vel.set(0, 0, 0);
+      }
+    }
+
+    // Apply Position to Mesh
+    cardGroup.position.copy(pos);
+
+    // Calculate rotation: orient Y-axis towards anchor, with speed-based wobble
+    const clipPos = pos.clone().add(new THREE.Vector3(0, 1.55, 0));
+    const strapVec = anchor.clone().sub(clipPos);
     
-    particleSystem.rotation.y += targetX * 0.15;
-    particleSystem.rotation.x += -targetY * 0.15;
+    // Default Y orientation vector pointing up the strap
+    const strapDir = strapVec.clone().normalize();
+    const up = new THREE.Vector3(0, 1, 0);
+    const quat = new THREE.Quaternion().setFromUnitVectors(up, strapDir);
+    cardGroup.quaternion.copy(quat);
+
+    // Apply velocity-based twists and tilt swings
+    if (!isDragging) {
+      const targetRotX = vel.z * -0.05;
+      const targetRotZ = vel.x * -0.05;
+      const targetRotY = vel.x * 0.08;
+
+      rot.x += (targetRotX - rot.x) * 0.15;
+      rot.z += (targetRotZ - rot.z) * 0.15;
+      rot.y += (targetRotY - rot.y) * 0.1;
+
+      cardGroup.rotateX(rot.x);
+      cardGroup.rotateZ(rot.z);
+      cardGroup.rotateY(rot.y + Math.sin(clock.getElapsedTime() * 1.5) * 0.05); // natural twist
+    }
+
+    // 9. Update Strap Points (Hanging neck loop)
+    const neckLeft = new THREE.Vector3(-0.9, 3.2, -0.4);
+    const neckRight = new THREE.Vector3(0.9, 3.2, -0.4);
+    const clipAttach = pos.clone().add(new THREE.Vector3(0, 1.62, 0));
+
+    const positions = strapMesh.geometry.attributes.position.array;
+    
+    // Draw V shape: Left Neck -> Anchor -> Right Neck -> Clip
+    const halfCount = strapPointCount / 2;
+    for (let i = 0; i < strapPointCount; i++) {
+      let t, p;
+      if (i < halfCount) {
+        // Left side loop
+        t = i / (halfCount - 1);
+        p = new THREE.Vector3().lerpVectors(neckLeft, clipAttach, t);
+        const sag = Math.sin(t * Math.PI) * (0.15 * (1.0 - Math.min(1.0, strapVec.length() / restLength)));
+        p.y -= sag;
+      } else {
+        // Right side loop
+        t = (i - halfCount) / (halfCount - 1);
+        p = new THREE.Vector3().lerpVectors(clipAttach, neckRight, t);
+        const sag = Math.sin(t * Math.PI) * (0.15 * (1.0 - Math.min(1.0, strapVec.length() / restLength)));
+        p.y -= sag;
+      }
+      
+      positions[i * 3] = p.x;
+      positions[i * 3 + 1] = p.y;
+      positions[i * 3 + 2] = p.z;
+    }
+    strapMesh.geometry.attributes.position.needsUpdate = true;
 
     renderer.render(scene, camera);
   }
 
   animate();
-}
-
-// ==========================================================================
-// INTERACTIVE LANYARD 3D TILT EFFECT
-// ==========================================================================
-function initLanyardInteraction() {
-  const wrapper = document.getElementById('lanyardWrapper');
-  const card = document.getElementById('lanyardCard');
-  const shine = document.getElementById('lanyardShine');
-  const hologram = card ? card.querySelector('.lanyard-hologram') : null;
-  
-  if (!wrapper || !card || !shine) return;
-  
-  wrapper.addEventListener('mousemove', (e) => {
-    const rect = wrapper.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    const normalizedX = (x / rect.width) - 0.5;
-    const normalizedY = (y / rect.height) - 0.5;
-    
-    // Smooth 3D tilt response angles
-    const tiltX = normalizedY * -35;
-    const tiltY = normalizedX * 35;
-    
-    card.style.animation = 'none';
-    card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.04, 1.04, 1.04)`;
-    
-    // Dynamic Hologram Shifting Gradients (rainbow iridescent color dodge)
-    if (hologram) {
-      const holoX = (normalizedX + 0.5) * 100;
-      const holoY = (normalizedY + 0.5) * 100;
-      hologram.style.background = `linear-gradient(${135 + (normalizedX * 45)}deg, rgba(99, 102, 241, 0.25) 0%, rgba(6, 182, 212, 0.25) ${holoX}%, rgba(236, 72, 153, 0.2) ${holoY}%, rgba(255, 255, 255, 0) 100%)`;
-      hologram.style.opacity = '1';
-    }
-    
-    // Radial shine overlay translation
-    const shineX = (normalizedX + 0.5) * 100;
-    const shineY = (normalizedY + 0.5) * 100;
-    shine.style.backgroundPosition = `${shineX}% ${shineY}%`;
-  });
-  
-  wrapper.addEventListener('mouseleave', () => {
-    card.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease';
-    card.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-    
-    if (hologram) {
-      hologram.style.transition = 'opacity 0.6s ease, background 0.6s ease';
-      hologram.style.background = `linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(6, 182, 212, 0.15) 30%, rgba(236, 72, 153, 0.1) 60%, rgba(255, 255, 255, 0) 100%)`;
-      hologram.style.opacity = '0.7';
-    }
-    
-    setTimeout(() => {
-      card.style.animation = 'lanyard-swing 6s ease-in-out infinite alternate';
-      setTimeout(() => {
-        card.style.transition = 'transform 0.1s ease-out, box-shadow 0.3s ease, border-color 0.3s ease';
-        if (hologram) hologram.style.transition = 'opacity 0.3s ease';
-      }, 50);
-    }, 600);
-    
-    shine.style.backgroundPosition = '50% 50%';
-  });
 }
