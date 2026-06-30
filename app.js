@@ -395,188 +395,213 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================================================
-// INTERACTIVE 3D LANYARD BADGE — ported 1:1 from 3D_CARD-main/components/band/App.js
-// Original: R3F + Rapier physics + MeshLine + GLTFLoader
-// This port: Three.js vanilla + Verlet physics + MeshLine CDN + GLTFLoader
-//
-// Key values from source App.js:
-//   camera: fov=25, position=[0,0,13]
-//   gravity: [0,-40,0]
-//   card: scale=2.25, position=[0,-1.2,-0.05]
-//   joint: attachment at [0, 1.45, 0] on card (sphericalJoint j3->card)
-//   band: MeshLineMaterial, repeat=[-4,1], lineWidth=1
-//   segments: fixed -> j1(0.5,0,0) -> j2(1,0,0) -> j3(1.5,0,0) -> card(2,0,0)
+// 3D LANYARD BADGE — Vanilla Three.js port of 3D_CARD-main/components/band/App.js
+// Simple PlaneGeometry card (no GLB UV issues) + TubeGeometry strap
+// Camera: fov=25, pos=[0,0,13] | Gravity=-40 | Scale=2.25 | Joint y=1.45
 // ==========================================================================
 function initLanyard3D() {
   const container = document.getElementById('lanyardContainer');
-  const canvas = document.getElementById('lanyardCanvas3D');
+  const canvas    = document.getElementById('lanyardCanvas3D');
   if (!container || !canvas) return;
 
-  // RENDERER
+  // ── RENDERER ─────────────────────────────────────────────────────────────
   let W = container.clientWidth;
   let H = container.clientHeight;
-
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
   renderer.setSize(W, H);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   const scene = new THREE.Scene();
 
-  // CAMERA — exact from App.js: fov=25, position=[0,0,13]
+  // ── CAMERA ── fov=25, pos=[0,0,13] from App.js ───────────────────────────
   const camera = new THREE.PerspectiveCamera(25, W / H, 0.1, 100);
 
-  function positionCamera() {
+  function setupCamera() {
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
-    // Offset horizontally so card appears in right column of our 2-column layout
-    const xOffset = camera.aspect * 2.2;
-    camera.position.set(-xOffset, 0, 13);
-    camera.lookAt(xOffset * 0.5, -1, 0);
+    // Shift left so card appears in RIGHT column of our 2-col hero layout
+    // At fov=25 and z=13, the scene width ≈ 2*13*tan(12.5°) ≈ 5.76 units
+    // We want card centred at ~x=+2 in scene space, so camera moves left
+    camera.position.set(-camera.aspect * 2.5, 0, 13);
+    camera.lookAt(camera.aspect * 1.2, -1.5, 0);
   }
-  positionCamera();
+  setupCamera();
 
-  // LIGHTING — matches Lightformers: ambientLight intensity=PI, 4 directional lights
+  // ── LIGHTING ─────────────────────────────────────────────────────────────
   scene.add(new THREE.AmbientLight(0xffffff, Math.PI));
-  const l1 = new THREE.DirectionalLight(0xffffff, 2);  l1.position.set(0, -1, 5);   scene.add(l1);
-  const l2 = new THREE.DirectionalLight(0xffffff, 3);  l2.position.set(-1, -1, 1);  scene.add(l2);
-  const l3 = new THREE.DirectionalLight(0xffffff, 3);  l3.position.set(1, 1, 1);    scene.add(l3);
-  const l4 = new THREE.DirectionalLight(0xffffff, 10); l4.position.set(-10, 0, 14); scene.add(l4);
+  [[0,-1,5,2],[−1,−1,1,3],[1,1,1,3],[−10,0,14,10]].forEach(([x,y,z,i])=>{
+    const l = new THREE.DirectionalLight(0xffffff, i);
+    l.position.set(x, y, z);
+    scene.add(l);
+  });
 
-  // CARD TEXTURE (Canvas 2D)
-  const CARD_W = 512, CARD_H = 768;
-  const badgeCanvas = document.createElement('canvas');
-  badgeCanvas.width = CARD_W;
-  badgeCanvas.height = CARD_H;
-  const ctx = badgeCanvas.getContext('2d');
-  const cardTexture = new THREE.CanvasTexture(badgeCanvas);
-  cardTexture.anisotropy = 16;
+  // ── CARD TEXTURE ─────────────────────────────────────────────────────────
+  const CW = 512, CH = 800;
+  const bCanvas = document.createElement('canvas');
+  bCanvas.width = CW; bCanvas.height = CH;
+  const ctx = bCanvas.getContext('2d');
+  // IMPORTANT: flipY false so canvas draws appear correct on PlaneGeometry
+  const cardTex = new THREE.CanvasTexture(bCanvas);
+  cardTex.flipY = true; // default — PlaneGeometry UVs go bottom-up
 
-  const profileImg = new Image();
-  profileImg.src = 'profile.jpg';
-  profileImg.onload = () => drawCard();
-  profileImg.onerror = () => drawCard();
+  const img = new Image();
+  img.src = 'profile.jpg';
+  img.onload  = drawCard;
+  img.onerror = drawCard;
 
   function drawCard() {
-    ctx.fillStyle = '#10131b';
-    ctx.fillRect(0, 0, CARD_W, CARD_H);
-    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    // Background
+    ctx.fillStyle = '#0d1117';
+    ctx.fillRect(0, 0, CW, CH);
+
+    // Rounded border
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
     ctx.lineWidth = 6;
-    ctx.beginPath(); ctx.roundRect(10, 10, CARD_W-20, CARD_H-20, 36); ctx.stroke();
-    const grad = ctx.createLinearGradient(0, 0, CARD_W, 0);
-    grad.addColorStop(0, '#7000FF'); grad.addColorStop(1, '#00D1FF');
-    ctx.fillStyle = grad; ctx.fillRect(10, 10, CARD_W-20, 18);
-    ctx.fillStyle = '#8a9bac'; ctx.font = 'bold 15px "Courier New",monospace';
-    ctx.textAlign = 'left'; ctx.fillText('POLSRI // DEPT. MI', 38, 76);
-    ctx.fillStyle = '#34d399'; ctx.beginPath(); ctx.arc(CARD_W-50, 71, 7, 0, Math.PI*2); ctx.fill();
-    ctx.font = 'bold 13px "Courier New",monospace'; ctx.fillText('ONLINE', CARD_W-106, 76);
-    ctx.fillStyle = '#1a1e28'; ctx.beginPath(); ctx.roundRect(CARD_W/2-46, 38, 92, 16, 8); ctx.fill();
-    const px=96, py=120, pw=CARD_W-192, ph=290;
-    ctx.save(); ctx.beginPath(); ctx.roundRect(px, py, pw, ph, 18); ctx.clip();
-    if (profileImg.complete && profileImg.naturalWidth > 0) { ctx.drawImage(profileImg, px, py, pw, ph); }
-    else { ctx.fillStyle='#1e2433'; ctx.fillRect(px, py, pw, ph); }
+    ctx.beginPath(); ctx.roundRect(8,8,CW-16,CH-16,30); ctx.stroke();
+
+    // Top gradient bar
+    const g = ctx.createLinearGradient(0,0,CW,0);
+    g.addColorStop(0,'#7000FF'); g.addColorStop(1,'#00D1FF');
+    ctx.fillStyle = g; ctx.fillRect(8,8,CW-16,16);
+
+    // Lanyard hole
+    ctx.fillStyle = '#1a1e2b';
+    ctx.beginPath(); ctx.roundRect(CW/2-40,30,80,14,7); ctx.fill();
+
+    // Institution
+    ctx.fillStyle = '#6e7f8c';
+    ctx.font = 'bold 14px "Courier New",monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('POLSRI  //  DEPT. MI', 32, 72);
+
+    // Green dot + status
+    ctx.fillStyle = '#34d399';
+    ctx.beginPath(); ctx.arc(CW-45,67,6,0,Math.PI*2); ctx.fill();
+    ctx.font = 'bold 12px "Courier New",monospace';
+    ctx.fillText('ONLINE', CW-100, 72);
+
+    // Profile photo
+    const px=80, py=108, pw=CW-160, ph=270;
+    ctx.save();
+    ctx.beginPath(); ctx.roundRect(px,py,pw,ph,16); ctx.clip();
+    if (img.complete && img.naturalWidth > 0) ctx.drawImage(img,px,py,pw,ph);
+    else { ctx.fillStyle='#1c2333'; ctx.fillRect(px,py,pw,ph); }
     ctx.restore();
-    ctx.fillStyle = '#a4e6ff'; ctx.font = 'bold 32px Arial,sans-serif';
-    ctx.textAlign = 'center'; ctx.fillText('GHALI RAHMAT', CARD_W/2, 462);
-    ctx.fillStyle = '#bbc9cf'; ctx.font = 'bold 17px "Courier New",monospace';
-    ctx.fillText('>_ ANDROID NATIVE DEV', CARD_W/2, 502);
-    const bars=[10,4,14,6,22,4,8,30,6,10,4,18]; let bx=45;
-    bars.forEach((bw,i)=>{ if(i%2===0){ctx.fillStyle='rgba(255,255,255,0.35)';ctx.fillRect(bx,588,bw,52);} bx+=bw+3; });
-    ctx.fillStyle='#7a8a96'; ctx.font='bold 13px "Courier New",monospace';
-    ctx.textAlign='right'; ctx.fillText('DEV-ID: 0x8F92', CARD_W-38, 660);
-    cardTexture.needsUpdate = true;
+
+    // Name (glow)
+    ctx.shadowColor = '#00d1ff';
+    ctx.shadowBlur  = 12;
+    ctx.fillStyle   = '#a8f0ff';
+    ctx.font        = 'bold 36px Arial,sans-serif';
+    ctx.textAlign   = 'center';
+    ctx.fillText('GHALI RAHMAT', CW/2, 430);
+    ctx.shadowBlur  = 0;
+
+    // Role
+    ctx.fillStyle = '#8aaab5';
+    ctx.font      = 'bold 16px "Courier New",monospace';
+    ctx.fillText('>_ ANDROID NATIVE DEV', CW/2, 470);
+
+    // Divider
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(32,498); ctx.lineTo(CW-32,498); ctx.stroke();
+
+    // Barcode
+    const bars=[10,4,14,6,22,4,8,30,6,10,4,18,5,12]; let bx=32;
+    bars.forEach((bw,i)=>{
+      if(i%2===0){ ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.fillRect(bx,520,bw,48); }
+      bx+=bw+3;
+    });
+
+    // ID
+    ctx.fillStyle = '#4a5a66';
+    ctx.font = 'bold 12px "Courier New",monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('DEV-ID: GR-2024-0892', CW-32, 620);
+
+    cardTex.needsUpdate = true;
   }
   drawCard();
 
-  // SCENE ROOT GROUP — matches <group position={[0, 4, 0]}>
-  const rootGroup = new THREE.Group();
-  rootGroup.position.set(0, 4, 0);
-  scene.add(rootGroup);
+  // ── SCENE ROOT — matches <group position={[0,4,0]}> ────────────────────
+  const root = new THREE.Group();
+  root.position.set(0, 4, 0);
+  scene.add(root);
 
-  // CARD BODY — lives in rootGroup space, moves with physics
+  // ── CARD BODY (moves with physics) ────────────────────────────────────
   const cardBody = new THREE.Group();
-  rootGroup.add(cardBody);
+  root.add(cardBody);
 
-  // CARD VISUAL GROUP — exact offsets from App.js: scale=2.25, pos=[0,-1.2,-0.05]
-  const cardGroup = new THREE.Group();
-  cardGroup.scale.setScalar(2.25);
-  cardGroup.position.set(0, -1.2, -0.05);
-  cardBody.add(cardGroup);
+  // Card visual: scale=2.25, offset=[0,-1.2,-0.05] from App.js
+  const CARD_SCALE = 2.25;
+  const cardVisual = new THREE.Group();
+  cardVisual.scale.setScalar(CARD_SCALE);
+  cardVisual.position.set(0, -1.2, -0.05);
+  cardBody.add(cardVisual);
 
-  // Load GLB model from /assets/kartu.glb (exact same file)
-  const gltfLoader = new THREE.GLTFLoader();
-  gltfLoader.load('kartu.glb', (gltf) => {
-    gltf.scene.traverse((child) => {
-      if (child.isMesh) {
-        // Apply our canvas texture to the base material (card face)
-        if (child.name === 'card') {
-          child.material = new THREE.MeshPhysicalMaterial({
-            map: cardTexture,
-            anisotropy: 16,
-            clearcoat: 1,
-            clearcoatRoughness: 0.15,
-            roughness: 0.3,
-            metalness: 0.5,
-          });
-        }
-      }
-    });
-    cardGroup.add(gltf.scene);
-  }, undefined, () => {
-    // GLB load failed: flat card fallback
-    const fallbackMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(1.6, 2.4),
-      new THREE.MeshBasicMaterial({ map: cardTexture, side: THREE.DoubleSide })
-    );
-    cardGroup.add(fallbackMesh);
-  });
+  // Front plane — simple PlaneGeometry, NO GLB (avoids all UV flip issues)
+  // PlaneGeometry faces +Z by default, billboard will make +Z face camera → correct!
+  const CARD_W3D = 1.6, CARD_H3D = 2.4; // proportional to 512×800
+  const frontMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(CARD_W3D, CARD_H3D),
+    new THREE.MeshBasicMaterial({ map: cardTex })
+  );
+  cardVisual.add(frontMesh);
 
-  // Hit mesh for raycasting — matches CuboidCollider args=[0.8, 1.125, 0.01]
+  // Back face
+  const backC = document.createElement('canvas');
+  backC.width=512; backC.height=800;
+  const bCtx=backC.getContext('2d');
+  bCtx.fillStyle='#0d1117'; bCtx.fillRect(0,0,512,800);
+  bCtx.strokeStyle='rgba(255,255,255,0.1)'; bCtx.lineWidth=6;
+  bCtx.beginPath(); bCtx.roundRect(8,8,496,784,30); bCtx.stroke();
+  bCtx.fillStyle='#7000ff'; bCtx.font='bold 260px Arial,sans-serif';
+  bCtx.textAlign='center'; bCtx.fillText('G',256,540);
+  bCtx.fillStyle='#00d1ff'; bCtx.font='bold 20px "Courier New",monospace';
+  bCtx.fillText('GHALI RAHMAT',256,640);
+  const backMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(CARD_W3D, CARD_H3D),
+    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(backC) })
+  );
+  backMesh.rotation.y = Math.PI;
+  cardVisual.add(backMesh);
+
+  // Metallic ring/clip at top of card (y = half card height = CARD_H3D/2)
+  const ringMesh = new THREE.Mesh(
+    new THREE.TorusGeometry(0.08, 0.02, 8, 24),
+    new THREE.MeshStandardMaterial({ color:0xd0d0d0, metalness:0.95, roughness:0.15 })
+  );
+  ringMesh.position.set(0, CARD_H3D/2, 0);
+  cardVisual.add(ringMesh);
+
+  // Invisible hit box for raycasting (matches CuboidCollider [0.8,1.125,0.01] × 2.25)
   const hitMesh = new THREE.Mesh(
-    new THREE.BoxGeometry(0.8*2, 1.125*2, 0.1),
+    new THREE.BoxGeometry(CARD_W3D * CARD_SCALE, CARD_H3D * CARD_SCALE, 0.1),
     new THREE.MeshBasicMaterial({ visible: false })
   );
   cardBody.add(hitMesh);
 
-  // BAND (STRAP) — use MeshLine if available (same lib as original), else TubeGeometry
-  const textureLoader = new THREE.TextureLoader();
-  const bandTexture = textureLoader.load('bandd.png', (t) => {
+  // ── STRAP (TubeGeometry — reliable, no CDN dependency) ─────────────────
+  const texLoader = new THREE.TextureLoader();
+  const bandTex = texLoader.load('bandd.png', (t) => {
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    t.repeat.set(-4, 1); // exact from App.js: repeat={[-4, 1]}
+    t.repeat.set(8, 1);
   });
+  const strapMat = new THREE.MeshStandardMaterial({
+    map: bandTex, roughness: 0.5, metalness: 0.05
+  });
+  let strapMesh = new THREE.Mesh(new THREE.BufferGeometry(), strapMat);
+  strapMesh.frustumCulled = false;
+  scene.add(strapMesh);
 
-  let bandMesh, meshLineGeo, useMeshLine = false;
-
-  if (typeof MeshLine !== 'undefined' && typeof MeshLineMaterial !== 'undefined') {
-    useMeshLine = true;
-    meshLineGeo = new MeshLine();
-    const dummyPts = [];
-    for (let i = 0; i <= 32; i++) dummyPts.push(0, 0, 0);
-    meshLineGeo.setPoints(dummyPts);
-    const meshLineMat = new MeshLineMaterial({
-      color: new THREE.Color('white'),
-      depthTest: false,
-      resolution: new THREE.Vector2(W, H),
-      useMap: true,
-      map: bandTexture,
-      repeat: new THREE.Vector2(-4, 1),
-      lineWidth: 1,
-    });
-    bandMesh = new THREE.Mesh(meshLineGeo, meshLineMat);
-    bandMesh.frustumCulled = false;
-    scene.add(bandMesh);
-  } else {
-    const strapMat = new THREE.MeshStandardMaterial({ map: bandTexture, roughness: 0.7 });
-    bandMesh = new THREE.Mesh(new THREE.BufferGeometry(), strapMat);
-    scene.add(bandMesh);
-  }
-
-  // VERLET ROPE PHYSICS
-  // Matches: fixed(0,0,0)->j1(0.5,0,0)->j2(1,0,0)->j3(1.5,0,0)->card(2,0,0)
-  // All in rootGroup local space. Gravity=-40, rope segment length=1
-  const FIXED_POS = new THREE.Vector3(0, 0, 0);
-  const GRAVITY = -40;
-  const DAMPING = 0.85;
-  const SEG_REST = 1.0;
+  // ── VERLET PHYSICS — 4 segments: fixed→j1→j2→j3→card ─────────────────
+  // Initial positions in root-local space (matches App.js <group position>)
+  // fixed=(0,0,0), j1=(0.5,0,0), j2=(1,0,0), j3=(1.5,0,0), card=(2,0,0)
+  const FIXED = new THREE.Vector3(0, 0, 0);
+  const GRAV  = -40;   // exact from App.js gravity={[0,-40,0]}
+  const DAMP  = 0.88;
+  const REST  = 1.0;   // rope joint length = 1
   const MAX_SPEED = 50, MIN_SPEED = 10;
 
   const nodes = [
@@ -586,173 +611,164 @@ function initLanyard3D() {
     { pos: new THREE.Vector3(1.5, 0, 0), prev: new THREE.Vector3(1.5, 0, 0), pinned: false },
     { pos: new THREE.Vector3(2,   0, 0), prev: new THREE.Vector3(2,   0, 0), pinned: false },
   ];
-  // Lerped copies for j1(index 1) and j2(index 2) — matches original lerped positions
   const lerped = [
     null,
-    new THREE.Vector3().copy(nodes[1].pos),
-    new THREE.Vector3().copy(nodes[2].pos),
+    new THREE.Vector3(0.5, 0, 0),
+    new THREE.Vector3(1,   0, 0),
     null, null
   ];
 
-  // DRAG
-  const raycaster = new THREE.Raycaster();
-  const pointer = new THREE.Vector2();
-  const dragPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-  let isDragging = false;
-  let dragOffset = new THREE.Vector3();
-  let dragPos = new THREE.Vector3();
+  // ── DRAG INTERACTION ────────────────────────────────────────────────────
+  const ray = new THREE.Raycaster();
+  const ptr = new THREE.Vector2();
+  const dragPlane  = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+  let isDragging   = false;
+  let dragOffset   = new THREE.Vector3();
+  let dragWorldPos = new THREE.Vector3();
 
-  function getPointerNDC(e) {
-    const rect = canvas.getBoundingClientRect();
-    pointer.x = ((e.clientX - rect.left) / rect.width)  *  2 - 1;
-    pointer.y = -((e.clientY - rect.top)  / rect.height) * 2 + 1;
+  function ptrNDC(e) {
+    const r = canvas.getBoundingClientRect();
+    ptr.x =  (e.clientX - r.left) / r.width  * 2 - 1;
+    ptr.y = -(e.clientY - r.top)  / r.height * 2 + 1;
   }
 
-  window.addEventListener('mousedown', (e) => {
-    getPointerNDC(e);
-    raycaster.setFromCamera(pointer, camera);
-    const hits = raycaster.intersectObject(hitMesh, false);
+  function tryStartDrag(e) {
+    ptrNDC(e);
+    ray.setFromCamera(ptr, camera);
+    const hits = ray.intersectObject(hitMesh, false);
     if (hits.length > 0) {
       isDragging = true;
       canvas.style.cursor = 'grabbing';
-      const wPos = new THREE.Vector3(); cardBody.getWorldPosition(wPos);
+      const wPos = new THREE.Vector3();
+      cardBody.getWorldPosition(wPos);
       dragOffset.copy(hits[0].point).sub(wPos);
     }
-  });
-  window.addEventListener('mousemove', (e) => {
-    getPointerNDC(e);
+  }
+
+  window.addEventListener('mousedown',  e => tryStartDrag(e));
+  window.addEventListener('touchstart', e => tryStartDrag(e.touches[0]), { passive: true });
+
+  window.addEventListener('mousemove', e => {
+    ptrNDC(e);
     if (isDragging) {
-      raycaster.setFromCamera(pointer, camera);
+      ray.setFromCamera(ptr, camera);
       const hit = new THREE.Vector3();
-      raycaster.ray.intersectPlane(dragPlane, hit);
-      dragPos.copy(hit).sub(dragOffset);
+      ray.ray.intersectPlane(dragPlane, hit);
+      dragWorldPos.copy(hit).sub(dragOffset);
     } else {
-      raycaster.setFromCamera(pointer, camera);
-      const h = raycaster.intersectObject(hitMesh, false);
-      canvas.style.cursor = h.length > 0 ? 'grab' : 'default';
-      canvas.style.pointerEvents = h.length > 0 ? 'auto' : 'none';
+      ray.setFromCamera(ptr, camera);
+      const h = ray.intersectObject(hitMesh, false);
+      const over = h.length > 0;
+      canvas.style.cursor       = over ? 'grab' : 'default';
+      canvas.style.pointerEvents = over ? 'auto' : 'none';
     }
   });
-  window.addEventListener('mouseup', () => { isDragging = false; canvas.style.cursor = 'default'; });
-  window.addEventListener('touchstart', (e) => {
-    getPointerNDC(e.touches[0]);
-    raycaster.setFromCamera(pointer, camera);
-    const hits = raycaster.intersectObject(hitMesh, false);
-    if (hits.length > 0) {
-      isDragging = true;
-      const wPos = new THREE.Vector3(); cardBody.getWorldPosition(wPos);
-      dragOffset.copy(hits[0].point).sub(wPos);
-    }
-  }, { passive: true });
-  window.addEventListener('touchmove', (e) => {
-    getPointerNDC(e.touches[0]);
+
+  window.addEventListener('touchmove', e => {
+    ptrNDC(e.touches[0]);
     if (isDragging) {
-      raycaster.setFromCamera(pointer, camera);
+      ray.setFromCamera(ptr, camera);
       const hit = new THREE.Vector3();
-      raycaster.ray.intersectPlane(dragPlane, hit);
-      dragPos.copy(hit).sub(dragOffset);
+      ray.ray.intersectPlane(dragPlane, hit);
+      dragWorldPos.copy(hit).sub(dragOffset);
     }
   }, { passive: true });
+
+  window.addEventListener('mouseup',  () => { isDragging = false; canvas.style.cursor = 'default'; });
   window.addEventListener('touchend', () => { isDragging = false; });
 
   window.addEventListener('resize', () => {
     W = container.clientWidth; H = container.clientHeight;
-    renderer.setSize(W, H); positionCamera();
-    if (useMeshLine && bandMesh.material.resolution) bandMesh.material.resolution.set(W, H);
+    renderer.setSize(W, H); setupCamera();
   });
 
-  // RENDER LOOP
+  // ── RENDER LOOP ──────────────────────────────────────────────────────────
   const clock = new THREE.Clock();
   let cardAngVelY = 0, cardRotY = 0;
 
   function animate() {
     requestAnimationFrame(animate);
-    const delta = Math.min(clock.getDelta(), 1/30);
+    const dt = Math.min(clock.getDelta(), 1/30);
 
-    // Kinematic drag — move card node directly (like setNextKinematicTranslation)
+    // Kinematic drag: move card node directly
     if (isDragging) {
-      const localDrag = rootGroup.worldToLocal(dragPos.clone());
+      const localDrag = root.worldToLocal(dragWorldPos.clone());
       nodes[4].pos.copy(localDrag);
       nodes[4].prev.copy(localDrag);
     }
 
     // Verlet integration
     for (let i = 1; i < nodes.length; i++) {
-      if (nodes[i].pinned) continue;
-      if (isDragging && i === 4) continue;
-      const n = nodes[i];
-      const vel = n.pos.clone().sub(n.prev).multiplyScalar(DAMPING);
-      vel.y += GRAVITY * delta * delta;
+      if (nodes[i].pinned || (isDragging && i === 4)) continue;
+      const n   = nodes[i];
+      const vel = n.pos.clone().sub(n.prev).multiplyScalar(DAMP);
+      vel.y += GRAV * dt * dt;
       n.prev.copy(n.pos);
       n.pos.add(vel);
     }
 
-    // Constraint relaxation (rope joint length enforcement)
+    // Constraint relaxation (40 iterations for stiffness)
     for (let iter = 0; iter < 40; iter++) {
-      nodes[0].pos.copy(FIXED_POS);
+      nodes[0].pos.copy(FIXED);
       for (let i = 0; i < nodes.length - 1; i++) {
-        if (isDragging && i+1 === 4) continue;
+        if (isDragging && i + 1 === 4) continue;
         const a = nodes[i], b = nodes[i+1];
-        const d3 = b.pos.clone().sub(a.pos);
-        const dist = d3.length();
-        if (dist < 0.0001) continue;
-        const diff = (dist - SEG_REST) / dist * 0.5;
-        const corr = d3.multiplyScalar(diff);
+        const d   = b.pos.clone().sub(a.pos);
+        const len = d.length();
+        if (len < 1e-4) continue;
+        const corr = d.multiplyScalar((len - REST) / len * 0.5);
         if (!a.pinned) a.pos.add(corr);
         b.pos.sub(corr);
       }
     }
 
-    // Lerp j1, j2 — matches clampedDistance lerp from original
+    // Lerp j1 & j2 (matches original clamped-distance lerp)
     for (let i = 1; i <= 2; i++) {
-      const cDist = Math.max(0.1, Math.min(1, lerped[i].distanceTo(nodes[i].pos)));
-      lerped[i].lerp(nodes[i].pos, delta * (MIN_SPEED + cDist * (MAX_SPEED - MIN_SPEED)));
+      const cd = Math.max(0.1, Math.min(1, lerped[i].distanceTo(nodes[i].pos)));
+      lerped[i].lerp(nodes[i].pos, dt * (MIN_SPEED + cd * (MAX_SPEED - MIN_SPEED)));
     }
 
-    // Position card
+    // Position card body
     cardBody.position.copy(nodes[4].pos);
 
-    // Billboard: card always faces camera (no flip possible)
+    // ── BILLBOARD: copy camera quaternion → card always faces viewer correctly ──
     cardBody.quaternion.copy(camera.quaternion);
 
-    // Angular damping on Y — matches: ang.y - rot.y * 0.25
+    // Gentle angular damping on Y (matches ang.y - rot.y * 0.25)
     if (!isDragging) {
-      cardAngVelY -= cardRotY * 0.25 * delta;
-      cardAngVelY *= 0.98;
-      cardRotY += cardAngVelY;
-      const swingQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, cardRotY, 0));
-      cardBody.quaternion.multiply(swingQ);
+      cardAngVelY -= cardRotY * 0.25 * dt;
+      cardAngVelY *= 0.97;
+      cardRotY    += cardAngVelY;
+      cardBody.quaternion.multiply(
+        new THREE.Quaternion().setFromEuler(new THREE.Euler(0, cardRotY, 0))
+      );
     } else {
       cardAngVelY = 0; cardRotY = 0;
     }
 
-    // Update cardBody world matrix so we can read card attachment point
+    // ── STRAP CURVE ──────────────────────────────────────────────────────
+    // Band attachment on card = local [0, CARD_H3D/2, 0] in cardVisual space
+    // = [0, 1.2 (half card), 0] in cardBody space (after scale 2.25 and offset)
+    // Spherical joint was [[0,0,0],[0,1.45,0]] in App.js (in rigid body local)
     cardBody.updateMatrixWorld(true);
+    const attachLocal = new THREE.Vector3(0, 1.45, 0); // exact from App.js joint
+    const attachWorld = root.worldToLocal(attachLocal.clone().applyMatrix4(cardBody.matrixWorld));
 
-    // Band curve points (matches App.js exactly):
-    // curve.points[0] = j3.translation()   -> nodes[3].pos  (j3 in rootGroup space)
-    // curve.points[1] = j2.lerped          -> lerped[2]
-    // curve.points[2] = j1.lerped          -> lerped[1]
-    // curve.points[3] = fixed.translation() -> FIXED_POS
-    // BUT: we also need card attachment = [0,1.45,0] on cardBody (sphericalJoint offset)
-    // Attach band end at j3 position, which equals card-attachment via constraint
-    const j3WorldPos = rootGroup.localToWorld(nodes[3].pos.clone());
-    const j2WorldPos = rootGroup.localToWorld(lerped[2].clone());
-    const j1WorldPos = rootGroup.localToWorld(lerped[1].clone());
-    const fixedWorldPos = rootGroup.localToWorld(FIXED_POS.clone());
+    // Curve: j3-attachment → j2(lerped) → j1(lerped) → fixed
+    // This matches App.js: curve.points[0]=j3, [1]=j2.lerped, [2]=j1.lerped, [3]=fixed
+    const p0 = attachWorld;              // at card attachment (joint point)
+    const p1 = lerped[2].clone();        // j2 lerped
+    const p2 = lerped[1].clone();        // j1 lerped
+    const p3 = FIXED.clone();            // fixed anchor
 
-    const curve = new THREE.CatmullRomCurve3([j3WorldPos, j2WorldPos, j1WorldPos, fixedWorldPos]);
-    curve.curveType = 'chordal'; // matches original: curve.curveType = 'chordal'
-    const pts = curve.getPoints(32);
+    // Convert to world space for the tube mesh
+    const toW = (v) => root.localToWorld(v.clone());
+    const strapCurve = new THREE.CatmullRomCurve3([toW(p0), toW(p1), toW(p2), toW(p3)]);
+    strapCurve.curveType = 'chordal'; // matches App.js: curve.curveType = 'chordal'
 
-    if (useMeshLine) {
-      const flatPts = pts.flatMap(p => [p.x, p.y, p.z]);
-      meshLineGeo.setPoints(flatPts);
-    } else {
-      const newGeo = new THREE.TubeGeometry(curve, 48, 0.06, 8, false);
-      if (bandMesh.geometry) bandMesh.geometry.dispose();
-      bandMesh.geometry = newGeo;
-    }
+    const newGeo = new THREE.TubeGeometry(strapCurve, 32, 0.055, 8, false);
+    if (strapMesh.geometry) strapMesh.geometry.dispose();
+    strapMesh.geometry = newGeo;
 
     renderer.render(scene, camera);
   }
