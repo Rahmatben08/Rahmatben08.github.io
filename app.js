@@ -409,7 +409,7 @@ function initLanyard3D() {
   // 1. Scene & Camera
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
-  camera.position.set(0, 0.2, 5.0);
+  camera.position.set(0, 0.2, 4.0);
 
   // Set camera horizontal offset to center card on the right column
   function updateCamera() {
@@ -593,7 +593,7 @@ function initLanyard3D() {
   const cardGroup = new THREE.Group();
   scene.add(cardGroup);
 
-  const cardGeo = new THREE.PlaneGeometry(2.0, 3.1);
+  const cardGeo = new THREE.PlaneGeometry(1.3, 2.0);
   
   // Use MeshBasicMaterial for a natural, unlit photo face as requested
   const frontMat = new THREE.MeshBasicMaterial({
@@ -615,7 +615,7 @@ function initLanyard3D() {
   cardGroup.add(backMesh);
 
   // Glossy plastic protective case overlay
-  const caseGeo = new THREE.BoxGeometry(2.12, 3.22, 0.04);
+  const caseGeo = new THREE.BoxGeometry(1.38, 2.08, 0.035);
   const caseMat = new THREE.MeshPhysicalMaterial({
     color: 0xffffff,
     transparent: true,
@@ -635,7 +635,7 @@ function initLanyard3D() {
     roughness: 0.15
   });
   const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-  ringMesh.position.set(0, 1.62, 0);
+  ringMesh.position.set(0, 1.05, 0);
   cardGroup.add(ringMesh);
 
   // Strap (dynamic bending 3D Tube mesh)
@@ -757,7 +757,7 @@ function initLanyard3D() {
     if (!isDragging) {
       const force = new THREE.Vector3(0, gravity * mass, 0); // Gravity
 
-      const attachPoint = pos.clone().add(new THREE.Vector3(0, 1.55, 0));
+      const attachPoint = pos.clone().add(new THREE.Vector3(0, 1.0, 0));
       const springVec = anchor.clone().sub(attachPoint);
       const dist = springVec.length();
 
@@ -771,18 +771,18 @@ function initLanyard3D() {
       vel.multiplyScalar(kDamping);
       pos.add(vel.clone().multiplyScalar(dt));
     } else {
-      const attachPoint = pos.clone().add(new THREE.Vector3(0, 1.55, 0));
+      const attachPoint = pos.clone().add(new THREE.Vector3(0, 1.0, 0));
       const dist = anchor.distanceTo(attachPoint);
       if (dist > restLength * 1.6) {
         const dir = attachPoint.clone().sub(anchor).normalize();
-        pos.copy(anchor.clone().add(dir.multiplyScalar(restLength * 1.6)).sub(new THREE.Vector3(0, 1.55, 0)));
+        pos.copy(anchor.clone().add(dir.multiplyScalar(restLength * 1.6)).sub(new THREE.Vector3(0, 1.0, 0)));
         vel.set(0, 0, 0);
       }
     }
 
     cardGroup.position.copy(pos);
 
-    const clipPos = pos.clone().add(new THREE.Vector3(0, 1.55, 0));
+    const clipPos = pos.clone().add(new THREE.Vector3(0, 1.0, 0));
     const strapVec = anchor.clone().sub(clipPos);
     const strapDir = strapVec.clone().normalize();
     const up = new THREE.Vector3(0, 1, 0);
@@ -806,7 +806,7 @@ function initLanyard3D() {
     // 9. Update Strap points dynamically (Hanging woven tube cord)
     const neckLeft = new THREE.Vector3(-1.4, 3.2, -0.6);
     const neckRight = new THREE.Vector3(1.4, 3.2, -0.6);
-    const clipAttach = pos.clone().add(new THREE.Vector3(0, 1.62, 0));
+    const clipAttach = pos.clone().add(new THREE.Vector3(0, 1.05, 0));
 
     const points = [];
     const halfCount = strapPointCount / 2;
@@ -828,7 +828,7 @@ function initLanyard3D() {
 
     const curve = new THREE.CatmullRomCurve3(points);
     if (strapMesh.geometry) strapMesh.geometry.dispose();
-    strapMesh.geometry = new THREE.TubeGeometry(curve, 32, 0.026, 8, false);
+    strapMesh.geometry = new THREE.TubeGeometry(curve, 32, 0.016, 8, false);
 
     renderer.render(scene, camera);
   }
