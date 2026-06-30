@@ -603,59 +603,62 @@ function initLanyard3D() {
   drawBadgeFace();
   drawBadgeBack();
 
-  // 5. 3D Model Construction (Card, Case, Ring, Strap)
+  // 5. 3D Model Construction: Loaded from kartu.glb
   const cardGroup = new THREE.Group();
   scene.add(cardGroup);
 
-  const cardGeo = new THREE.PlaneGeometry(1.0, 1.55);
-  
-  // Use MeshBasicMaterial for a natural, unlit photo face as requested
-  const frontMat = new THREE.MeshBasicMaterial({
-    map: frontTexture,
-    transparent: true,
-    side: THREE.DoubleSide
-  });
-  const backMat = new THREE.MeshBasicMaterial({
-    map: backTexture,
-    transparent: true,
-    side: THREE.DoubleSide
-  });
-
-  const frontMesh = new THREE.Mesh(cardGeo, frontMat);
-  const backMesh = new THREE.Mesh(cardGeo, backMat);
-  backMesh.rotation.y = Math.PI;
-  backMesh.position.z = -0.005; // tiny gap
-  cardGroup.add(frontMesh);
-  cardGroup.add(backMesh);
-
-  // Glossy plastic protective case overlay
-  const caseGeo = new THREE.BoxGeometry(1.06, 1.61, 0.03);
-  const caseMat = new THREE.MeshPhysicalMaterial({
+  // Keep a transparent physics bounding box for hover & drag interactions
+  const caseGeo = new THREE.BoxGeometry(1.6, 2.3, 0.1);
+  const caseMat = new THREE.MeshBasicMaterial({
     color: 0xffffff,
     transparent: true,
-    opacity: 0.2,
-    roughness: 0.1,
-    transmission: 0.9,
-    thickness: 0.05
+    opacity: 0.0, // completely invisible collider
+    depthWrite: false
   });
   const caseMesh = new THREE.Mesh(caseGeo, caseMat);
   cardGroup.add(caseMesh);
 
-  // Metallic ring/clip
-  const ringGeo = new THREE.TorusGeometry(0.12, 0.03, 8, 24);
-  const ringMat = new THREE.MeshStandardMaterial({
-    color: 0xe5e7eb,
-    metalness: 0.95,
-    roughness: 0.15
-  });
-  const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-  ringMesh.position.set(0, 0.8, 0);
-  cardGroup.add(ringMesh);
+  // Load GLB model (mesh names: card, clip, clamp)
+  const gltfLoader = new THREE.GLTFLoader();
+  gltfLoader.load('kartu.glb', (gltf) => {
+    gltf.scene.scale.set(2.25, 2.25, 2.25);
+    gltf.scene.position.set(0, -1.2, -0.05);
 
-  // Strap (dynamic bending 3D Tube mesh)
+    const cardMesh = gltf.scene.getObjectByName('card');
+    if (cardMesh && cardMesh.material) {
+      cardMesh.material.map = combinedTexture;
+      cardMesh.material.roughness = 0.35;
+      cardMesh.material.metalness = 0.1;
+      cardMesh.material.clearcoat = 1.0;
+      cardMesh.material.clearcoatRoughness = 0.15;
+      cardMesh.material.needsUpdate = true;
+    }
+
+    const clipMesh = gltf.scene.getObjectByName('clip');
+    if (clipMesh && clipMesh.material) {
+      clipMesh.material.metalness = 0.9;
+      clipMesh.material.roughness = 0.2;
+    }
+
+    const clampMesh = gltf.scene.getObjectByName('clamp');
+    if (clampMesh && clampMesh.material) {
+      clampMesh.material.metalness = 0.9;
+      clampMesh.material.roughness = 0.2;
+    }
+
+    cardGroup.add(gltf.scene);
+  });
+
+  // Strap (dynamic bending 3D Tube mesh with texture from downloads)
   const strapPointCount = 16;
+  const textureLoader = new THREE.TextureLoader();
+  const strapTexture = textureLoader.load('bandd.png');
+  strapTexture.wrapS = THREE.RepeatWrapping;
+  strapTexture.wrapT = THREE.RepeatWrapping;
+  strapTexture.repeat.set(16, 1); // tile along the strap length
+  
   const strapMat = new THREE.MeshStandardMaterial({
-    color: 0x7000FF, // Woven purple rope
+    map: strapTexture,
     roughness: 0.6,
     metalness: 0.1
   });
