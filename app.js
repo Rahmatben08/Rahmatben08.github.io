@@ -396,516 +396,423 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ==========================================================================
 // INTERACTIVE 3D PHYSICS LANYARD BADGE (WEBGL / THREE.JS)
+// Complete rewrite - clean, correct, no accumulated bugs
 // ==========================================================================
 function initLanyard3D() {
   const container = document.getElementById('lanyardContainer');
   const canvas = document.getElementById('lanyardCanvas3D');
   if (!container || !canvas) return;
 
-  // Fullscreen container width/height
-  let w = container.clientWidth;
-  let h = container.clientHeight;
+  // ── 1. RENDERER & SCENE ────────────────────────────────────────────────
+  let W = container.clientWidth;
+  let H = container.clientHeight;
 
-  // 1. Scene & Camera
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
-  camera.position.set(0, 0.2, 4.0);
-
-  // Set camera horizontal offset to center card on the right column
-  function updateCamera() {
-    const aspect = camera.aspect;
-    camera.position.x = -aspect * 0.52;
-  }
-  updateCamera();
-
-  // 2. WebGL Renderer
-  const renderer = new THREE.WebGLRenderer({
-    canvas: canvas,
-    alpha: true,
-    antialias: true
-  });
-  renderer.setSize(w, h);
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setSize(W, H);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.shadowMap.enabled = true;
 
-  // 3. Lighting (Strap/Clip standard shading)
-  const ambient = new THREE.AmbientLight(0xffffff, 0.85);
-  scene.add(ambient);
+  const scene = new THREE.Scene();
 
-  const mainLight = new THREE.PointLight(0xffffff, 2.0, 15);
-  mainLight.position.set(1.5, 2.5, 3.5);
-  scene.add(mainLight);
+  // ── 2. CAMERA ──────────────────────────────────────────────────────────
+  // Camera positioned so card hangs on right ~40% of screen
+  const camera = new THREE.PerspectiveCamera(35, W / H, 0.1, 100);
 
-  const fillLight = new THREE.DirectionalLight(0x6366f1, 0.7);
-  fillLight.position.set(-2, -1, 1);
+  function positionCamera() {
+    camera.aspect = W / H;
+    camera.updateProjectionMatrix();
+    // Shift camera LEFT so the right column of the screen shows the card
+    // Negative X = camera moves left = card appears on the right side
+    camera.position.set(-camera.aspect * 1.4, 0.5, 6.5);
+    camera.lookAt(camera.aspect * 0.3, -0.5, 0);
+  }
+  positionCamera();
+
+  // ── 3. LIGHTING ────────────────────────────────────────────────────────
+  scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
+  keyLight.position.set(2, 4, 3);
+  scene.add(keyLight);
+  const fillLight = new THREE.DirectionalLight(0x8888ff, 0.4);
+  fillLight.position.set(-3, -1, 2);
   scene.add(fillLight);
 
-  // 4. Create Badge Textures via HTML5 Canvas
+  // ── 4. CARD TEXTURE (Canvas 2D) ────────────────────────────────────────
+  const CARD_W = 512, CARD_H = 768;
   const badgeCanvas = document.createElement('canvas');
-  badgeCanvas.width = 512;
-  badgeCanvas.height = 1024;
+  badgeCanvas.width = CARD_W;
+  badgeCanvas.height = CARD_H;
   const ctx = badgeCanvas.getContext('2d');
 
-  const backCanvas = document.createElement('canvas');
-  backCanvas.width = 512;
-  backCanvas.height = 1024;
-  const backCtx = backCanvas.getContext('2d');
+  const cardTexture = new THREE.CanvasTexture(badgeCanvas);
 
-  // Load Profile Image
-  let profileImg = new Image();
+  const profileImg = new Image();
   profileImg.src = 'profile.jpg';
-  profileImg.onload = () => {
-    drawBadgeFace();
-  };
+  profileImg.onload = () => drawCard();
+  profileImg.onerror = () => drawCard(); // draw even if image fails
 
-  // Create a combined 1024x1024 canvas for the GLTF model UV layout (left: front, right: back)
-  const combinedCanvas = document.createElement('canvas');
-  combinedCanvas.width = 1024;
-  combinedCanvas.height = 1024;
-  const combinedCtx = combinedCanvas.getContext('2d');
-  const combinedTexture = new THREE.CanvasTexture(combinedCanvas);
-  combinedTexture.flipY = true;
-
-  const frontTexture = new THREE.CanvasTexture(badgeCanvas);
-  const backTexture = new THREE.CanvasTexture(backCanvas);
-  frontTexture.flipY = true;
-  backTexture.flipY = true;
-
-  function drawBadgeFace() {
-    // Clear & background matching theme colors
+  function drawCard() {
+    // Background
     ctx.fillStyle = '#10131b';
-    ctx.fillRect(0, 0, 512, 1024);
-
-    // Card border outline matching surface border
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-    ctx.lineWidth = 8;
-    ctx.beginPath();
-    ctx.roundRect(15, 15, 482, 994, 45);
-    ctx.stroke();
-
-    // Top Card Accent - gradient from Purple (#7000FF) to Cyan (#00D1FF)
-    const topGrad = ctx.createLinearGradient(0, 0, 512, 0);
-    topGrad.addColorStop(0, '#7000FF');
-    topGrad.addColorStop(1, '#00D1FF');
-    ctx.fillStyle = topGrad;
-    ctx.beginPath();
-    ctx.roundRect(15, 15, 482, 24, [45, 45, 0, 0]);
-    ctx.fill();
-
-    // Inner background grids
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
-    ctx.lineWidth = 2;
-    for (let i = 40; i < 984; i += 40) {
-      ctx.beginPath(); ctx.moveTo(25, i); ctx.lineTo(487, i); ctx.stroke();
-    }
-
-    // Header slot hole
-    ctx.fillStyle = '#181b23';
-    ctx.beginPath();
-    ctx.roundRect(206, 55, 100, 20, 10);
-    ctx.fill();
-
-    // Header labels (POLSRI // DEPT. MI)
-    ctx.fillStyle = '#859399';
-    ctx.font = 'bold 18px Courier New, monospace';
-    ctx.fillText('POLSRI // DEPT. MI', 50, 115);
-
-    // LED Status Dot
-    ctx.fillStyle = '#34d399';
-    ctx.beginPath(); ctx.arc(430, 110, 8, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#34d399';
-    ctx.font = 'bold 16px Courier New, monospace';
-    ctx.fillText('ONLINE', 335, 115);
-
-    // Draw Profile Picture (Natural - borderless & without lights)
-    ctx.save();
-    ctx.beginPath();
-    ctx.roundRect(96, 170, 320, 380, 25);
-    ctx.clip();
-    if (profileImg.complete) {
-      ctx.drawImage(profileImg, 96, 170, 320, 380);
-    } else {
-      ctx.fillStyle = '#181b23';
-      ctx.fillRect(96, 170, 320, 380);
-    }
-    ctx.restore();
-
-    // Border around photo slot
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.roundRect(96, 170, 320, 380, 25);
-    ctx.stroke();
-
-    // Name text: GHALI RAHMAT in Sora primary color (#a4e6ff)
-    ctx.fillStyle = '#a4e6ff';
-    ctx.font = 'bold 44px Arial, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('GHALI RAHMAT', 256, 620);
-
-    // Role line with terminal icon: ANDROID NATIVE DEV
-    ctx.fillStyle = '#bbc9cf';
-    ctx.font = 'bold 24px Courier New, monospace';
-    ctx.fillText('>_ ANDROID NATIVE DEV', 256, 680);
-
-    // Bottom info area
-    ctx.textAlign = 'left';
-    ctx.fillStyle = '#bbc9cf';
-    // Draw barcode decoration matching user's design
-    const startX = 50;
-    const barcodeY = 780;
-    const barcodeH = 65;
-    const widths = [12, 5, 12, 24, 5, 12, 35, 12, 5];
-    let currentX = startX;
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-    widths.forEach(w => {
-      ctx.fillRect(currentX, barcodeY, w, barcodeH);
-      currentX += w + 10;
-    });
-
-    ctx.fillStyle = '#bbc9cf';
-    ctx.font = 'bold 18px Courier New, monospace';
-    ctx.textAlign = 'right';
-    ctx.fillText('DEV-ID: 0x8F92', 462, 890);
-
-    // Copy to combined texture
-    combinedCtx.drawImage(badgeCanvas, 0, 0);
-    combinedTexture.needsUpdate = true;
-  }
-
-  function drawBadgeBack() {
-    backCtx.fillStyle = '#10131b';
-    backCtx.fillRect(0, 0, 512, 1024);
+    ctx.fillRect(0, 0, CARD_W, CARD_H);
 
     // Border
-    backCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-    backCtx.lineWidth = 14;
-    backCtx.beginPath();
-    backCtx.roundRect(15, 15, 482, 994, 45);
-    backCtx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.roundRect(10, 10, CARD_W - 20, CARD_H - 20, 36);
+    ctx.stroke();
 
-    // Large glowing logo G
-    backCtx.fillStyle = '#7000ff';
-    backCtx.font = 'bold 320px Arial, sans-serif';
-    backCtx.textAlign = 'center';
-    backCtx.fillText('G', 256, 570);
-    
-    // Subtitle
-    backCtx.fillStyle = '#00d1ff';
-    backCtx.font = 'bold 24px Courier New, monospace';
-    backCtx.fillText('GHALI RAHMAT', 256, 680);
+    // Top gradient accent bar
+    const grad = ctx.createLinearGradient(0, 0, CARD_W, 0);
+    grad.addColorStop(0, '#7000FF');
+    grad.addColorStop(1, '#00D1FF');
+    ctx.fillStyle = grad;
+    ctx.fillRect(10, 10, CARD_W - 20, 18);
 
-    // Copy to combined texture
-    combinedCtx.drawImage(backCanvas, 512, 0);
-    combinedTexture.needsUpdate = true;
+    // Header text
+    ctx.fillStyle = '#8a9bac';
+    ctx.font = 'bold 15px "Courier New", monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('POLSRI // DEPT. MI', 38, 76);
+
+    // Online dot
+    ctx.fillStyle = '#34d399';
+    ctx.beginPath();
+    ctx.arc(CARD_W - 50, 71, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#34d399';
+    ctx.font = 'bold 13px "Courier New", monospace';
+    ctx.fillText('ONLINE', CARD_W - 106, 76);
+
+    // Slot hole
+    ctx.fillStyle = '#1a1e28';
+    ctx.beginPath();
+    ctx.roundRect(CARD_W / 2 - 46, 38, 92, 16, 8);
+    ctx.fill();
+
+    // Profile photo
+    const px = 96, py = 120, pw = CARD_W - 192, ph = 290;
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(px, py, pw, ph, 18);
+    ctx.clip();
+    if (profileImg.complete && profileImg.naturalWidth > 0) {
+      ctx.drawImage(profileImg, px, py, pw, ph);
+    } else {
+      ctx.fillStyle = '#1e2433';
+      ctx.fillRect(px, py, pw, ph);
+    }
+    ctx.restore();
+    // Photo border
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(px, py, pw, ph, 18);
+    ctx.stroke();
+
+    // Name
+    ctx.fillStyle = '#a4e6ff';
+    ctx.font = 'bold 32px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('GHALI RAHMAT', CARD_W / 2, 462);
+
+    // Role
+    ctx.fillStyle = '#bbc9cf';
+    ctx.font = 'bold 17px "Courier New", monospace';
+    ctx.fillText('>_ ANDROID NATIVE DEV', CARD_W / 2, 502);
+
+    // Barcode lines
+    const bx = 45, by = 588, bh = 52;
+    const bars = [10, 4, 14, 6, 22, 4, 8, 30, 6, 10, 4, 18];
+    let cx2 = bx;
+    bars.forEach((bw, i) => {
+      ctx.fillStyle = i % 2 === 0 ? 'rgba(255,255,255,0.35)' : 'transparent';
+      if (i % 2 === 0) ctx.fillRect(cx2, by, bw, bh);
+      cx2 += bw + 3;
+    });
+
+    // Dev ID
+    ctx.fillStyle = '#7a8a96';
+    ctx.font = 'bold 13px "Courier New", monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('DEV-ID: 0x8F92', CARD_W - 38, 660);
+
+    cardTexture.needsUpdate = true;
   }
 
-  drawBadgeFace();
-  drawBadgeBack();
+  // draw empty card immediately
+  drawCard();
 
-  // 5. 3D Model Construction: Loaded from kartu.glb
+  // ── 5. 3D CARD MESH ────────────────────────────────────────────────────
   const cardGroup = new THREE.Group();
   scene.add(cardGroup);
 
-  // Keep a transparent physics bounding box for hover & drag interactions
-  const caseGeo = new THREE.BoxGeometry(1.6, 2.3, 0.1);
-  const caseMat = new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.0, // completely invisible collider
-    depthWrite: false
-  });
-  const caseMesh = new THREE.Mesh(caseGeo, caseMat);
-  cardGroup.add(caseMesh);
+  // Front face — card texture
+  const cardGeo = new THREE.PlaneGeometry(1.75, 2.6);
+  const frontMat = new THREE.MeshBasicMaterial({ map: cardTexture, side: THREE.FrontSide });
+  const frontMesh = new THREE.Mesh(cardGeo, frontMat);
+  cardGroup.add(frontMesh);
 
-  // Load GLB model (mesh names: card, clip, clamp)
-  const gltfLoader = new THREE.GLTFLoader();
-  gltfLoader.load('kartu.glb', (gltf) => {
-    gltf.scene.scale.set(2.25, 2.25, 2.25);
-    gltf.scene.position.set(0, -1.2, -0.05);
+  // Back face — dark with logo G
+  const backCanvas = document.createElement('canvas');
+  backCanvas.width = CARD_W; backCanvas.height = CARD_H;
+  const bCtx = backCanvas.getContext('2d');
+  bCtx.fillStyle = '#10131b';
+  bCtx.fillRect(0, 0, CARD_W, CARD_H);
+  bCtx.strokeStyle = 'rgba(255,255,255,0.1)';
+  bCtx.lineWidth = 6;
+  bCtx.beginPath();
+  bCtx.roundRect(10, 10, CARD_W - 20, CARD_H - 20, 36);
+  bCtx.stroke();
+  bCtx.fillStyle = '#7000ff';
+  bCtx.font = 'bold 280px Arial, sans-serif';
+  bCtx.textAlign = 'center';
+  bCtx.fillText('G', CARD_W / 2, 520);
+  bCtx.fillStyle = '#00d1ff';
+  bCtx.font = 'bold 22px "Courier New", monospace';
+  bCtx.fillText('GHALI RAHMAT', CARD_W / 2, 620);
+  const backTex = new THREE.CanvasTexture(backCanvas);
+  const backMesh = new THREE.Mesh(cardGeo, new THREE.MeshBasicMaterial({ map: backTex, side: THREE.FrontSide }));
+  backMesh.rotation.y = Math.PI;
+  cardGroup.add(backMesh);
 
-    const cardMesh = gltf.scene.getObjectByName('card');
-    if (cardMesh && cardMesh.material) {
-      cardMesh.material.map = combinedTexture;
-      cardMesh.material.roughness = 0.35;
-      cardMesh.material.metalness = 0.1;
-      cardMesh.material.clearcoat = 1.0;
-      cardMesh.material.clearcoatRoughness = 0.15;
-      cardMesh.material.needsUpdate = true;
-    }
+  // Invisible bounding box for hit-testing / drag
+  const hitGeo = new THREE.BoxGeometry(1.75, 2.6, 0.05);
+  const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+  const hitMesh = new THREE.Mesh(hitGeo, hitMat);
+  cardGroup.add(hitMesh);
 
-    const clipMesh = gltf.scene.getObjectByName('clip');
-    if (clipMesh && clipMesh.material) {
-      clipMesh.material.metalness = 0.9;
-      clipMesh.material.roughness = 0.2;
-    }
+  // Metallic clip ring at top of card
+  const ringGeo = new THREE.TorusGeometry(0.1, 0.025, 8, 24);
+  const ringMat = new THREE.MeshStandardMaterial({ color: 0xe0e0e0, metalness: 0.95, roughness: 0.15 });
+  const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+  ringMesh.position.set(0, 1.35, 0); // top edge of 2.6-tall card = 1.3
+  cardGroup.add(ringMesh);
 
-    const clampMesh = gltf.scene.getObjectByName('clamp');
-    if (clampMesh && clampMesh.material) {
-      clampMesh.material.metalness = 0.9;
-      clampMesh.material.roughness = 0.2;
-    }
+  // GLB model (optional enhancement — loads on top if available)
+  if (typeof THREE.GLTFLoader !== 'undefined') {
+    const loader = new THREE.GLTFLoader();
+    loader.load('kartu.glb', (gltf) => {
+      // Hide our flat meshes and use the GLB instead
+      frontMesh.visible = false;
+      backMesh.visible = false;
+      ringMesh.visible = false;
 
-    cardGroup.add(gltf.scene);
-  });
+      gltf.scene.scale.set(2.25, 2.25, 2.25);
+      gltf.scene.position.set(0, -1.2, -0.05);
+      gltf.scene.rotation.y = 0; // ensure not rotated
 
-  // Strap (dynamic bending 3D Tube mesh with texture from downloads)
-  const strapPointCount = 16;
-  const textureLoader = new THREE.TextureLoader();
-  const strapTexture = textureLoader.load('bandd.png');
-  strapTexture.wrapS = THREE.RepeatWrapping;
-  strapTexture.wrapT = THREE.RepeatWrapping;
-  strapTexture.repeat.set(16, 1); // tile along the strap length
-  
-  const strapMat = new THREE.MeshStandardMaterial({
-    map: strapTexture,
-    roughness: 0.6,
-    metalness: 0.1
-  });
-  let strapMesh = new THREE.Mesh(new THREE.BufferGeometry(), strapMat);
-  scene.add(strapMesh);
-
-  // 6. Physics State variables (Verlet Multi-Segment Rope Chain)
-  const anchor = new THREE.Vector3(0, 2.3, 0);
-  const segmentCount = 6;
-  const segmentLength = 0.32; // Total length ~1.92
-  const ropePoints = [];
-
-  for (let i = 0; i < segmentCount; i++) {
-    ropePoints.push({
-      pos: new THREE.Vector3(0, anchor.y - i * segmentLength, 0),
-      prevPos: new THREE.Vector3(0, anchor.y - i * segmentLength, 0),
-      isFixed: i === 0
+      const cardNode = gltf.scene.getObjectByName('card');
+      if (cardNode && cardNode.material) {
+        cardNode.material.map = cardTexture;
+        cardNode.material.roughness = 0.3;
+        cardNode.material.metalness = 0.1;
+        cardNode.material.needsUpdate = true;
+      }
+      cardGroup.add(gltf.scene);
+    }, undefined, () => {
+      // GLB load failed — keep flat meshes visible
     });
   }
 
-  // Set card position reference to the last rope point
-  let pos = ropePoints[segmentCount - 1].pos;
-  let rot = new THREE.Vector3(0, 0, 0);
+  // ── 6. STRAP MESH ──────────────────────────────────────────────────────
+  const textureLoader = new THREE.TextureLoader();
+  const strapTex = textureLoader.load('bandd.png', (t) => {
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(12, 1);
+  });
+  const strapMat = new THREE.MeshStandardMaterial({ map: strapTex, roughness: 0.7, metalness: 0.05 });
+  let strapMesh = new THREE.Mesh(new THREE.BufferGeometry(), strapMat);
+  scene.add(strapMesh);
 
-  // 7. Raycasting & Mouse drag state (at window level for fullscreen overlay logic)
+  // ── 7. VERLET ROPE PHYSICS ─────────────────────────────────────────────
+  // Anchor point at top of scene (where strap meets neck)
+  const ANCHOR = new THREE.Vector3(0, 3.2, 0);
+  const SEG = 5;           // number of rope segments
+  const SEG_LEN = 0.52;    // rest length per segment
+
+  // Initialize chain nodes hanging straight down
+  const nodes = Array.from({ length: SEG + 1 }, (_, i) => ({
+    pos: new THREE.Vector3(ANCHOR.x, ANCHOR.y - i * SEG_LEN, ANCHOR.z),
+    prev: new THREE.Vector3(ANCHOR.x, ANCHOR.y - i * SEG_LEN, ANCHOR.z),
+    pinned: i === 0
+  }));
+
+  // ── 8. DRAG INTERACTION ────────────────────────────────────────────────
   const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2();
-  let isDragging = false;
-  let prevMousePos = new THREE.Vector3();
+  const mouse2d = new THREE.Vector2();
   const dragPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-  const draggedPos = new THREE.Vector3();
+  let isDragging = false;
+  let dragTarget = new THREE.Vector3(); // where we want the card to go
 
-  function onMouseDown(e) {
+  function getMouseNDC(e) {
     const rect = canvas.getBoundingClientRect();
-    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    mouse2d.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse2d.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  }
 
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects([caseMesh]);
-
-    if (intersects.length > 0) {
+  function onPointerDown(e) {
+    const pt = e.touches ? e.touches[0] : e;
+    getMouseNDC(pt);
+    raycaster.setFromCamera(mouse2d, camera);
+    if (raycaster.intersectObject(hitMesh, false).length > 0) {
       isDragging = true;
       canvas.style.cursor = 'grabbing';
-      
-      const intersection = new THREE.Vector3();
-      raycaster.ray.intersectPlane(dragPlane, intersection);
-      prevMousePos.copy(intersection);
-      draggedPos.copy(pos); // start dragging from current card pos
+      const hit = new THREE.Vector3();
+      raycaster.ray.intersectPlane(dragPlane, hit);
+      dragTarget.copy(hit);
     }
   }
 
-  function onMouseMove(e) {
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  function onPointerMove(e) {
+    const pt = e.touches ? e.touches[0] : e;
+    // NDC for hover test uses full window coords
+    mouse2d.x = (pt.clientX / window.innerWidth) * 2 - 1;
+    mouse2d.y = -(pt.clientY / window.innerHeight) * 2 + 1;
 
     if (!isDragging) {
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObjects([caseMesh]);
-      
-      if (intersects.length > 0) {
-        canvas.style.cursor = 'grab';
-        canvas.style.pointerEvents = 'auto';
-      } else {
-        canvas.style.cursor = 'default';
-        canvas.style.pointerEvents = 'none';
-      }
-    }
-
-    if (isDragging) {
-      raycaster.setFromCamera(mouse, camera);
-      const currentMousePos = new THREE.Vector3();
-      raycaster.ray.intersectPlane(dragPlane, currentMousePos);
-
-      const delta = currentMousePos.clone().sub(prevMousePos);
-      draggedPos.add(delta);
-      
-      prevMousePos.copy(currentMousePos);
+      raycaster.setFromCamera(mouse2d, camera);
+      const hits = raycaster.intersectObject(hitMesh, false);
+      canvas.style.cursor = hits.length > 0 ? 'grab' : 'default';
+      canvas.style.pointerEvents = hits.length > 0 ? 'auto' : 'none';
+    } else {
+      getMouseNDC(pt);
+      raycaster.setFromCamera(mouse2d, camera);
+      const hit = new THREE.Vector3();
+      raycaster.ray.intersectPlane(dragPlane, hit);
+      dragTarget.copy(hit);
     }
   }
 
-  function onMouseUp() {
-    if (isDragging) {
-      isDragging = false;
-      canvas.style.cursor = 'grab';
-    }
+  function onPointerUp() {
+    isDragging = false;
+    canvas.style.cursor = 'grab';
   }
 
-  window.addEventListener('mousedown', onMouseDown);
-  window.addEventListener('mousemove', onMouseMove);
-  window.addEventListener('mouseup', onMouseUp);
+  window.addEventListener('mousedown', onPointerDown);
+  window.addEventListener('mousemove', onPointerMove);
+  window.addEventListener('mouseup', onPointerUp);
+  window.addEventListener('touchstart', e => onPointerDown(e), { passive: true });
+  window.addEventListener('touchmove', e => onPointerMove(e), { passive: true });
+  window.addEventListener('touchend', onPointerUp);
 
-  // Touch support
-  window.addEventListener('touchstart', (e) => { if (e.touches[0]) onMouseDown(e.touches[0]); });
-  window.addEventListener('touchmove', (e) => { if (e.touches[0]) onMouseMove(e.touches[0]); });
-  window.addEventListener('touchend', onMouseUp);
-
-  // Resize handler
   window.addEventListener('resize', () => {
-    w = container.clientWidth;
-    h = container.clientHeight;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    updateCamera();
-    renderer.setSize(w, h);
+    W = container.clientWidth;
+    H = container.clientHeight;
+    renderer.setSize(W, H);
+    positionCamera();
   });
 
-  // 8. Simulation & Render Loop
+  // ── 9. RENDER LOOP ─────────────────────────────────────────────────────
   const clock = new THREE.Clock();
+  // Small Euler angles for wobble (non-accumulating)
+  let wobbleX = 0, wobbleZ = 0;
 
   function animate() {
     requestAnimationFrame(animate);
+    const dt = Math.min(clock.getDelta(), 0.033);
+    const t = clock.getElapsedTime();
 
-    const dt = Math.min(clock.getDelta(), 0.02); // cap dt to prevent physics explosion
+    // -- Verlet integration --
+    const GRAVITY = new THREE.Vector3(0, -28, 0);
+    const DAMPING = 0.90;
 
-    // --- Verlet Physics Simulation ---
-    const gravity = new THREE.Vector3(0, -35.0, 0); // strong responsive gravity
-    const damping = 0.94; // air drag damping
+    for (let i = 1; i < nodes.length; i++) {
+      const n = nodes[i];
+      const vel = n.pos.clone().sub(n.prev).multiplyScalar(DAMPING);
+      const isCard = (i === nodes.length - 1);
 
-    // A. Integrate positions
-    for (let i = 1; i < segmentCount; i++) {
-      const p = ropePoints[i];
-      if (isDragging && i === segmentCount - 1) continue; // dragging controls position directly
-
-      const temp = p.pos.clone();
-      
-      // Calculate velocity
-      const vel = p.pos.clone().sub(p.prevPos).multiplyScalar(damping);
-      
-      // Card is heavier, apply more gravity weight to last segment
-      const gForce = gravity.clone();
-      if (i === segmentCount - 1) {
-        gForce.multiplyScalar(2.0); // card weight
+      // If dragging, steer card node toward dragTarget
+      if (isDragging && isCard) {
+        const toTarget = dragTarget.clone().sub(n.pos).multiplyScalar(18 * dt);
+        vel.add(toTarget);
+      } else {
+        vel.add(GRAVITY.clone().multiplyScalar(dt * dt));
       }
-      
-      p.pos.add(vel).add(gForce.multiplyScalar(dt * dt));
-      p.prevPos.copy(temp);
+      n.prev.copy(n.pos);
+      n.pos.add(vel);
     }
 
-    // B. If dragging, lock last point directly to drag coordinates
-    if (isDragging) {
-      ropePoints[segmentCount - 1].pos.copy(draggedPos);
-    }
+    // -- Constraint relaxation --
+    for (let iter = 0; iter < 10; iter++) {
+      nodes[0].pos.copy(ANCHOR); // anchor always fixed
 
-    // C. Resolve constraints (Rope segments distance solver)
-    for (let iter = 0; iter < 12; iter++) {
-      // Anchor remains fixed
-      ropePoints[0].pos.copy(anchor);
-
-      for (let i = 0; i < segmentCount - 1; i++) {
-        const pA = ropePoints[i];
-        const pB = ropePoints[i + 1];
-
-        const delta = pB.pos.clone().sub(pA.pos);
+      for (let i = 0; i < nodes.length - 1; i++) {
+        const a = nodes[i], b = nodes[i + 1];
+        const delta = b.pos.clone().sub(a.pos);
         const dist = delta.length();
-        if (dist === 0) continue;
-
-        const diff = segmentLength - dist;
-        const percent = (diff / dist) * 0.5;
-        const offset = delta.multiplyScalar(percent);
-
-        if (!pA.isFixed) pA.pos.sub(offset);
-        if (!(isDragging && i + 1 === segmentCount - 1)) {
-          pB.pos.add(offset);
-        }
+        if (dist < 0.0001) continue;
+        const correction = delta.multiplyScalar((dist - SEG_LEN) / dist * 0.5);
+        if (!a.pinned) a.pos.add(correction);
+        if (!(isDragging && i + 1 === nodes.length - 1)) b.pos.sub(correction);
       }
     }
 
-    // Apply Position to Mesh (Card center is at pos)
-    cardGroup.position.copy(pos);
+    // -- Position card mesh at last node --
+    const cardPos = nodes[nodes.length - 1].pos;
+    cardGroup.position.copy(cardPos);
 
-    // 5. Responsive scaling based on window width
-    let scale = 1.0;
-    if (window.innerWidth < 768) {
-      scale = 0.62;
-    } else if (window.innerWidth < 1024) {
-      scale = 0.70;
-    } else if (window.innerWidth < 1280) {
-      scale = 0.85;
-    }
-    cardGroup.scale.set(scale, scale, scale);
+    // -- Card orientation: always faces camera (Z-forward), Y-up --
+    // The card hangs from the last rope segment
+    // We want: local +Y points UPWARD (toward where the strap connects)
+    //          local +Z points TOWARD camera
+    const cardTop = new THREE.Vector3(0, 1.35, 0).applyMatrix4(cardGroup.matrixWorld);
 
-    // Calculate rotation basis:
-    // A. Local Y-axis aligns with the last segment direction
-    const attachPoint = pos.clone().add(new THREE.Vector3(0, 1.45, 0)); // top clip
-    const prevRopePoint = ropePoints[segmentCount - 2].pos;
-    const strapVec = prevRopePoint.clone().sub(attachPoint);
-    const vY = strapVec.clone().normalize().multiplyScalar(-1);
-    
-    // B. Local Z-axis faces the camera (pointing towards Z=1). 
-    // We cross vY with camera direction (0, 0, 1) to get local X-axis.
-    const vX = new THREE.Vector3().crossVectors(vY, new THREE.Vector3(0, 0, 1)).normalize();
-    
-    // C. Re-calculate orthogonal Z-axis (forward) to complete right-handed coordinate system
-    const vZ = new THREE.Vector3().crossVectors(vX, vY).normalize();
-    
-    // D. Construct matrix and set quaternion (keeps card facing camera forward at all times!)
-    const basisMat = new THREE.Matrix4().makeBasis(vX, vY, vZ);
-    const quat = new THREE.Quaternion().setFromRotationMatrix(basisMat);
+    // Direction FROM card center TO the rope node above it
+    const secondToLast = nodes[nodes.length - 2].pos;
+    const upDir = secondToLast.clone().sub(cardPos).normalize();
 
-    // Apply physics wobble/twist without accumulation
+    // Construct orthonormal basis: keep card facing camera
+    // rightDir = upDir × cameraForward (cross gives rightward in screen space)
+    const camFwd = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+    let rightDir = new THREE.Vector3().crossVectors(upDir, camFwd);
+    if (rightDir.lengthSq() < 0.001) rightDir.set(1, 0, 0);
+    rightDir.normalize();
+    const fwdDir = new THREE.Vector3().crossVectors(rightDir, upDir).normalize();
+
+    const rotMat = new THREE.Matrix4().makeBasis(rightDir, upDir, fwdDir);
+    cardGroup.quaternion.setFromRotationMatrix(rotMat);
+
+    // -- Small physical wobble (velocity-derived, not accumulating) --
     if (!isDragging) {
-      const cardVel = ropePoints[segmentCount - 1].pos.clone().sub(ropePoints[segmentCount - 1].prevPos).multiplyScalar(60.0);
-      const targetRotX = cardVel.z * -0.05;
-      const targetRotZ = cardVel.x * -0.05;
-      const targetRotY = cardVel.x * 0.08;
+      const cardVel = cardPos.clone().sub(nodes[nodes.length - 1].prev);
+      const targetWobbleX = cardVel.z * -0.35;
+      const targetWobbleZ = cardVel.x * -0.35;
+      wobbleX += (targetWobbleX - wobbleX) * 0.12;
+      wobbleZ += (targetWobbleZ - wobbleZ) * 0.12;
 
-      rot.x += (targetRotX - rot.x) * 0.15;
-      rot.z += (targetRotZ - rot.z) * 0.15;
-      rot.y += (targetRotY - rot.y) * 0.1;
-    } else {
-      rot.set(0, 0, 0);
+      const wobbleQuat = new THREE.Quaternion().setFromEuler(
+        new THREE.Euler(wobbleX, Math.sin(t * 0.8) * 0.04, wobbleZ)
+      );
+      cardGroup.quaternion.multiply(wobbleQuat);
     }
 
-    const wobbleQuat = new THREE.Quaternion().setFromEuler(
-      new THREE.Euler(rot.x, rot.y + Math.sin(clock.getElapsedTime() * 1.5) * 0.05, rot.z)
-    );
-    cardGroup.quaternion.copy(quat).multiply(wobbleQuat);
+    // -- Responsive card scale --
+    const scl = W < 768 ? 0.60 : W < 1024 ? 0.75 : W < 1440 ? 0.88 : 1.0;
+    cardGroup.scale.setScalar(scl);
 
-    // 9. Update Strap points dynamically (Woven neck loop following rope segments)
-    const neckLeft = new THREE.Vector3(-1.4, 3.2, -0.6);
-    const neckRight = new THREE.Vector3(1.4, 3.2, -0.6);
-    
-    // Update card world matrix to calculate exact attachment point in 3D world space
-    cardGroup.updateMatrixWorld(true);
-    const clipAttach = new THREE.Vector3(0, 1.45, 0).applyMatrix4(cardGroup.matrixWorld);
+    // -- Update strap geometry --
+    const clipWorld = new THREE.Vector3(0, 1.35, 0).applyMatrix4(cardGroup.matrixWorld);
 
-    const points = [];
-    
-    // We map a smooth curve: neckLeft -> rope segment points -> clipAttach -> rope segment points -> neckRight
-    points.push(neckLeft);
-    
-    // Smooth transition points following rope segment 1 & 2
-    points.push(new THREE.Vector3().copy(ropePoints[1].pos).add(new THREE.Vector3(-0.35, 0, -0.15)));
-    points.push(new THREE.Vector3().copy(ropePoints[2].pos).add(new THREE.Vector3(-0.15, 0, -0.05)));
-    points.push(new THREE.Vector3().copy(ropePoints[3].pos).add(new THREE.Vector3(-0.05, 0, 0)));
-    
-    points.push(clipAttach);
-    
-    points.push(new THREE.Vector3().copy(ropePoints[3].pos).add(new THREE.Vector3(0.05, 0, 0)));
-    points.push(new THREE.Vector3().copy(ropePoints[2].pos).add(new THREE.Vector3(0.15, 0, -0.05)));
-    points.push(new THREE.Vector3().copy(ropePoints[1].pos).add(new THREE.Vector3(0.35, 0, -0.15)));
-    
-    points.push(neckRight);
+    // Build smooth V-shaped loop: left anchor → nodes → clip → nodes → right anchor
+    const leftAnchor = new THREE.Vector3(-1.5, 3.4, -0.5);
+    const rightAnchor = new THREE.Vector3(1.5, 3.4, -0.5);
 
-    const curve = new THREE.CatmullRomCurve3(points);
+    const strapPts = [];
+    strapPts.push(leftAnchor);
+    for (let i = 1; i < nodes.length; i++) {
+      strapPts.push(nodes[i].pos.clone().add(new THREE.Vector3(-0.04 * (nodes.length - 1 - i), 0, 0)));
+    }
+    strapPts.push(clipWorld);
+    for (let i = nodes.length - 2; i >= 1; i--) {
+      strapPts.push(nodes[i].pos.clone().add(new THREE.Vector3(0.04 * (nodes.length - 1 - i), 0, 0)));
+    }
+    strapPts.push(rightAnchor);
+
+    const curve = new THREE.CatmullRomCurve3(strapPts);
+    const newGeo = new THREE.TubeGeometry(curve, 48, 0.014, 8, false);
     if (strapMesh.geometry) strapMesh.geometry.dispose();
-    strapMesh.geometry = new THREE.TubeGeometry(curve, 32, 0.016, 8, false);
+    strapMesh.geometry = newGeo;
 
     renderer.render(scene, camera);
   }
