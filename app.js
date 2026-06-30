@@ -414,7 +414,7 @@ function initLanyard3D() {
   // Set camera horizontal offset to center card on the right column
   function updateCamera() {
     const aspect = camera.aspect;
-    camera.position.x = -aspect * 0.75;
+    camera.position.x = -aspect * 0.52;
   }
   updateCamera();
 
@@ -814,32 +814,53 @@ function initLanyard3D() {
     // Apply Position to Mesh (Card center is at pos)
     cardGroup.position.copy(pos);
 
-    // Calculate rotation: Y-axis aligns with the last segment direction
+    // 5. Responsive scaling based on window width
+    let scale = 1.0;
+    if (window.innerWidth < 768) {
+      scale = 0.62;
+    } else if (window.innerWidth < 1024) {
+      scale = 0.70;
+    } else if (window.innerWidth < 1280) {
+      scale = 0.85;
+    }
+    cardGroup.scale.set(scale, scale, scale);
+
+    // Calculate rotation basis:
+    // A. Local Y-axis aligns with the last segment direction
     const attachPoint = pos.clone().add(new THREE.Vector3(0, 0.8, 0)); // top clip
     const prevRopePoint = ropePoints[segmentCount - 2].pos;
     const strapVec = prevRopePoint.clone().sub(attachPoint);
-    const strapDir = strapVec.clone().normalize();
+    const vY = strapVec.clone().normalize();
     
-    const up = new THREE.Vector3(0, 1, 0);
-    const quat = new THREE.Quaternion().setFromUnitVectors(up, strapDir);
-    cardGroup.quaternion.copy(quat);
+    // B. Local Z-axis faces the camera (pointing towards Z=1). 
+    // We cross vY with camera direction (0, 0, 1) to get local X-axis.
+    const vX = new THREE.Vector3().crossVectors(vY, new THREE.Vector3(0, 0, 1)).normalize();
+    
+    // C. Re-calculate orthogonal Z-axis (forward) to complete right-handed coordinate system
+    const vZ = new THREE.Vector3().crossVectors(vX, vY).normalize();
+    
+    // D. Construct matrix and set quaternion (keeps card facing camera forward at all times!)
+    const basisMat = new THREE.Matrix4().makeBasis(vX, vY, vZ);
+    const quat = new THREE.Quaternion().setFromRotationMatrix(basisMat);
 
-    // Damped restoring torque for Z and X swing wobble
+    // Apply physics wobble/twist without accumulation
     if (!isDragging) {
       const cardVel = ropePoints[segmentCount - 1].pos.clone().sub(ropePoints[segmentCount - 1].prevPos).multiplyScalar(60.0);
-      const targetRotX = cardVel.z * -0.04;
-      const targetRotZ = cardVel.x * -0.04;
-      const targetRotY = cardVel.x * 0.06;
+      const targetRotX = cardVel.z * -0.05;
+      const targetRotZ = cardVel.x * -0.05;
+      const targetRotY = cardVel.x * 0.08;
 
       rot.x += (targetRotX - rot.x) * 0.15;
-      rot.y += (targetRotY - rot.y) * 0.15;
-      cardGroup.rotateX(rot.x);
-      cardGroup.rotateZ(rot.z);
-      cardGroup.rotateY(rot.y + Math.sin(clock.getElapsedTime() * 1.5) * 0.05); // natural twist
+      rot.z += (targetRotZ - rot.z) * 0.15;
+      rot.y += (targetRotY - rot.y) * 0.1;
     } else {
-      // reset rotation slowly when dragging
       rot.set(0, 0, 0);
     }
+
+    const wobbleQuat = new THREE.Quaternion().setFromEuler(
+      new THREE.Euler(rot.x, rot.y + Math.sin(clock.getElapsedTime() * 1.5) * 0.05, rot.z)
+    );
+    cardGroup.quaternion.copy(quat).multiply(wobbleQuat);
 
     // 9. Update Strap points dynamically (Woven neck loop following rope segments)
     const neckLeft = new THREE.Vector3(-1.4, 3.2, -0.6);
