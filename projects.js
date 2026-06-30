@@ -1,6 +1,7 @@
 const projectsData = [
   {
     id: "spk-konseling-pkbi",
+    githubUrl: "https://github.com/Rahmatben08/spk-konseling-pkbi",
     title: "Sistem Pendukung Keputusan (SPK) Konseling PKBI Sumatera Selatan",
     role: "Web Developer",
     category: "web",
@@ -20,6 +21,7 @@ const projectsData = [
   },
   {
     id: "website-mi-polsri",
+    githubUrl: "https://github.com/Rahmatben08/website-mi-polsri",
     title: "Website Jurusan Manajemen Informatika POLSRI",
     role: "Web Developer",
     category: "web",
@@ -39,6 +41,7 @@ const projectsData = [
   },
   {
     id: "pos-kopi-miring",
+    githubUrl: "https://github.com/Rahmatben08/pos-kopi-miring",
     title: "Sistem B2B Inventory & POS 'Kopi Miring'",
     role: "Full-Stack Developer",
     category: "web",
@@ -57,6 +60,7 @@ const projectsData = [
   },
   {
     id: "figma-kopi-miring",
+    githubUrl: "https://github.com/Rahmatben08/figma-kopi-miring",
     title: "Interactive UI & Prototype - Sistem B2B Kopi Miring",
     role: "Interactive UI & Prototype Engineer",
     category: "design",
@@ -74,6 +78,7 @@ const projectsData = [
   },
   {
     id: "cbt-trakindo",
+    githubUrl: "https://github.com/Rahmatben08/cbt-trakindo",
     title: "Aplikasi Web Manajemen Inventaris & Pelacakan Transaksi Suku Cadang PT Trakindo Utama Palembang",
     role: "Web Developer",
     category: "web",
@@ -93,6 +98,7 @@ const projectsData = [
   },
   {
     id: "mobile-bimbingan-skripsi",
+    githubUrl: "https://github.com/Rahmatben08/mobile-bimbingan-skripsi",
     title: "Aplikasi Bimbingan Akademik & Pendaftaran Sidang Skripsi",
     role: "Android Developer",
     category: "mobile",
@@ -111,6 +117,7 @@ const projectsData = [
   },
   {
     id: "mobile-jadwal-kuliah",
+    githubUrl: "https://github.com/Rahmatben08/mobile-jadwal-kuliah",
     title: "Aplikasi Penjadwalan Kuliah Interaktif",
     role: "Android Developer",
     category: "mobile",
@@ -128,6 +135,7 @@ const projectsData = [
   },
   {
     id: "mobile-bioguard",
+    githubUrl: "https://github.com/Rahmatben08/mobile-bioguard",
     title: "BIO-GUARD: Aplikasi IoT & Pelacakan Rantai Dingin (Mobile PKM-KC)",
     role: "Ketua Tim & Pengembang Full-Stack (Mobile)",
     category: "mobile",
@@ -145,6 +153,7 @@ const projectsData = [
   },
   {
     id: "web-bioguard",
+    githubUrl: "https://github.com/Rahmatben08/web-bioguard",
     title: "BIO-GUARD: Dashboard Pemantauan Suhu Rantai Dingin (Web PKM-KC)",
     role: "Ketua Tim & Pengembang Full-Stack (Web)",
     category: "web",
@@ -162,6 +171,7 @@ const projectsData = [
   },
   {
     id: "ml-bioguard",
+    githubUrl: "https://github.com/Rahmatben08/ml-bioguard",
     title: "BIO-GUARD: Model Machine Learning Prediksi Kerusakan Produk (PKM-KC)",
     role: "AI / Machine Learning Engineer",
     category: "web",

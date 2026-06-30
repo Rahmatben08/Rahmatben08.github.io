@@ -114,7 +114,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <!-- Custom Style Fallback -->
-    <link rel="stylesheet" href="style.css?v=1.0.5">
+    <link rel="stylesheet" href="style.css?v=1.0.6">
 </head>
 <body class="font-body-md text-on-surface overflow-x-hidden relative">
 
@@ -501,7 +501,13 @@
             <div class="modal-body">
                 <div class="modal-left">
                     <div class="modal-meta-section">
-                        <span class="modal-role-badge" id="modalRole">Role</span>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span class="modal-role-badge" id="modalRole">Role</span>
+                            <a id="modalGithubLink" href="#" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#6366f1]/10 border border-[#6366f1]/20 text-[#c0c1ff] rounded-full text-xs font-bold hover:bg-[#6366f1]/20 transition-all">
+                                <span class="w-3.5 h-3.5 flex items-center justify-center" id="modalGithubIcon"></span>
+                                <span>GitHub Repo</span>
+                            </a>
+                        </div>
                         <div style="height: 10px;"></div>
                         <h3 class="text-xs font-bold text-[#58a6ff] uppercase tracking-wider mb-2">Deskripsi Proyek</h3>
                         <p id="modalDescription" class="text-sm text-[#8b949e] leading-relaxed">Deskripsi...</p>
@@ -533,7 +539,7 @@
     </div>
 
     <!-- Script Files -->
-    <script src="projects.js?v=1.0.5"></script>
-    <script src="app.js?v=1.0.5"></script>
+    <script src="projects.js?v=1.0.6"></script>
+    <script src="app.js?v=1.0.6"></script>
 </body>
 </html>
