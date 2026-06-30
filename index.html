@@ -114,7 +114,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <!-- Custom Style Fallback -->
-    <link rel="stylesheet" href="style.css?v=1.1.2">
+    <link rel="stylesheet" href="style.css?v=1.1.3">
 </head>
 <body class="font-body-md text-on-surface overflow-x-hidden relative">
 
@@ -204,12 +204,14 @@
                         </a>
                     </div>
                     
-                    <!-- Interactive 3D Lanyard Card -->
-                    <!-- Next-Gen 3D Physics Lanyard Card Container -->
-                    <div class="lanyard-container hidden md:block relative w-[320px] h-[480px]" id="lanyardContainer" style="margin-top: -30px;">
-                        <canvas id="lanyardCanvas3D" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
-                    </div>
+                    <!-- Reserved Space for 3D Lanyard Card -->
+                    <div class="w-[320px] h-[400px] hidden md:block" aria-hidden="true"></div>
                 </div>
+            </div>
+            
+            <!-- Next-Gen 3D Physics Lanyard Card Container (Fullscreen Overlay) -->
+            <div class="lanyard-container hidden md:block absolute inset-0 w-full h-full pointer-events-none" id="lanyardContainer" style="z-index: 5;">
+                <canvas id="lanyardCanvas3D" class="w-full h-full block cursor-grab active:cursor-grabbing" style="pointer-events: none;"></canvas>
             </div>
             
             <!-- Scroll Indicator -->
@@ -540,7 +542,7 @@
     </div>
 
     <!-- Script Files -->
-    <script src="projects.js?v=1.1.2"></script>
-    <script src="app.js?v=1.1.2"></script>
+    <script src="projects.js?v=1.1.3"></script>
+    <script src="app.js?v=1.1.3"></script>
 </body>
 </html>
