@@ -392,6 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderBentoTools();
   renderProjects();
   initHero3D(); // Start 3D rendering
+  initLanyardInteraction(); // Start interactive Lanyard
 });
 
 // ==========================================================================
@@ -511,4 +512,57 @@ function initHero3D() {
   }
 
   animate();
+}
+
+// ==========================================================================
+// INTERACTIVE LANYARD 3D TILT EFFECT
+// ==========================================================================
+function initLanyardInteraction() {
+  const wrapper = document.getElementById('lanyardWrapper');
+  const card = document.getElementById('lanyardCard');
+  const shine = document.getElementById('lanyardShine');
+  
+  if (!wrapper || !card || !shine) return;
+  
+  wrapper.addEventListener('mousemove', (e) => {
+    const rect = wrapper.getBoundingClientRect();
+    const x = e.clientX - rect.left; // x position within element
+    const y = e.clientY - rect.top;  // y position within element
+    
+    // Normalize values from -0.5 to 0.5
+    const normalizedX = (x / rect.width) - 0.5;
+    const normalizedY = (y / rect.height) - 0.5;
+    
+    // Calculate tilt angles (max 20 degrees)
+    const tiltX = normalizedY * -40;
+    const tiltY = normalizedX * 40;
+    
+    // Disable default swing animation during mouse interaction
+    card.style.animation = 'none';
+    
+    // Apply 3D transform tilt
+    card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.05, 1.05, 1.05)`;
+    
+    // Move the gloss shine position
+    const shineX = (normalizedX + 0.5) * 100;
+    const shineY = (normalizedY + 0.5) * 100;
+    shine.style.backgroundPosition = `${shineX}% ${shineY}%`;
+  });
+  
+  wrapper.addEventListener('mouseleave', () => {
+    // Smooth reset tilt transition
+    card.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease';
+    card.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    
+    // Re-enable swinging after reset transition
+    setTimeout(() => {
+      card.style.animation = 'lanyard-swing 5s ease-in-out infinite alternate';
+      // Reset transition to responsive hover speed
+      setTimeout(() => {
+        card.style.transition = 'transform 0.1s ease-out, box-shadow 0.3s ease, border-color 0.3s ease';
+      }, 50);
+    }, 500);
+    
+    shine.style.backgroundPosition = '0% 0%';
+  });
 }
