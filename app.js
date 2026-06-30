@@ -443,12 +443,12 @@ function initLanyard3D() {
   // 4. Create Badge Textures via HTML5 Canvas
   const badgeCanvas = document.createElement('canvas');
   badgeCanvas.width = 512;
-  badgeCanvas.height = 768;
+  badgeCanvas.height = 1024;
   const ctx = badgeCanvas.getContext('2d');
 
   const backCanvas = document.createElement('canvas');
   backCanvas.width = 512;
-  backCanvas.height = 768;
+  backCanvas.height = 1024;
   const backCtx = backCanvas.getContext('2d');
 
   // Load Profile Image
@@ -458,6 +458,14 @@ function initLanyard3D() {
     drawBadgeFace();
   };
 
+  // Create a combined 1024x1024 canvas for the GLTF model UV layout (left: front, right: back)
+  const combinedCanvas = document.createElement('canvas');
+  combinedCanvas.width = 1024;
+  combinedCanvas.height = 1024;
+  const combinedCtx = combinedCanvas.getContext('2d');
+  const combinedTexture = new THREE.CanvasTexture(combinedCanvas);
+  combinedTexture.flipY = true;
+
   const frontTexture = new THREE.CanvasTexture(badgeCanvas);
   const backTexture = new THREE.CanvasTexture(backCanvas);
   frontTexture.flipY = true;
@@ -466,13 +474,13 @@ function initLanyard3D() {
   function drawBadgeFace() {
     // Clear & background matching theme colors
     ctx.fillStyle = '#10131b';
-    ctx.fillRect(0, 0, 512, 768);
+    ctx.fillRect(0, 0, 512, 1024);
 
     // Card border outline matching surface border
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
     ctx.lineWidth = 8;
     ctx.beginPath();
-    ctx.roundRect(15, 15, 482, 738, 45);
+    ctx.roundRect(15, 15, 482, 994, 45);
     ctx.stroke();
 
     // Top Card Accent - gradient from Purple (#7000FF) to Cyan (#00D1FF)
@@ -481,44 +489,44 @@ function initLanyard3D() {
     topGrad.addColorStop(1, '#00D1FF');
     ctx.fillStyle = topGrad;
     ctx.beginPath();
-    ctx.roundRect(15, 15, 482, 16, [45, 45, 0, 0]);
+    ctx.roundRect(15, 15, 482, 24, [45, 45, 0, 0]);
     ctx.fill();
 
     // Inner background grids
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
     ctx.lineWidth = 2;
-    for (let i = 40; i < 728; i += 40) {
+    for (let i = 40; i < 984; i += 40) {
       ctx.beginPath(); ctx.moveTo(25, i); ctx.lineTo(487, i); ctx.stroke();
     }
 
     // Header slot hole
     ctx.fillStyle = '#181b23';
     ctx.beginPath();
-    ctx.roundRect(206, 45, 100, 20, 10);
+    ctx.roundRect(206, 55, 100, 20, 10);
     ctx.fill();
 
     // Header labels (POLSRI // DEPT. MI)
     ctx.fillStyle = '#859399';
-    ctx.font = 'bold 16px Courier New, monospace';
-    ctx.fillText('POLSRI // DEPT. MI', 50, 95);
+    ctx.font = 'bold 18px Courier New, monospace';
+    ctx.fillText('POLSRI // DEPT. MI', 50, 115);
 
     // LED Status Dot
     ctx.fillStyle = '#34d399';
-    ctx.beginPath(); ctx.arc(430, 90, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(430, 110, 8, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = '#34d399';
-    ctx.font = 'bold 14px Courier New, monospace';
-    ctx.fillText('ONLINE', 345, 95);
+    ctx.font = 'bold 16px Courier New, monospace';
+    ctx.fillText('ONLINE', 335, 115);
 
     // Draw Profile Picture (Natural - borderless & without lights)
     ctx.save();
     ctx.beginPath();
-    ctx.roundRect(121, 140, 270, 320, 25);
+    ctx.roundRect(96, 170, 320, 380, 25);
     ctx.clip();
     if (profileImg.complete) {
-      ctx.drawImage(profileImg, 121, 140, 270, 320);
+      ctx.drawImage(profileImg, 96, 170, 320, 380);
     } else {
       ctx.fillStyle = '#181b23';
-      ctx.fillRect(121, 140, 270, 320);
+      ctx.fillRect(96, 170, 320, 380);
     }
     ctx.restore();
 
@@ -526,66 +534,70 @@ function initLanyard3D() {
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.roundRect(121, 140, 270, 320, 25);
+    ctx.roundRect(96, 170, 320, 380, 25);
     ctx.stroke();
 
     // Name text: GHALI RAHMAT in Sora primary color (#a4e6ff)
     ctx.fillStyle = '#a4e6ff';
-    ctx.font = 'bold 36px Arial, sans-serif';
+    ctx.font = 'bold 44px Arial, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('GHALI RAHMAT', 256, 520);
+    ctx.fillText('GHALI RAHMAT', 256, 620);
 
     // Role line with terminal icon: ANDROID NATIVE DEV
     ctx.fillStyle = '#bbc9cf';
-    ctx.font = 'bold 20px Courier New, monospace';
-    ctx.fillText('>_ ANDROID NATIVE DEV', 256, 570);
+    ctx.font = 'bold 24px Courier New, monospace';
+    ctx.fillText('>_ ANDROID NATIVE DEV', 256, 680);
 
     // Bottom info area
     ctx.textAlign = 'left';
     ctx.fillStyle = '#bbc9cf';
     // Draw barcode decoration matching user's design
     const startX = 50;
-    const barcodeY = 650;
-    const barcodeH = 50;
-    const widths = [10, 4, 10, 20, 4, 10, 30, 10, 4];
+    const barcodeY = 780;
+    const barcodeH = 65;
+    const widths = [12, 5, 12, 24, 5, 12, 35, 12, 5];
     let currentX = startX;
     ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
     widths.forEach(w => {
       ctx.fillRect(currentX, barcodeY, w, barcodeH);
-      currentX += w + 8;
+      currentX += w + 10;
     });
 
     ctx.fillStyle = '#bbc9cf';
-    ctx.font = 'bold 15px Courier New, monospace';
+    ctx.font = 'bold 18px Courier New, monospace';
     ctx.textAlign = 'right';
-    ctx.fillText('DEV-ID: 0x8F92', 462, 690);
+    ctx.fillText('DEV-ID: 0x8F92', 462, 890);
 
-    frontTexture.needsUpdate = true;
+    // Copy to combined texture
+    combinedCtx.drawImage(badgeCanvas, 0, 0);
+    combinedTexture.needsUpdate = true;
   }
 
   function drawBadgeBack() {
     backCtx.fillStyle = '#10131b';
-    backCtx.fillRect(0, 0, 512, 768);
+    backCtx.fillRect(0, 0, 512, 1024);
 
     // Border
     backCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
     backCtx.lineWidth = 14;
     backCtx.beginPath();
-    backCtx.roundRect(15, 15, 482, 738, 45);
+    backCtx.roundRect(15, 15, 482, 994, 45);
     backCtx.stroke();
 
     // Large glowing logo G
     backCtx.fillStyle = '#7000ff';
-    backCtx.font = 'bold 240px Arial, sans-serif';
+    backCtx.font = 'bold 320px Arial, sans-serif';
     backCtx.textAlign = 'center';
-    backCtx.fillText('G', 256, 470);
+    backCtx.fillText('G', 256, 570);
     
     // Subtitle
     backCtx.fillStyle = '#00d1ff';
-    backCtx.font = 'bold 20px Courier New, monospace';
-    backCtx.fillText('GHALI RAHMAT', 256, 550);
+    backCtx.font = 'bold 24px Courier New, monospace';
+    backCtx.fillText('GHALI RAHMAT', 256, 680);
 
-    backTexture.needsUpdate = true;
+    // Copy to combined texture
+    combinedCtx.drawImage(backCanvas, 512, 0);
+    combinedTexture.needsUpdate = true;
   }
 
   drawBadgeFace();
@@ -827,7 +839,7 @@ function initLanyard3D() {
 
     // Calculate rotation basis:
     // A. Local Y-axis aligns with the last segment direction
-    const attachPoint = pos.clone().add(new THREE.Vector3(0, 0.8, 0)); // top clip
+    const attachPoint = pos.clone().add(new THREE.Vector3(0, 1.45, 0)); // top clip
     const prevRopePoint = ropePoints[segmentCount - 2].pos;
     const strapVec = prevRopePoint.clone().sub(attachPoint);
     const vY = strapVec.clone().normalize().multiplyScalar(-1);
@@ -868,7 +880,7 @@ function initLanyard3D() {
     
     // Update card world matrix to calculate exact attachment point in 3D world space
     cardGroup.updateMatrixWorld(true);
-    const clipAttach = new THREE.Vector3(0, 0.8, 0).applyMatrix4(cardGroup.matrixWorld);
+    const clipAttach = new THREE.Vector3(0, 1.45, 0).applyMatrix4(cardGroup.matrixWorld);
 
     const points = [];
     
