@@ -462,37 +462,46 @@ function initLanyard3D() {
   const backTexture = new THREE.CanvasTexture(backCanvas);
 
   function drawBadgeFace() {
-    // Clear & background
-    ctx.fillStyle = '#0a0f1d';
+    // Clear & background matching theme colors
+    ctx.fillStyle = '#10131b';
     ctx.fillRect(0, 0, 512, 768);
 
-    // Glowing rim border
-    ctx.strokeStyle = '#6366f1';
-    ctx.lineWidth = 14;
+    // Card border outline matching surface border
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.lineWidth = 8;
     ctx.beginPath();
     ctx.roundRect(15, 15, 482, 738, 45);
     ctx.stroke();
 
+    // Top Card Accent - gradient from Purple (#7000FF) to Cyan (#00D1FF)
+    const topGrad = ctx.createLinearGradient(0, 0, 512, 0);
+    topGrad.addColorStop(0, '#7000FF');
+    topGrad.addColorStop(1, '#00D1FF');
+    ctx.fillStyle = topGrad;
+    ctx.beginPath();
+    ctx.roundRect(15, 15, 482, 16, [45, 45, 0, 0]);
+    ctx.fill();
+
     // Inner background grids
-    ctx.strokeStyle = 'rgba(99, 102, 241, 0.08)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
     ctx.lineWidth = 2;
     for (let i = 40; i < 728; i += 40) {
       ctx.beginPath(); ctx.moveTo(25, i); ctx.lineTo(487, i); ctx.stroke();
     }
 
     // Header slot hole
-    ctx.fillStyle = '#1e293b';
+    ctx.fillStyle = '#181b23';
     ctx.beginPath();
     ctx.roundRect(206, 45, 100, 20, 10);
     ctx.fill();
 
-    // Header labels
-    ctx.fillStyle = '#818cf8';
+    // Header labels (POLSRI // DEPT. MI)
+    ctx.fillStyle = '#859399';
     ctx.font = 'bold 16px Courier New, monospace';
     ctx.fillText('POLSRI // DEPT. MI', 50, 95);
 
     // LED Status Dot
-    ctx.fillStyle = '#10b981';
+    ctx.fillStyle = '#34d399';
     ctx.beginPath(); ctx.arc(430, 90, 8, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = '#34d399';
     ctx.font = 'bold 14px Courier New, monospace';
@@ -506,69 +515,73 @@ function initLanyard3D() {
     if (profileImg.complete) {
       ctx.drawImage(profileImg, 121, 140, 270, 320);
     } else {
-      ctx.fillStyle = '#1e1b4b';
+      ctx.fillStyle = '#181b23';
       ctx.fillRect(121, 140, 270, 320);
     }
     ctx.restore();
 
-    // Name text
-    ctx.fillStyle = '#ffffff';
+    // Border around photo slot
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(121, 140, 270, 320, 25);
+    ctx.stroke();
+
+    // Name text: GHALI RAHMAT in Sora primary color (#a4e6ff)
+    ctx.fillStyle = '#a4e6ff';
     ctx.font = 'bold 36px Arial, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('GHALI RAHMAT', 256, 520);
 
-    // Pill badge for role
-    ctx.fillStyle = 'rgba(99, 102, 241, 0.2)';
-    ctx.beginPath(); ctx.roundRect(116, 550, 280, 40, 20); ctx.fill();
-    ctx.strokeStyle = 'rgba(99, 102, 241, 0.3)';
-    ctx.stroke();
-
-    ctx.fillStyle = '#818cf8';
-    ctx.font = 'bold 18px Courier New, monospace';
-    ctx.fillText('FULL-STACK ENGINEER', 256, 576);
+    // Role line with terminal icon: ANDROID NATIVE DEV
+    ctx.fillStyle = '#bbc9cf';
+    ctx.font = 'bold 20px Courier New, monospace';
+    ctx.fillText('>_ ANDROID NATIVE DEV', 256, 570);
 
     // Bottom info area
     ctx.textAlign = 'left';
-    ctx.fillStyle = '#9ca3af';
-    ctx.font = '12px Courier New, monospace';
-    ctx.fillText('ACCESS: FULL', 50, 670);
-    ctx.fillText('SYS: DEVR-2026', 50, 690);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 15px Courier New, monospace';
-    ctx.fillText('GR-9A9271304', 50, 715);
+    ctx.fillStyle = '#bbc9cf';
+    // Draw barcode decoration matching user's design
+    const startX = 50;
+    const barcodeY = 650;
+    const barcodeH = 50;
+    const widths = [10, 4, 10, 20, 4, 10, 30, 10, 4];
+    let currentX = startX;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    widths.forEach(w => {
+      ctx.fillRect(currentX, barcodeY, w, barcodeH);
+      currentX += w + 8;
+    });
 
-    // Golden smart chip
-    ctx.fillStyle = '#fbbf24';
-    ctx.beginPath(); ctx.roundRect(390, 650, 70, 50, 8); ctx.fill();
-    ctx.strokeStyle = '#b45309';
-    ctx.lineWidth = 3;
-    ctx.stroke();
-    // Grid inside chip
-    ctx.beginPath();
-    ctx.moveTo(415, 650); ctx.lineTo(415, 700);
-    ctx.moveTo(435, 650); ctx.lineTo(435, 700);
-    ctx.moveTo(390, 675); ctx.lineTo(460, 675);
-    ctx.stroke();
+    ctx.fillStyle = '#bbc9cf';
+    ctx.font = 'bold 15px Courier New, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('DEV-ID: 0x8F92', 462, 690);
 
     frontTexture.needsUpdate = true;
   }
 
   function drawBadgeBack() {
-    backCtx.fillStyle = '#0f172a';
+    backCtx.fillStyle = '#10131b';
     backCtx.fillRect(0, 0, 512, 768);
 
-    // Glowing border
-    backCtx.strokeStyle = '#6366f1';
+    // Border
+    backCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
     backCtx.lineWidth = 14;
     backCtx.beginPath();
     backCtx.roundRect(15, 15, 482, 738, 45);
     backCtx.stroke();
 
-    // Large glowing logo
-    backCtx.fillStyle = '#6366f1';
-    backCtx.font = 'bold 200px Arial, sans-serif';
+    // Large glowing logo G
+    backCtx.fillStyle = '#7000ff';
+    backCtx.font = 'bold 240px Arial, sans-serif';
     backCtx.textAlign = 'center';
-    backCtx.fillText('G', 256, 460);
+    backCtx.fillText('G', 256, 470);
+    
+    // Subtitle
+    backCtx.fillStyle = '#00d1ff';
+    backCtx.font = 'bold 20px Courier New, monospace';
+    backCtx.fillText('GHALI RAHMAT', 256, 550);
 
     backTexture.needsUpdate = true;
   }
@@ -628,7 +641,7 @@ function initLanyard3D() {
   // Strap (dynamic bending 3D Tube mesh)
   const strapPointCount = 16;
   const strapMat = new THREE.MeshStandardMaterial({
-    color: 0x312e81,
+    color: 0x7000FF, // Woven purple rope
     roughness: 0.6,
     metalness: 0.1
   });
