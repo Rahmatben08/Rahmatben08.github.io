@@ -752,37 +752,20 @@ function initLanyard3D() {
     const cardPos = nodes[nodes.length - 1].pos;
     cardGroup.position.copy(cardPos);
 
-    // -- Card orientation: always faces camera (Z-forward), Y-up --
-    // The card hangs from the last rope segment
-    // We want: local +Y points UPWARD (toward where the strap connects)
-    //          local +Z points TOWARD camera
-    const cardTop = new THREE.Vector3(0, 1.35, 0).applyMatrix4(cardGroup.matrixWorld);
+    // -- Card orientation: BILLBOARD (always faces camera, guaranteed upright) --
+    // Step 1: copy camera's world quaternion so card perfectly faces camera
+    cardGroup.quaternion.copy(camera.quaternion);
 
-    // Direction FROM card center TO the rope node above it
-    const secondToLast = nodes[nodes.length - 2].pos;
-    const upDir = secondToLast.clone().sub(cardPos).normalize();
-
-    // Construct orthonormal basis: keep card facing camera
-    // rightDir = upDir × cameraForward (cross gives rightward in screen space)
-    const camFwd = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
-    let rightDir = new THREE.Vector3().crossVectors(upDir, camFwd);
-    if (rightDir.lengthSq() < 0.001) rightDir.set(1, 0, 0);
-    rightDir.normalize();
-    const fwdDir = new THREE.Vector3().crossVectors(rightDir, upDir).normalize();
-
-    const rotMat = new THREE.Matrix4().makeBasis(rightDir, upDir, fwdDir);
-    cardGroup.quaternion.setFromRotationMatrix(rotMat);
-
-    // -- Small physical wobble (velocity-derived, not accumulating) --
+    // Step 2: small velocity-based wobble on top (non-accumulating)
     if (!isDragging) {
       const cardVel = cardPos.clone().sub(nodes[nodes.length - 1].prev);
-      const targetWobbleX = cardVel.z * -0.35;
-      const targetWobbleZ = cardVel.x * -0.35;
-      wobbleX += (targetWobbleX - wobbleX) * 0.12;
-      wobbleZ += (targetWobbleZ - wobbleZ) * 0.12;
+      const targetWobbleX = cardVel.z * -0.3;
+      const targetWobbleZ = cardVel.x * -0.3;
+      wobbleX += (targetWobbleX - wobbleX) * 0.10;
+      wobbleZ += (targetWobbleZ - wobbleZ) * 0.10;
 
       const wobbleQuat = new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(wobbleX, Math.sin(t * 0.8) * 0.04, wobbleZ)
+        new THREE.Euler(wobbleX, Math.sin(t * 0.8) * 0.03, wobbleZ)
       );
       cardGroup.quaternion.multiply(wobbleQuat);
     }
