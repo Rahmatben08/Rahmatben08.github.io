@@ -460,6 +460,8 @@ function initLanyard3D() {
 
   const frontTexture = new THREE.CanvasTexture(badgeCanvas);
   const backTexture = new THREE.CanvasTexture(backCanvas);
+  frontTexture.flipY = false;
+  backTexture.flipY = false;
 
   function drawBadgeFace() {
     // Clear & background matching theme colors
@@ -842,7 +844,10 @@ function initLanyard3D() {
     // 9. Update Strap points dynamically (Woven neck loop following rope segments)
     const neckLeft = new THREE.Vector3(-1.4, 3.2, -0.6);
     const neckRight = new THREE.Vector3(1.4, 3.2, -0.6);
-    const clipAttach = pos.clone().add(new THREE.Vector3(0, 0.8, 0)); // clip connection
+    
+    // Update card world matrix to calculate exact attachment point in 3D world space
+    cardGroup.updateMatrixWorld(true);
+    const clipAttach = new THREE.Vector3(0, 0.8, 0).applyMatrix4(cardGroup.matrixWorld);
 
     const points = [];
     
