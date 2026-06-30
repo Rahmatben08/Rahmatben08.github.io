@@ -413,17 +413,20 @@ function initLanyard3D() {
 
   const scene = new THREE.Scene();
 
-  // ── CAMERA ── fov=25, pos=[0,0,13] from App.js ───────────────────────────
+  // ── CAMERA — centered, simple, predictable ─────────────────────────────
   const camera = new THREE.PerspectiveCamera(25, W / H, 0.1, 100);
+
+  // The card will sit in root space, root will be offset to the right.
+  // Camera stays at center and looks at the card position.
+  // This is much more predictable than shifting the camera.
+  const CARD_WORLD_X = 3.0;  // how far right the card hangs
+  const CARD_WORLD_Y = -1.5; // vertical center where card settles
 
   function setupCamera() {
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
-    // Shift left so card appears in RIGHT column of our 2-col hero layout
-    // At fov=25 and z=13, the scene width ≈ 2*13*tan(12.5°) ≈ 5.76 units
-    // We want card centred at ~x=+2 in scene space, so camera moves left
-    camera.position.set(-camera.aspect * 3.2, 0, 13);
-    camera.lookAt(camera.aspect * 1.8, -2.0, 0);
+    camera.position.set(0, 0, 13);
+    camera.lookAt(CARD_WORLD_X, CARD_WORLD_Y, 0);
   }
   setupCamera();
 
@@ -541,17 +544,19 @@ function initLanyard3D() {
   }
   drawCard();
 
-  // ── SCENE ROOT — matches <group position={[0,4,0]}> ────────────────────
+  // ── SCENE ROOT — anchor point for the strap (hangs at top, card below) ─
   const root = new THREE.Group();
-  root.position.set(0, 3, 0);
+  // X = CARD_WORLD_X so card hangs in right column
+  // Y = positive so card hangs DOWN into viewport center
+  root.position.set(CARD_WORLD_X, 4.5, 0);
   scene.add(root);
 
   // ── CARD BODY (moves with physics) ────────────────────────────────────
   const cardBody = new THREE.Group();
   root.add(cardBody);
 
-  // Card visual: scale=2.25, offset=[0,-1.2,-0.05] from App.js
-  const CARD_SCALE = 2.25;
+  // Card visual: smaller scale to fit nicely in right column
+  const CARD_SCALE = 1.8;  // reduced from 2.25 to fit viewport
   const cardVisual = new THREE.Group();
   cardVisual.scale.setScalar(CARD_SCALE);
   cardVisual.position.set(0, -1.2, -0.05);
@@ -764,26 +769,22 @@ function initLanyard3D() {
     }
 
     // ── STRAP CURVE ──────────────────────────────────────────────────────
-    // Band attachment on card = local [0, CARD_H3D/2, 0] in cardVisual space
-    // = [0, 1.2 (half card), 0] in cardBody space (after scale 2.25 and offset)
-    // Spherical joint was [[0,0,0],[0,1.45,0]] in App.js (in rigid body local)
+    // Attachment on card = local [0, 1.45, 0] (sphericalJoint from App.js)
     cardBody.updateMatrixWorld(true);
-    const attachLocal = new THREE.Vector3(0, 1.45, 0); // exact from App.js joint
-    const attachWorld = root.worldToLocal(attachLocal.clone().applyMatrix4(cardBody.matrixWorld));
+    const attachWorld = new THREE.Vector3(0, 1.45, 0).applyMatrix4(cardBody.matrixWorld);
 
-    // Curve: j3-attachment → j2(lerped) → j1(lerped) → fixed
-    // This matches App.js: curve.points[0]=j3, [1]=j2.lerped, [2]=j1.lerped, [3]=fixed
-    const p0 = attachWorld;              // at card attachment (joint point)
-    const p1 = lerped[2].clone();        // j2 lerped
-    const p2 = lerped[1].clone();        // j1 lerped
-    const p3 = FIXED.clone();            // fixed anchor
+    // Curve from card attachment → j3 → j2(lerped) → j1(lerped) → root anchor (world)
+    const rootWorld = new THREE.Vector3();
+    root.getWorldPosition(rootWorld); // world position of fixed anchor
 
-    // Convert to world space for the tube mesh
-    const toW = (v) => root.localToWorld(v.clone());
-    const strapCurve = new THREE.CatmullRomCurve3([toW(p0), toW(p1), toW(p2), toW(p3)]);
-    strapCurve.curveType = 'chordal'; // matches App.js: curve.curveType = 'chordal'
+    const j3w = root.localToWorld(nodes[3].pos.clone());
+    const j2w = root.localToWorld(lerped[2].clone());
+    const j1w = root.localToWorld(lerped[1].clone());
 
-    const newGeo = new THREE.TubeGeometry(strapCurve, 32, 0.055, 8, false);
+    const strapCurve = new THREE.CatmullRomCurve3([attachWorld, j3w, j2w, j1w, rootWorld]);
+    strapCurve.curveType = 'chordal';
+
+    const newGeo = new THREE.TubeGeometry(strapCurve, 48, 0.06, 10, false);
     if (strapMesh.geometry) strapMesh.geometry.dispose();
     strapMesh.geometry = newGeo;
 
