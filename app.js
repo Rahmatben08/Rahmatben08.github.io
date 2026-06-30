@@ -521,48 +521,57 @@ function initLanyardInteraction() {
   const wrapper = document.getElementById('lanyardWrapper');
   const card = document.getElementById('lanyardCard');
   const shine = document.getElementById('lanyardShine');
+  const hologram = card ? card.querySelector('.lanyard-hologram') : null;
   
   if (!wrapper || !card || !shine) return;
   
   wrapper.addEventListener('mousemove', (e) => {
     const rect = wrapper.getBoundingClientRect();
-    const x = e.clientX - rect.left; // x position within element
-    const y = e.clientY - rect.top;  // y position within element
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
     
-    // Normalize values from -0.5 to 0.5
     const normalizedX = (x / rect.width) - 0.5;
     const normalizedY = (y / rect.height) - 0.5;
     
-    // Calculate tilt angles (max 20 degrees)
-    const tiltX = normalizedY * -40;
-    const tiltY = normalizedX * 40;
+    // Smooth 3D tilt response angles
+    const tiltX = normalizedY * -35;
+    const tiltY = normalizedX * 35;
     
-    // Disable default swing animation during mouse interaction
     card.style.animation = 'none';
+    card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.04, 1.04, 1.04)`;
     
-    // Apply 3D transform tilt
-    card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.05, 1.05, 1.05)`;
+    // Dynamic Hologram Shifting Gradients (rainbow iridescent color dodge)
+    if (hologram) {
+      const holoX = (normalizedX + 0.5) * 100;
+      const holoY = (normalizedY + 0.5) * 100;
+      hologram.style.background = `linear-gradient(${135 + (normalizedX * 45)}deg, rgba(99, 102, 241, 0.25) 0%, rgba(6, 182, 212, 0.25) ${holoX}%, rgba(236, 72, 153, 0.2) ${holoY}%, rgba(255, 255, 255, 0) 100%)`;
+      hologram.style.opacity = '1';
+    }
     
-    // Move the gloss shine position
+    // Radial shine overlay translation
     const shineX = (normalizedX + 0.5) * 100;
     const shineY = (normalizedY + 0.5) * 100;
     shine.style.backgroundPosition = `${shineX}% ${shineY}%`;
   });
   
   wrapper.addEventListener('mouseleave', () => {
-    // Smooth reset tilt transition
-    card.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease';
+    card.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease, border-color 0.3s ease';
     card.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
     
-    // Re-enable swinging after reset transition
+    if (hologram) {
+      hologram.style.transition = 'opacity 0.6s ease, background 0.6s ease';
+      hologram.style.background = `linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(6, 182, 212, 0.15) 30%, rgba(236, 72, 153, 0.1) 60%, rgba(255, 255, 255, 0) 100%)`;
+      hologram.style.opacity = '0.7';
+    }
+    
     setTimeout(() => {
-      card.style.animation = 'lanyard-swing 5s ease-in-out infinite alternate';
-      // Reset transition to responsive hover speed
+      card.style.animation = 'lanyard-swing 6s ease-in-out infinite alternate';
       setTimeout(() => {
         card.style.transition = 'transform 0.1s ease-out, box-shadow 0.3s ease, border-color 0.3s ease';
+        if (hologram) hologram.style.transition = 'opacity 0.3s ease';
       }, 50);
-    }, 500);
+    }, 600);
     
-    shine.style.backgroundPosition = '0% 0%';
+    shine.style.backgroundPosition = '50% 50%';
   });
 }
