@@ -593,7 +593,7 @@ function initLanyard3D() {
   const cardGroup = new THREE.Group();
   scene.add(cardGroup);
 
-  const cardGeo = new THREE.PlaneGeometry(1.3, 2.0);
+  const cardGeo = new THREE.PlaneGeometry(1.0, 1.55);
   
   // Use MeshBasicMaterial for a natural, unlit photo face as requested
   const frontMat = new THREE.MeshBasicMaterial({
@@ -615,7 +615,7 @@ function initLanyard3D() {
   cardGroup.add(backMesh);
 
   // Glossy plastic protective case overlay
-  const caseGeo = new THREE.BoxGeometry(1.38, 2.08, 0.035);
+  const caseGeo = new THREE.BoxGeometry(1.06, 1.61, 0.03);
   const caseMat = new THREE.MeshPhysicalMaterial({
     color: 0xffffff,
     transparent: true,
@@ -635,7 +635,7 @@ function initLanyard3D() {
     roughness: 0.15
   });
   const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-  ringMesh.position.set(0, 1.05, 0);
+  ringMesh.position.set(0, 0.8, 0);
   cardGroup.add(ringMesh);
 
   // Strap (dynamic bending 3D Tube mesh)
@@ -648,20 +648,23 @@ function initLanyard3D() {
   let strapMesh = new THREE.Mesh(new THREE.BufferGeometry(), strapMat);
   scene.add(strapMesh);
 
-  // 6. Physics State variables
+  // 6. Physics State variables (Verlet Multi-Segment Rope Chain)
   const anchor = new THREE.Vector3(0, 2.3, 0);
-  let pos = new THREE.Vector3(0, 0, 0);
-  let vel = new THREE.Vector3(0, 0, 0);
+  const segmentCount = 6;
+  const segmentLength = 0.32; // Total length ~1.92
+  const ropePoints = [];
+
+  for (let i = 0; i < segmentCount; i++) {
+    ropePoints.push({
+      pos: new THREE.Vector3(0, anchor.y - i * segmentLength, 0),
+      prevPos: new THREE.Vector3(0, anchor.y - i * segmentLength, 0),
+      isFixed: i === 0
+    });
+  }
+
+  // Set card position reference to the last rope point
+  let pos = ropePoints[segmentCount - 1].pos;
   let rot = new THREE.Vector3(0, 0, 0);
-
-  const restLength = 1.9;
-  const kSpring = 240; // stiffness
-  const kDamping = 0.91; // air drag
-  const gravity = -9.8;
-  const mass = 1.0;
-
-  // Set initial position hanging straight down
-  pos.set(0, anchor.y - restLength, 0);
 
   // 7. Raycasting & Mouse drag state (at window level for fullscreen overlay logic)
   const raycaster = new THREE.Raycaster();
@@ -669,6 +672,7 @@ function initLanyard3D() {
   let isDragging = false;
   let prevMousePos = new THREE.Vector3();
   const dragPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+  const draggedPos = new THREE.Vector3();
 
   function onMouseDown(e) {
     const rect = canvas.getBoundingClientRect();
@@ -685,25 +689,24 @@ function initLanyard3D() {
       const intersection = new THREE.Vector3();
       raycaster.ray.intersectPlane(dragPlane, intersection);
       prevMousePos.copy(intersection);
+      draggedPos.copy(pos); // start dragging from current card pos
     }
   }
 
   function onMouseMove(e) {
-    // Translate client mouse coordinates to WebGL window space
     mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
-    // Hover cursor change & click-through toggling (so text/links underneath are click-friendly)
     if (!isDragging) {
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects([caseMesh]);
       
       if (intersects.length > 0) {
         canvas.style.cursor = 'grab';
-        canvas.style.pointerEvents = 'auto'; // Block clicks only on card
+        canvas.style.pointerEvents = 'auto';
       } else {
         canvas.style.cursor = 'default';
-        canvas.style.pointerEvents = 'none'; // Pass through clicks elsewhere
+        canvas.style.pointerEvents = 'none';
       }
     }
 
@@ -713,9 +716,8 @@ function initLanyard3D() {
       raycaster.ray.intersectPlane(dragPlane, currentMousePos);
 
       const delta = currentMousePos.clone().sub(prevMousePos);
-      pos.add(delta);
+      draggedPos.add(delta);
       
-      vel.copy(delta).multiplyScalar(60.0);
       prevMousePos.copy(currentMousePos);
     }
   }
@@ -752,79 +754,113 @@ function initLanyard3D() {
   function animate() {
     requestAnimationFrame(animate);
 
-    const dt = Math.min(clock.getDelta(), 0.05);
+    const dt = Math.min(clock.getDelta(), 0.02); // cap dt to prevent physics explosion
 
-    if (!isDragging) {
-      const force = new THREE.Vector3(0, gravity * mass, 0); // Gravity
+    // --- Verlet Physics Simulation ---
+    const gravity = new THREE.Vector3(0, -35.0, 0); // strong responsive gravity
+    const damping = 0.94; // air drag damping
 
-      const attachPoint = pos.clone().add(new THREE.Vector3(0, 1.0, 0));
-      const springVec = anchor.clone().sub(attachPoint);
-      const dist = springVec.length();
+    // A. Integrate positions
+    for (let i = 1; i < segmentCount; i++) {
+      const p = ropePoints[i];
+      if (isDragging && i === segmentCount - 1) continue; // dragging controls position directly
 
-      if (dist > 0.01) {
-        const forceMag = kSpring * (dist - restLength);
-        force.add(springVec.normalize().multiplyScalar(forceMag));
+      const temp = p.pos.clone();
+      
+      // Calculate velocity
+      const vel = p.pos.clone().sub(p.prevPos).multiplyScalar(damping);
+      
+      // Card is heavier, apply more gravity weight to last segment
+      const gForce = gravity.clone();
+      if (i === segmentCount - 1) {
+        gForce.multiplyScalar(2.0); // card weight
       }
+      
+      p.pos.add(vel).add(gForce.multiplyScalar(dt * dt));
+      p.prevPos.copy(temp);
+    }
 
-      const acc = force.divideScalar(mass);
-      vel.add(acc.multiplyScalar(dt));
-      vel.multiplyScalar(kDamping);
-      pos.add(vel.clone().multiplyScalar(dt));
-    } else {
-      const attachPoint = pos.clone().add(new THREE.Vector3(0, 1.0, 0));
-      const dist = anchor.distanceTo(attachPoint);
-      if (dist > restLength * 1.6) {
-        const dir = attachPoint.clone().sub(anchor).normalize();
-        pos.copy(anchor.clone().add(dir.multiplyScalar(restLength * 1.6)).sub(new THREE.Vector3(0, 1.0, 0)));
-        vel.set(0, 0, 0);
+    // B. If dragging, lock last point directly to drag coordinates
+    if (isDragging) {
+      ropePoints[segmentCount - 1].pos.copy(draggedPos);
+    }
+
+    // C. Resolve constraints (Rope segments distance solver)
+    for (let iter = 0; iter < 12; iter++) {
+      // Anchor remains fixed
+      ropePoints[0].pos.copy(anchor);
+
+      for (let i = 0; i < segmentCount - 1; i++) {
+        const pA = ropePoints[i];
+        const pB = ropePoints[i + 1];
+
+        const delta = pB.pos.clone().sub(pA.pos);
+        const dist = delta.length();
+        if (dist === 0) continue;
+
+        const diff = segmentLength - dist;
+        const percent = (diff / dist) * 0.5;
+        const offset = delta.multiplyScalar(percent);
+
+        if (!pA.isFixed) pA.pos.sub(offset);
+        if (!(isDragging && i + 1 === segmentCount - 1)) {
+          pB.pos.add(offset);
+        }
       }
     }
 
+    // Apply Position to Mesh (Card center is at pos)
     cardGroup.position.copy(pos);
 
-    const clipPos = pos.clone().add(new THREE.Vector3(0, 1.0, 0));
-    const strapVec = anchor.clone().sub(clipPos);
+    // Calculate rotation: Y-axis aligns with the last segment direction
+    const attachPoint = pos.clone().add(new THREE.Vector3(0, 0.8, 0)); // top clip
+    const prevRopePoint = ropePoints[segmentCount - 2].pos;
+    const strapVec = prevRopePoint.clone().sub(attachPoint);
     const strapDir = strapVec.clone().normalize();
+    
     const up = new THREE.Vector3(0, 1, 0);
     const quat = new THREE.Quaternion().setFromUnitVectors(up, strapDir);
     cardGroup.quaternion.copy(quat);
 
+    // Damped restoring torque for Z and X swing wobble
     if (!isDragging) {
-      const targetRotX = vel.z * -0.05;
-      const targetRotZ = vel.x * -0.05;
-      const targetRotY = vel.x * 0.08;
+      const cardVel = ropePoints[segmentCount - 1].pos.clone().sub(ropePoints[segmentCount - 1].prevPos).multiplyScalar(60.0);
+      const targetRotX = cardVel.z * -0.04;
+      const targetRotZ = cardVel.x * -0.04;
+      const targetRotY = cardVel.x * 0.06;
 
       rot.x += (targetRotX - rot.x) * 0.15;
-      rot.z += (targetRotZ - rot.z) * 0.15;
-      rot.y += (targetRotY - rot.y) * 0.1;
-
+      rot.y += (targetRotY - rot.y) * 0.15;
       cardGroup.rotateX(rot.x);
       cardGroup.rotateZ(rot.z);
-      cardGroup.rotateY(rot.y + Math.sin(clock.getElapsedTime() * 1.5) * 0.05);
+      cardGroup.rotateY(rot.y + Math.sin(clock.getElapsedTime() * 1.5) * 0.05); // natural twist
+    } else {
+      // reset rotation slowly when dragging
+      rot.set(0, 0, 0);
     }
 
-    // 9. Update Strap points dynamically (Hanging woven tube cord)
+    // 9. Update Strap points dynamically (Woven neck loop following rope segments)
     const neckLeft = new THREE.Vector3(-1.4, 3.2, -0.6);
     const neckRight = new THREE.Vector3(1.4, 3.2, -0.6);
-    const clipAttach = pos.clone().add(new THREE.Vector3(0, 1.05, 0));
+    const clipAttach = pos.clone().add(new THREE.Vector3(0, 0.8, 0)); // clip connection
 
     const points = [];
-    const halfCount = strapPointCount / 2;
     
-    for (let i = 0; i < halfCount; i++) {
-      const t = i / (halfCount - 1);
-      const p = new THREE.Vector3().lerpVectors(neckLeft, clipAttach, t);
-      const sag = Math.sin(t * Math.PI) * (0.22 * (1.0 - Math.min(1.0, strapVec.length() / restLength)));
-      p.y -= sag;
-      points.push(p);
-    }
-    for (let i = 1; i < halfCount; i++) {
-      const t = i / (halfCount - 1);
-      const p = new THREE.Vector3().lerpVectors(clipAttach, neckRight, t);
-      const sag = Math.sin(t * Math.PI) * (0.22 * (1.0 - Math.min(1.0, strapVec.length() / restLength)));
-      p.y -= sag;
-      points.push(p);
-    }
+    // We map a smooth curve: neckLeft -> rope segment points -> clipAttach -> rope segment points -> neckRight
+    points.push(neckLeft);
+    
+    // Smooth transition points following rope segment 1 & 2
+    points.push(new THREE.Vector3().copy(ropePoints[1].pos).add(new THREE.Vector3(-0.35, 0, -0.15)));
+    points.push(new THREE.Vector3().copy(ropePoints[2].pos).add(new THREE.Vector3(-0.15, 0, -0.05)));
+    points.push(new THREE.Vector3().copy(ropePoints[3].pos).add(new THREE.Vector3(-0.05, 0, 0)));
+    
+    points.push(clipAttach);
+    
+    points.push(new THREE.Vector3().copy(ropePoints[3].pos).add(new THREE.Vector3(0.05, 0, 0)));
+    points.push(new THREE.Vector3().copy(ropePoints[2].pos).add(new THREE.Vector3(0.15, 0, -0.05)));
+    points.push(new THREE.Vector3().copy(ropePoints[1].pos).add(new THREE.Vector3(0.35, 0, -0.15)));
+    
+    points.push(neckRight);
 
     const curve = new THREE.CatmullRomCurve3(points);
     if (strapMesh.geometry) strapMesh.geometry.dispose();
