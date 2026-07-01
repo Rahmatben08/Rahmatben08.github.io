@@ -428,9 +428,16 @@ function initLanyard3D() {
   }
   setupCamera();
 
-  // ── LIGHTING — matches original lightformers ──────────────────────────────
-  scene.add(new THREE.AmbientLight(0xffffff, Math.PI));
-  const lightData = [[0,-1,5,2],[-1,-1,1,3],[1,1,1,3],[-10,0,14,10]];
+  // ── LIGHTING (Balanced for premium dark mode, prevents texture blowout) ──
+  scene.add(new THREE.AmbientLight(0xffffff, 0.45)); // soft fill light
+  
+  // Balanced intensities (intensity 1.2 instead of 10)
+  const lightData = [
+    [0, -1, 5, 0.5],
+    [-1, -1, 1, 0.3],
+    [1, 1, 1, 0.4],
+    [-5, 5, 10, 1.2]
+  ];
   lightData.forEach(function(ld) {
     var dl = new THREE.DirectionalLight(0xffffff, ld[3]);
     dl.position.set(ld[0], ld[1], ld[2]);
@@ -521,7 +528,7 @@ function initLanyard3D() {
     ctx.save();
     
     // Background - dark blue-black with high premium glass look
-    ctx.fillStyle = 'rgba(13, 17, 23, 0.95)';
+    ctx.fillStyle = '#0d1117';
     ctx.fillRect(0, 0, 512, 768);
 
     // Rounded border (glowing cyan/white)
