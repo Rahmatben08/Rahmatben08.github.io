@@ -396,8 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ==========================================================================
 // 3D LANYARD BADGE — Vanilla Three.js port of 3D_CARD-main/components/band/App.js
-// Simple PlaneGeometry card (no GLB UV issues) + TubeGeometry strap
-// Camera: fov=25, pos=[0,0,13] | Gravity=-40 | Scale=2.25 | Joint y=1.45
+// Optimized with custom billboard ribbon geometry and GLTF mesh loading.
 // ==========================================================================
 function initLanyard3D() {
   const container = document.getElementById('lanyardContainer');
@@ -413,12 +412,10 @@ function initLanyard3D() {
 
   const scene = new THREE.Scene();
 
-  // ── CAMERA — centered, simple, predictable ─────────────────────────────
+  // ── CAMERA — fov=25, position=[0,0,13] ────────────────────────────────────
   const camera = new THREE.PerspectiveCamera(25, W / H, 0.1, 100);
 
-  // The card will sit in root space, root will be offset to the right.
-  // Camera stays at center and looks at the card position.
-  // This is much more predictable than shifting the camera.
+  // Root position & offsets for card placement in the right column
   const CARD_WORLD_X = 3.0;  // how far right the card hangs
   const CARD_WORLD_Y = -1.5; // vertical center where card settles
 
@@ -430,213 +427,370 @@ function initLanyard3D() {
   }
   setupCamera();
 
-  // -- LIGHTING --
+  // ── LIGHTING — matches original lightformers ──────────────────────────────
   scene.add(new THREE.AmbientLight(0xffffff, Math.PI));
-  var lightData = [[0,-1,5,2],[-1,-1,1,3],[1,1,1,3],[-10,0,14,10]];
+  const lightData = [[0,-1,5,2],[-1,-1,1,3],[1,1,1,3],[-10,0,14,10]];
   lightData.forEach(function(ld) {
     var dl = new THREE.DirectionalLight(0xffffff, ld[3]);
     dl.position.set(ld[0], ld[1], ld[2]);
     scene.add(dl);
   });
 
-  // ── CARD TEXTURE ─────────────────────────────────────────────────────────
-  const CW = 512, CH = 800;
+  // ── CARD TEXTURE (Canvas 2D) ─────────────────────────────────────────────
+  // A 1024x1024 texture atlas matching the UV layout of kartu.glb:
+  // Left 512x768 = card FRONT
+  // Right 512x768 = card BACK
+  // Bottom 256px = unused vertical space (spans 0.75 in UV coords)
+  const CW = 1024, CH = 1024;
   const bCanvas = document.createElement('canvas');
   bCanvas.width = CW; bCanvas.height = CH;
   const ctx = bCanvas.getContext('2d');
-  // IMPORTANT: flipY false so canvas draws appear correct on PlaneGeometry
+  
+  // Create CanvasTexture
   const cardTex = new THREE.CanvasTexture(bCanvas);
-  cardTex.flipY = true; // default — PlaneGeometry UVs go bottom-up
+  cardTex.anisotropy = 16;
+  cardTex.flipY = true; // will toggle to false if GLTF model loads
 
   const img = new Image();
   img.src = 'profile.jpg';
   img.onload  = drawCard;
   img.onerror = drawCard;
 
-
-  // Cross-browser roundRect helper (ctx.roundRect not available in all browsers)
-  function rrect(x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x+r, y);
-    ctx.lineTo(x+w-r, y);
-    ctx.quadraticCurveTo(x+w, y, x+w, y+r);
-    ctx.lineTo(x+w, y+h-r);
-    ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-    ctx.lineTo(x+r, y+h);
-    ctx.quadraticCurveTo(x, y+h, x, y+h-r);
-    ctx.lineTo(x, y+r);
-    ctx.quadraticCurveTo(x, y, x+r, y);
-    ctx.closePath();
+  // Cross-browser rounded rectangle helper
+  function rrect(c, x, y, w, h, r) {
+    c.beginPath();
+    c.moveTo(x+r, y);
+    c.lineTo(x+w-r, y);
+    c.quadraticCurveTo(x+w, y, x+w, y+r);
+    c.lineTo(x+w, y+h-r);
+    c.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    c.lineTo(x+r, y+h);
+    c.quadraticCurveTo(x, y+h, x, y+h-r);
+    c.lineTo(x, y+r);
+    c.quadraticCurveTo(x, y, x+r, y);
+    c.closePath();
   }
 
   function drawCard() {
-    // Background
+    ctx.clearRect(0, 0, CW, CH);
+
+    // ── DRAW FRONT (Left Half: 0 to 512, height 768) ──
+    ctx.save();
+    
+    // Background - dark blue-black
     ctx.fillStyle = '#0d1117';
-    ctx.fillRect(0, 0, CW, CH);
+    ctx.fillRect(0, 0, 512, 768);
 
     // Rounded border
     ctx.strokeStyle = 'rgba(255,255,255,0.15)';
     ctx.lineWidth = 6;
-    ctx.beginPath(); rrect(8,8,CW-16,CH-16,30); ctx.stroke();
+    rrect(ctx, 8, 8, 512-16, 768-16, 28);
+    ctx.stroke();
 
-    // Top gradient bar
-    const g = ctx.createLinearGradient(0,0,CW,0);
-    g.addColorStop(0,'#7000FF'); g.addColorStop(1,'#00D1FF');
-    ctx.fillStyle = g; ctx.fillRect(8,8,CW-16,16);
+    // Top gradient accent bar
+    const g = ctx.createLinearGradient(0, 0, 512, 0);
+    g.addColorStop(0, '#7000FF'); g.addColorStop(1, '#00D1FF');
+    ctx.fillStyle = g;
+    ctx.fillRect(8, 8, 512-16, 16);
 
-    // Lanyard hole
+    // Lanyard slot hole
     ctx.fillStyle = '#1a1e2b';
-    ctx.beginPath(); rrect(CW/2-40,30,80,14,7); ctx.fill();
+    rrect(256-40, 28, 80, 14, 7);
+    ctx.fill();
 
-    // Institution
+    // Institution Text
     ctx.fillStyle = '#6e7f8c';
     ctx.font = 'bold 14px "Courier New",monospace';
     ctx.textAlign = 'left';
     ctx.fillText('POLSRI  //  DEPT. MI', 32, 72);
 
-    // Green dot + status
+    // Online indicator status
     ctx.fillStyle = '#34d399';
-    ctx.beginPath(); ctx.arc(CW-45,67,6,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(512-45, 67, 6, 0, Math.PI*2); ctx.fill();
     ctx.font = 'bold 12px "Courier New",monospace';
-    ctx.fillText('ONLINE', CW-100, 72);
+    ctx.fillText('ONLINE', 512-100, 72);
 
     // Profile photo
-    const px=80, py=108, pw=CW-160, ph=270;
+    const px = 80, py = 108, pw = 512-160, ph = 270;
     ctx.save();
-    ctx.beginPath(); rrect(px,py,pw,ph,16); ctx.clip();
-    if (img.complete && img.naturalWidth > 0) ctx.drawImage(img,px,py,pw,ph);
-    else { ctx.fillStyle='#1c2333'; ctx.fillRect(px,py,pw,ph); }
+    rrect(ctx, px, py, pw, ph, 16); ctx.clip();
+    if (img.complete && img.naturalWidth > 0) {
+      ctx.drawImage(img, px, py, pw, ph);
+    } else {
+      ctx.fillStyle = '#1c2333';
+      ctx.fillRect(px, py, pw, ph);
+    }
     ctx.restore();
 
-    // Name (glow)
+    // Photo border
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 2;
+    rrect(ctx, px, py, pw, ph, 16);
+    ctx.stroke();
+
+    // Developer name (glow)
     ctx.shadowColor = '#00d1ff';
     ctx.shadowBlur  = 12;
     ctx.fillStyle   = '#a8f0ff';
     ctx.font        = 'bold 36px Arial,sans-serif';
     ctx.textAlign   = 'center';
-    ctx.fillText('GHALI RAHMAT', CW/2, 430);
+    ctx.fillText('GHALI RAHMAT', 256, 430);
     ctx.shadowBlur  = 0;
 
     // Role
     ctx.fillStyle = '#8aaab5';
     ctx.font      = 'bold 16px "Courier New",monospace';
-    ctx.fillText('>_ ANDROID NATIVE DEV', CW/2, 470);
+    ctx.fillText('>_ ANDROID NATIVE DEV', 256, 470);
 
-    // Divider
+    // Divider line
     ctx.strokeStyle = 'rgba(255,255,255,0.08)';
     ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(32,498); ctx.lineTo(CW-32,498); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(32, 498); ctx.lineTo(512-32, 498); ctx.stroke();
 
-    // Barcode
-    const bars=[10,4,14,6,22,4,8,30,6,10,4,18,5,12]; let bx=32;
-    bars.forEach((bw,i)=>{
-      if(i%2===0){ ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.fillRect(bx,520,bw,48); }
-      bx+=bw+3;
+    // Barcode decoration
+    const bars = [10, 4, 14, 6, 22, 4, 8, 30, 6, 10, 4, 18, 5, 12];
+    let bx = 32;
+    bars.forEach((bw, i) => {
+      if (i % 2 === 0) {
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fillRect(bx, 520, bw, 48);
+      }
+      bx += bw + 3;
     });
 
     // ID
     ctx.fillStyle = '#4a5a66';
     ctx.font = 'bold 12px "Courier New",monospace';
     ctx.textAlign = 'right';
-    ctx.fillText('DEV-ID: GR-2024-0892', CW-32, 620);
+    ctx.fillText('DEV-ID: GR-2024-0892', 512-32, 620);
+    ctx.restore();
+
+    // ── DRAW BACK (Right Half: 512 to 1024, height 768) ──
+    ctx.save();
+    ctx.translate(512, 0);
+
+    // Background - dark blue-black
+    ctx.fillStyle = '#0d1117';
+    ctx.fillRect(0, 0, 512, 768);
+
+    // Rounded border
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 6;
+    rrect(ctx, 8, 8, 512-16, 768-16, 28);
+    ctx.stroke();
+
+    // Large logo 'G'
+    ctx.fillStyle = '#7000ff';
+    ctx.font = 'bold 260px Arial,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('G', 256, 450);
+
+    // Branding name
+    ctx.fillStyle = '#00d1ff';
+    ctx.font = 'bold 20px "Courier New",monospace';
+    ctx.fillText('GHALI RAHMAT', 256, 550);
+    ctx.restore();
 
     cardTex.needsUpdate = true;
   }
   drawCard();
 
-  // ── SCENE ROOT — anchor point for the strap (hangs at top, card below) ─
+  // ── SCENE ROOT — matches Next.js <group position={[0, 4, 0]}> ───────────
   const root = new THREE.Group();
-  // X = CARD_WORLD_X so card hangs in right column
-  // Y = positive so card hangs DOWN into viewport center
   root.position.set(CARD_WORLD_X, 4.5, 0);
   scene.add(root);
 
-  // ── CARD BODY (moves with physics) ────────────────────────────────────
+  // ── CARD BODY (moves with physics) ─────────────────────────────────────
   const cardBody = new THREE.Group();
   root.add(cardBody);
 
-  // Card visual: smaller scale to fit nicely in right column
-  const CARD_SCALE = 1.8;  // reduced from 2.25 to fit viewport
+  // Card Visual: scale & offset matches App.js group [0, -1.2, -0.05]
+  const CARD_SCALE = 1.8;
   const cardVisual = new THREE.Group();
   cardVisual.scale.setScalar(CARD_SCALE);
   cardVisual.position.set(0, -1.2, -0.05);
   cardBody.add(cardVisual);
 
-  // Front plane — simple PlaneGeometry, NO GLB (avoids all UV flip issues)
-  // PlaneGeometry faces +Z by default, billboard will make +Z face camera → correct!
-  const CARD_W3D = 1.6, CARD_H3D = 2.4; // proportional to 512×800
+  // Fallback meshes (rendered before GLTF loads)
+  const CARD_W3D = 1.6, CARD_H3D = 2.4;
+  
+  // Helper to map PlaneGeometry UVs to texture atlas coordinates
+  function mapPlaneUVs(geo, minU, maxU, minV, maxV) {
+    const uvAttr = geo.attributes.uv;
+    for (let i = 0; i < uvAttr.count; i++) {
+      const u = uvAttr.getX(i); // 0 or 1
+      const v = uvAttr.getY(i); // 0 or 1
+      uvAttr.setX(i, minU + u * (maxU - minU));
+      uvAttr.setY(i, minV + v * (maxV - minV));
+    }
+    uvAttr.needsUpdate = true;
+  }
+
   const frontMesh = new THREE.Mesh(
     new THREE.PlaneGeometry(CARD_W3D, CARD_H3D),
     new THREE.MeshBasicMaterial({ map: cardTex })
   );
+  mapPlaneUVs(frontMesh.geometry, 0.0, 0.5, 0.0, 0.75);
   cardVisual.add(frontMesh);
 
-  // Back face
-  const backC = document.createElement('canvas');
-  backC.width=512; backC.height=800;
-  const bCtx=backC.getContext('2d');
-  bCtx.fillStyle='#0d1117'; bCtx.fillRect(0,0,512,800);
-  bCtx.strokeStyle='rgba(255,255,255,0.1)'; bCtx.lineWidth=6;
-  bCtx.beginPath(); bCtx.roundRect(8,8,496,784,30); bCtx.stroke();
-  bCtx.fillStyle='#7000ff'; bCtx.font='bold 260px Arial,sans-serif';
-  bCtx.textAlign='center'; bCtx.fillText('G',256,540);
-  bCtx.fillStyle='#00d1ff'; bCtx.font='bold 20px "Courier New",monospace';
-  bCtx.fillText('GHALI RAHMAT',256,640);
   const backMesh = new THREE.Mesh(
     new THREE.PlaneGeometry(CARD_W3D, CARD_H3D),
-    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(backC) })
+    new THREE.MeshBasicMaterial({ map: cardTex })
   );
+  mapPlaneUVs(backMesh.geometry, 0.5, 1.0, 0.0, 0.75);
   backMesh.rotation.y = Math.PI;
   cardVisual.add(backMesh);
 
-  // Metallic ring/clip at top of card (y = half card height = CARD_H3D/2)
+  // Fallback metallic ring
   const ringMesh = new THREE.Mesh(
     new THREE.TorusGeometry(0.08, 0.02, 8, 24),
-    new THREE.MeshStandardMaterial({ color:0xd0d0d0, metalness:0.95, roughness:0.15 })
+    new THREE.MeshStandardMaterial({ color: 0xd0d0d0, metalness: 0.95, roughness: 0.15 })
   );
-  ringMesh.position.set(0, CARD_H3D/2, 0);
+  ringMesh.position.set(0, CARD_H3D / 2, 0);
   cardVisual.add(ringMesh);
 
-  // Invisible hit box for raycasting (matches CuboidCollider [0.8,1.125,0.01] × 2.25)
+  // Invisible hit mesh for dragging (CuboidCollider bounds)
   const hitMesh = new THREE.Mesh(
-    new THREE.BoxGeometry(CARD_W3D * CARD_SCALE, CARD_H3D * CARD_SCALE, 0.1),
+    new THREE.BoxGeometry(CARD_W3D * CARD_SCALE, CARD_H3D * CARD_SCALE, 0.15),
     new THREE.MeshBasicMaterial({ visible: false })
   );
   cardBody.add(hitMesh);
 
-  // ── STRAP (TubeGeometry — reliable, no CDN dependency) ─────────────────
+  // Load GLTF Model (geometries extracted, centered, and textures applied)
+  const gltfLoader = new THREE.GLTFLoader();
+  gltfLoader.load('kartu.glb',
+    (gltf) => {
+      let cardGeo, clipGeo, clampGeo;
+      gltf.scene.traverse((child) => {
+        if (child.isMesh) {
+          if (child.name === 'card') cardGeo = child.geometry;
+          if (child.name === 'clip') clipGeo = child.geometry;
+          if (child.name === 'clamp') clampGeo = child.geometry;
+        }
+      });
+
+      if (cardGeo && clipGeo && clampGeo) {
+        // Hide fallback meshes
+        frontMesh.visible = false;
+        backMesh.visible = false;
+        ringMesh.visible = false;
+
+        // Important: set flipY false for GLTF mapping
+        cardTex.flipY = false;
+        cardTex.needsUpdate = true;
+
+        const baseMat = new THREE.MeshPhysicalMaterial({
+          map: cardTex,
+          roughness: 0.3,
+          metalness: 0.5,
+          clearcoat: 1,
+          clearcoatRoughness: 0.15
+        });
+
+        const metalMat = new THREE.MeshStandardMaterial({
+          color: 0xcccccc,
+          metalness: 0.95,
+          roughness: 0.25
+        });
+
+        // Instantiate new meshes with GLTF geometries (which bypasses node offsets)
+        const glbCardMesh = new THREE.Mesh(cardGeo, baseMat);
+        const glbClipMesh = new THREE.Mesh(clipGeo, metalMat);
+        const glbClampMesh = new THREE.Mesh(clampGeo, metalMat);
+
+        cardVisual.add(glbCardMesh);
+        cardVisual.add(glbClipMesh);
+        cardVisual.add(glbClampMesh);
+        
+        console.log("GLTF meshes successfully loaded and added");
+      }
+    },
+    undefined,
+    (err) => {
+      console.warn("GLTF load failed, using fallback card mesh", err);
+    }
+  );
+
+  // ── STRAP FLAT RIBBON (Custom billboarded geometry, like MeshLine) ────────
+  const numPoints = 33;
+  const ribbonGeometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(numPoints * 2 * 3);
+  const uvs = new Float32Array(numPoints * 2 * 2);
+  const indices = new Uint16Array((numPoints - 1) * 2 * 3);
+
+  // Setup static UVs and Indices once
+  for (let i = 0; i < numPoints; i++) {
+    const u = i / (numPoints - 1);
+    // Texture repeats 4.5 times along the ribbon
+    const uText = u * 4.5;
+    
+    // Left vertex UV
+    uvs[i * 4 + 0] = uText;
+    uvs[i * 4 + 1] = 0;
+
+    // Right vertex UV
+    uvs[i * 4 + 2] = uText;
+    uvs[i * 4 + 3] = 1;
+  }
+
+  for (let i = 0; i < numPoints - 1; i++) {
+    const currLeft = i * 2;
+    const currRight = i * 2 + 1;
+    const nextLeft = (i + 1) * 2;
+    const nextRight = (i + 1) * 2 + 1;
+
+    // Triangle 1
+    indices[i * 6 + 0] = currLeft;
+    indices[i * 6 + 1] = currRight;
+    indices[i * 6 + 2] = nextLeft;
+
+    // Triangle 2
+    indices[i * 6 + 3] = currRight;
+    indices[i * 6 + 4] = nextRight;
+    indices[i * 6 + 5] = nextLeft;
+  }
+
+  ribbonGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  ribbonGeometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+  ribbonGeometry.setIndex(new THREE.BufferAttribute(indices, 1));
+
+  // Load strap texture
   const texLoader = new THREE.TextureLoader();
-  const bandTex = texLoader.load('bandd.png', (t) => {
+  const bandTexture = texLoader.load('bandd.png', (t) => {
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    t.repeat.set(8, 1);
   });
+  
   const strapMat = new THREE.MeshStandardMaterial({
-    map: bandTex, roughness: 0.5, metalness: 0.05
+    map: bandTexture,
+    roughness: 0.6,
+    metalness: 0.05,
+    side: THREE.DoubleSide
   });
-  let strapMesh = new THREE.Mesh(new THREE.BufferGeometry(), strapMat);
+
+  const strapMesh = new THREE.Mesh(ribbonGeometry, strapMat);
   strapMesh.frustumCulled = false;
   scene.add(strapMesh);
 
-  // ── VERLET PHYSICS — 4 segments: fixed→j1→j2→j3→card ─────────────────
-  // Initial positions in root-local space (matches App.js <group position>)
-  // fixed=(0,0,0), j1=(0.5,0,0), j2=(1,0,0), j3=(1.5,0,0), card=(2,0,0)
+  // ── VERLET PHYSICS — 5 nodes: fixed → j1 → j2 → j3/clip → card ───────────
+  // rest length REST = 1.6 makes the strap visibly longer and realistic
   const FIXED = new THREE.Vector3(0, 0, 0);
-  const GRAV  = -40;   // exact from App.js gravity={[0,-40,0]}
+  const GRAV  = -45;
   const DAMP  = 0.88;
-  const REST  = 1.8;   // longer rope for visible strap
+  const REST  = 1.6; // longer rope segment
   const MAX_SPEED = 50, MIN_SPEED = 10;
 
   const nodes = [
     { pos: new THREE.Vector3(0,   0, 0), prev: new THREE.Vector3(0,   0, 0), pinned: true  },
-    { pos: new THREE.Vector3(0.5, 0, 0), prev: new THREE.Vector3(0.5, 0, 0), pinned: false },
-    { pos: new THREE.Vector3(1,   0, 0), prev: new THREE.Vector3(1,   0, 0), pinned: false },
-    { pos: new THREE.Vector3(1.5, 0, 0), prev: new THREE.Vector3(1.5, 0, 0), pinned: false },
-    { pos: new THREE.Vector3(2,   0, 0), prev: new THREE.Vector3(2,   0, 0), pinned: false },
+    { pos: new THREE.Vector3(0.4, 0, 0), prev: new THREE.Vector3(0.4, 0, 0), pinned: false },
+    { pos: new THREE.Vector3(0.8, 0, 0), prev: new THREE.Vector3(0.8, 0, 0), pinned: false },
+    { pos: new THREE.Vector3(1.2, 0, 0), prev: new THREE.Vector3(1.2, 0, 0), pinned: false },
+    { pos: new THREE.Vector3(1.6, 0, 0), prev: new THREE.Vector3(1.6, 0, 0), pinned: false },
   ];
+
   const lerped = [
     null,
-    new THREE.Vector3(0.5, 0, 0),
-    new THREE.Vector3(1,   0, 0),
+    new THREE.Vector3(0.4, 0, 0),
+    new THREE.Vector3(0.8, 0, 0),
     null, null
   ];
 
@@ -708,6 +862,45 @@ function initLanyard3D() {
   const clock = new THREE.Clock();
   let cardAngVelY = 0, cardRotY = 0;
 
+  // Ribbon geometry generator that creates a flat billboarded ribbon
+  function updateRibbonGeometry(geometry, points, width) {
+    const posAttr = geometry.getAttribute('position');
+    const posArray = posAttr.array;
+    const tangent = new THREE.Vector3();
+    const toCam = new THREE.Vector3();
+    const side = new THREE.Vector3();
+
+    for (let i = 0; i < points.length; i++) {
+      const p = points[i];
+
+      if (i === 0) {
+        tangent.copy(points[1]).sub(points[0]).normalize();
+      } else if (i === points.length - 1) {
+        tangent.copy(points[points.length - 1]).sub(points[points.length - 2]).normalize();
+      } else {
+        tangent.copy(points[i + 1]).sub(points[i - 1]).normalize();
+      }
+
+      toCam.copy(camera.position).sub(p).normalize();
+      side.crossVectors(tangent, toCam).normalize();
+
+      const halfWidth = width / 2;
+      
+      // Left edge vertex
+      posArray[i * 6 + 0] = p.x - side.x * halfWidth;
+      posArray[i * 6 + 1] = p.y - side.y * halfWidth;
+      posArray[i * 6 + 2] = p.z - side.z * halfWidth;
+
+      // Right edge vertex
+      posArray[i * 6 + 3] = p.x + side.x * halfWidth;
+      posArray[i * 6 + 4] = p.y + side.y * halfWidth;
+      posArray[i * 6 + 5] = p.z + side.z * halfWidth;
+    }
+
+    posAttr.needsUpdate = true;
+    geometry.computeVertexNormals();
+  }
+
   function animate() {
     requestAnimationFrame(animate);
     const dt = Math.min(clock.getDelta(), 1/30);
@@ -729,7 +922,7 @@ function initLanyard3D() {
       n.pos.add(vel);
     }
 
-    // Constraint relaxation (40 iterations for stiffness)
+    // Constraint relaxation
     for (let iter = 0; iter < 40; iter++) {
       nodes[0].pos.copy(FIXED);
       for (let i = 0; i < nodes.length - 1; i++) {
@@ -738,13 +931,15 @@ function initLanyard3D() {
         const d   = b.pos.clone().sub(a.pos);
         const len = d.length();
         if (len < 1e-4) continue;
-        const corr = d.multiplyScalar((len - REST) / len * 0.5);
+        // Last segment (from clip to card center) rest length = 1.45
+        const restLen = (i === 3) ? 1.45 : REST;
+        const corr = d.multiplyScalar((len - restLen) / len * 0.5);
         if (!a.pinned) a.pos.add(corr);
         b.pos.sub(corr);
       }
     }
 
-    // Lerp j1 & j2 (matches original clamped-distance lerp)
+    // Lerp j1 & j2 (smooth lag effect)
     for (let i = 1; i <= 2; i++) {
       const cd = Math.max(0.1, Math.min(1, lerped[i].distanceTo(nodes[i].pos)));
       lerped[i].lerp(nodes[i].pos, dt * (MIN_SPEED + cd * (MAX_SPEED - MIN_SPEED)));
@@ -753,40 +948,48 @@ function initLanyard3D() {
     // Position card body
     cardBody.position.copy(nodes[4].pos);
 
-    // ── BILLBOARD: copy camera quaternion → card always faces viewer correctly ──
-    cardBody.quaternion.copy(camera.quaternion);
+    // ── ROTATION MATH: Hanging card alignment ──
+    // Local Y axis: points from card center (nodes[4]) to clip node (nodes[3])
+    const upDir = new THREE.Vector3().subVectors(nodes[3].pos, nodes[4].pos).normalize();
 
-    // Gentle angular damping on Y (matches ang.y - rot.y * 0.25)
-    if (!isDragging) {
-      cardAngVelY -= cardRotY * 0.25 * dt;
-      cardAngVelY *= 0.97;
-      cardRotY    += cardAngVelY;
-      cardBody.quaternion.multiply(
-        new THREE.Quaternion().setFromEuler(new THREE.Euler(0, cardRotY, 0))
-      );
-    } else {
-      cardAngVelY = 0; cardRotY = 0;
-    }
+    // Local X axis: orthogonal to upDir and Z-facing reference
+    const lookDir = new THREE.Vector3(0, 0, 1);
+    const rightDir = new THREE.Vector3().crossVectors(upDir, lookDir);
+    if (rightDir.lengthSq() < 0.0001) rightDir.set(1, 0, 0);
+    rightDir.normalize();
 
-    // ── STRAP CURVE ──────────────────────────────────────────────────────
-    // Attachment on card = local [0, 1.45, 0] (sphericalJoint from App.js)
-    cardBody.updateMatrixWorld(true);
+    // Local Z axis: orthogonal to X and Y (faces camera)
+    const fwdDir = new THREE.Vector3().crossVectors(rightDir, upDir).normalize();
+
+    // Base rotation matrix
+    const rotMat = new THREE.Matrix4().makeBasis(rightDir, upDir, fwdDir);
+    cardBody.quaternion.setFromRotationMatrix(rotMat);
+
+    // ── Y-SPIN PHYSICS (Swing & Drag Torque) ──
+    const velX = (nodes[4].pos.x - nodes[4].prev.x) / dt;
+    const torque = velX * 0.6 - cardRotY * 2.0; // torque pulls rotation back to 0
+    cardAngVelY += torque * dt;
+    cardAngVelY *= 0.98; // damping
+    cardRotY += cardAngVelY * dt;
+
+    // Apply spin quaternion
+    const spinQuat = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), cardRotY);
+    cardBody.quaternion.multiply(spinQuat);
+
+    // ── UPDATE STRAP ──
     const attachWorld = new THREE.Vector3(0, 1.45, 0).applyMatrix4(cardBody.matrixWorld);
-
-    // Curve from card attachment → j3 → j2(lerped) → j1(lerped) → root anchor (world)
     const rootWorld = new THREE.Vector3();
-    root.getWorldPosition(rootWorld); // world position of fixed anchor
+    root.getWorldPosition(rootWorld);
 
-    const j3w = root.localToWorld(nodes[3].pos.clone());
     const j2w = root.localToWorld(lerped[2].clone());
     const j1w = root.localToWorld(lerped[1].clone());
 
-    const strapCurve = new THREE.CatmullRomCurve3([attachWorld, j3w, j2w, j1w, rootWorld]);
+    const strapCurve = new THREE.CatmullRomCurve3([attachWorld, j2w, j1w, rootWorld]);
     strapCurve.curveType = 'chordal';
+    const pts = strapCurve.getPoints(numPoints - 1);
 
-    const newGeo = new THREE.TubeGeometry(strapCurve, 48, 0.06, 10, false);
-    if (strapMesh.geometry) strapMesh.geometry.dispose();
-    strapMesh.geometry = newGeo;
+    // Update flat ribbon
+    updateRibbonGeometry(ribbonGeometry, pts, 0.08);
 
     renderer.render(scene, camera);
   }
