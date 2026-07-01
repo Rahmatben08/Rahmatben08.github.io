@@ -785,8 +785,8 @@ function initLanyard3D() {
   // Setup static UVs and Indices once
   for (let i = 0; i < numPoints; i++) {
     const u = i / (numPoints - 1);
-    // Texture repeats 4.5 times along the ribbon
-    const uText = u * 4.5;
+    // Texture repeats 25 times along the ribbon for realistic damask weave aspect ratio
+    const uText = u * 25.0;
     
     // Left vertex UV
     uvs[i * 4 + 0] = uText;
