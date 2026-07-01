@@ -678,16 +678,13 @@ function initLanyard3D() {
     uvAttr.needsUpdate = true;
   }
 
-  // Glassmorphic fallback material
-  const glassMatFallback = new THREE.MeshPhysicalMaterial({
+  // Premium fallback material (high compatibility)
+  const glassMatFallback = new THREE.MeshStandardMaterial({
     map: cardTex,
-    roughness: 0.15,
-    metalness: 0.1,
-    transmission: 0.65,
-    thickness: 1.5,
-    clearcoat: 1.0,
+    roughness: 0.25,
+    metalness: 0.15,
     transparent: true,
-    opacity: 0.92,
+    opacity: 0.95,
     side: THREE.DoubleSide
   });
 
@@ -744,17 +741,13 @@ function initLanyard3D() {
         cardTex.flipY = false;
         cardTex.needsUpdate = true;
 
-        // Glassmorphism main physical material (roughness, transmission, clearcoat)
-        const baseMat = new THREE.MeshPhysicalMaterial({
+        // Premium standard material (high compatibility fallback for glassmorphism)
+        const baseMat = new THREE.MeshStandardMaterial({
           map: cardTex,
-          roughness: 0.15,
-          metalness: 0.1,
-          transmission: 0.65,
-          thickness: 1.5,
-          clearcoat: 1.0,
-          clearcoatRoughness: 0.1,
+          roughness: 0.25,
+          metalness: 0.15,
           transparent: true,
-          opacity: 0.92,
+          opacity: 0.95,
           side: THREE.DoubleSide
         });
 
@@ -1089,7 +1082,7 @@ function initLanyard3D() {
     cardBody.quaternion.setFromRotationMatrix(rotMat);
 
     // ── Y-SPIN PHYSICS (Swing & Drag Torque) ──
-    const velX = (nodes[4].pos.x - nodes[4].prev.x) / dt;
+    const velX = dt > 0.0001 ? (nodes[4].pos.x - nodes[4].prev.x) / dt : 0;
     const torque = velX * 0.6 - cardRotY * 2.0; // torque pulls rotation back to 0
     cardAngVelY += torque * dt;
     cardAngVelY *= 0.98; // damping
@@ -1100,6 +1093,7 @@ function initLanyard3D() {
     cardBody.quaternion.multiply(spinQuat);
 
     // ── UPDATE STRAP ──
+    cardBody.updateMatrixWorld(true);
     const attachWorld = new THREE.Vector3(0, 1.45, 0).applyMatrix4(cardBody.matrixWorld);
     const rootWorld = new THREE.Vector3();
     root.getWorldPosition(rootWorld);
