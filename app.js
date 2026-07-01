@@ -465,7 +465,7 @@ function initLanyard3D() {
   cardTex.flipY = true; // will toggle to false if GLTF model loads
 
   const img = new Image();
-  img.src = 'profile.jpg';
+  img.src = 'profile.jpg?v=2.3.0';
   img.onload  = drawCard;
   img.onerror = drawCard;
 
@@ -727,7 +727,7 @@ function initLanyard3D() {
 
   // Load GLTF Model (geometries extracted, centered, and textures applied)
   const gltfLoader = new THREE.GLTFLoader();
-  gltfLoader.load('kartu.glb',
+  gltfLoader.load('kartu.glb?v=2.3.0',
     (gltf) => {
       let cardGeo, clipGeo, clampGeo;
       gltf.scene.traverse((child) => {
@@ -827,7 +827,7 @@ function initLanyard3D() {
 
   // Load strap texture
   const texLoader = new THREE.TextureLoader();
-  const bandTexture = texLoader.load('bandd.png', (t) => {
+  const bandTexture = texLoader.load('bandd.png?v=2.3.0', (t) => {
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
   });
   
