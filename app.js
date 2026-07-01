@@ -459,10 +459,14 @@ function initLanyard3D() {
   bCanvas.width = CW; bCanvas.height = CH;
   const ctx = bCanvas.getContext('2d');
   
-  // Create CanvasTexture
-  const cardTex = new THREE.CanvasTexture(bCanvas);
-  cardTex.anisotropy = 16;
-  cardTex.flipY = true; // will toggle to false if GLTF model loads
+  // Create Dual CanvasTextures with static flipY values to prevent WebGL state upload bugs
+  const cardTexGLTF = new THREE.CanvasTexture(bCanvas);
+  cardTexGLTF.anisotropy = 16;
+  cardTexGLTF.flipY = false;
+
+  const cardTexFallback = new THREE.CanvasTexture(bCanvas);
+  cardTexFallback.anisotropy = 16;
+  cardTexFallback.flipY = true;
 
   const img = new Image();
   img.src = 'profile.jpg?v=2.3.0';
@@ -650,7 +654,8 @@ function initLanyard3D() {
     ctx.fillText('GHALI RAHMAT', 256, 550);
     ctx.restore();
 
-    cardTex.needsUpdate = true;
+    cardTexGLTF.needsUpdate = true;
+    cardTexFallback.needsUpdate = true;
   }
   drawCard();
 
@@ -687,7 +692,7 @@ function initLanyard3D() {
 
   // Premium fallback material (high compatibility)
   const glassMatFallback = new THREE.MeshStandardMaterial({
-    map: cardTex,
+    map: cardTexGLTF,
     roughness: 0.25,
     metalness: 0.15,
     transparent: true,
@@ -744,13 +749,13 @@ function initLanyard3D() {
         backMesh.visible = false;
         ringMesh.visible = false;
 
-        // Important: set flipY false for GLTF mapping
-        cardTex.flipY = false;
-        cardTex.needsUpdate = true;
+
+        cardTexGLTF.needsUpdate = true;
+    cardTexFallback.needsUpdate = true;
 
         // Premium standard material (high compatibility fallback for glassmorphism)
         const baseMat = new THREE.MeshStandardMaterial({
-          map: cardTex,
+          map: cardTexGLTF,
           roughness: 0.25,
           metalness: 0.15,
           transparent: true,
