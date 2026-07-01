@@ -396,7 +396,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ==========================================================================
 // 3D LANYARD BADGE — Vanilla Three.js port of 3D_CARD-main/components/band/App.js
-// Optimized with custom billboard ribbon geometry and GLTF mesh loading.
+// Upgraded to match user's reference image with Glassmorphism, PointLight Glow,
+// and floating cyber nano-particles.
 // ==========================================================================
 function initLanyard3D() {
   const container = document.getElementById('lanyardContainer');
@@ -436,6 +437,11 @@ function initLanyard3D() {
     scene.add(dl);
   });
 
+  // ── REACTIVE POINT LIGHT (casts dynamic cyan glow behind the card) ───────
+  const reactiveLight = new THREE.PointLight(0x00d1ff, 6, 12);
+  reactiveLight.position.set(CARD_WORLD_X, CARD_WORLD_Y, -0.5);
+  scene.add(reactiveLight);
+
   // ── CARD TEXTURE (Canvas 2D) ─────────────────────────────────────────────
   // A 1024x1024 texture atlas matching the UV layout of kartu.glb:
   // Left 512x768 = card FRONT
@@ -471,49 +477,71 @@ function initLanyard3D() {
     c.closePath();
   }
 
+  // Draw gold microchip helper (matches reference image)
+  function drawChip(c, x, y, w, h) {
+    const g = c.createLinearGradient(x, y, x + w, y + h);
+    g.addColorStop(0, '#ffe57f');
+    g.addColorStop(0.4, '#ffd740');
+    g.addColorStop(0.8, '#ffc400');
+    g.addColorStop(1, '#ffb300');
+    c.fillStyle = g;
+    rrect(c, x, y, w, h, 6);
+    c.fill();
+
+    // Darker outline
+    c.strokeStyle = '#6d4c41';
+    c.lineWidth = 1.5;
+    rrect(ctx, x, y, w, h, 6);
+    c.stroke();
+
+    // Chip metallic design lines
+    c.beginPath();
+    c.moveTo(x, y + h / 2);
+    c.lineTo(x + w, y + h / 2);
+    
+    c.moveTo(x + w / 3, y);
+    c.lineTo(x + w / 3, y + h);
+    
+    c.moveTo(x + 2 * w / 3, y);
+    c.lineTo(x + 2 * w / 3, y + h);
+    c.stroke();
+
+    // Center circular design
+    c.fillStyle = '#ffd740';
+    c.beginPath();
+    c.arc(x + w / 2, y + h / 2, 7, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+  }
+
   function drawCard() {
     ctx.clearRect(0, 0, CW, CH);
 
     // ── DRAW FRONT (Left Half: 0 to 512, height 768) ──
     ctx.save();
     
-    // Background - dark blue-black
-    ctx.fillStyle = '#0d1117';
+    // Background - dark blue-black with high premium glass look
+    ctx.fillStyle = 'rgba(13, 17, 23, 0.95)';
     ctx.fillRect(0, 0, 512, 768);
 
-    // Rounded border
-    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    // Rounded border (glowing cyan/white)
+    ctx.strokeStyle = 'rgba(0, 209, 255, 0.4)';
     ctx.lineWidth = 6;
     rrect(ctx, 8, 8, 512-16, 768-16, 28);
     ctx.stroke();
 
-    // Top gradient accent bar
-    const g = ctx.createLinearGradient(0, 0, 512, 0);
-    g.addColorStop(0, '#7000FF'); g.addColorStop(1, '#00D1FF');
-    ctx.fillStyle = g;
-    ctx.fillRect(8, 8, 512-16, 16);
+    // Top slots (lanyard clips / accessories holes)
+    ctx.fillStyle = '#1e2530';
+    rrect(ctx, 100, 28, 60, 12, 5); ctx.fill();
+    rrect(ctx, 512-160, 28, 60, 12, 5); ctx.fill();
+    
+    // Center lanyard clip hole
+    rrect(ctx, 256-40, 28, 80, 14, 7); ctx.fill();
 
-    // Lanyard slot hole
-    ctx.fillStyle = '#1a1e2b';
-    rrect(256-40, 28, 80, 14, 7);
-    ctx.fill();
-
-    // Institution Text
-    ctx.fillStyle = '#6e7f8c';
-    ctx.font = 'bold 14px "Courier New",monospace';
-    ctx.textAlign = 'left';
-    ctx.fillText('POLSRI  //  DEPT. MI', 32, 72);
-
-    // Online indicator status
-    ctx.fillStyle = '#34d399';
-    ctx.beginPath(); ctx.arc(512-45, 67, 6, 0, Math.PI*2); ctx.fill();
-    ctx.font = 'bold 12px "Courier New",monospace';
-    ctx.fillText('ONLINE', 512-100, 72);
-
-    // Profile photo
-    const px = 80, py = 108, pw = 512-160, ph = 270;
+    // Profile photo (larger, vertically centered, matches image)
+    const px = 70, py = 100, pw = 512-140, ph = 380;
     ctx.save();
-    rrect(ctx, px, py, pw, ph, 16); ctx.clip();
+    rrect(ctx, px, py, pw, ph, 18); ctx.clip();
     if (img.complete && img.naturalWidth > 0) {
       ctx.drawImage(img, px, py, pw, ph);
     } else {
@@ -523,46 +551,70 @@ function initLanyard3D() {
     ctx.restore();
 
     // Photo border
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-    ctx.lineWidth = 2;
-    rrect(ctx, px, py, pw, ph, 16);
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 3;
+    rrect(ctx, px, py, pw, ph, 18);
     ctx.stroke();
 
-    // Developer name (glow)
-    ctx.shadowColor = '#00d1ff';
-    ctx.shadowBlur  = 12;
-    ctx.fillStyle   = '#a8f0ff';
-    ctx.font        = 'bold 36px Arial,sans-serif';
+    // Smart chip overlayed at bottom-center of the photo
+    const chipW = 60, chipH = 50;
+    drawChip(ctx, 256 - chipW / 2, py + ph - chipH - 15, chipW, chipH);
+
+    // Green "ONLINE" pill overlayed on the bottom-right of the photo
+    const pillW = 80, pillH = 26;
+    const pillX = px + pw - pillW - 15;
+    const pillY = py + ph - pillH - 27;
+    ctx.fillStyle = 'rgba(52, 211, 153, 0.25)';
+    rrect(ctx, pillX, pillY, pillW, pillH, 13);
+    ctx.fill();
+    ctx.strokeStyle = '#34d399';
+    ctx.lineWidth = 1.5;
+    rrect(ctx, pillX, pillY, pillW, pillH, 13);
+    ctx.stroke();
+
+    // Online green dot
+    ctx.fillStyle = '#34d399';
+    ctx.beginPath();
+    ctx.arc(pillX + 16, pillY + pillH / 2, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Online text
+    ctx.fillStyle = '#34d399';
+    ctx.font = 'bold 11px "Courier New",monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('ONLINE', pillX + 28, pillY + pillH / 2 + 4);
+
+    // Developer name
+    ctx.fillStyle   = '#ffffff';
+    ctx.font        = 'bold 32px Arial,sans-serif';
     ctx.textAlign   = 'center';
-    ctx.fillText('GHALI RAHMAT', 256, 430);
-    ctx.shadowBlur  = 0;
+    ctx.fillText('GHALI RAHMAT', 256, 530);
 
     // Role
-    ctx.fillStyle = '#8aaab5';
-    ctx.font      = 'bold 16px "Courier New",monospace';
-    ctx.fillText('>_ ANDROID NATIVE DEV', 256, 470);
+    ctx.fillStyle = '#a0aec0';
+    ctx.font      = 'bold 14px "Courier New",monospace';
+    ctx.fillText('ANDROID NATIVE DEV', 256, 565);
 
-    // Divider line
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-    ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(32, 498); ctx.lineTo(512-32, 498); ctx.stroke();
+    // Institution Text at bottom
+    ctx.fillStyle = '#718096';
+    ctx.font = 'bold 14px "Courier New",monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('D4 MI POLSRI', 45, 660);
 
-    // Barcode decoration
-    const bars = [10, 4, 14, 6, 22, 4, 8, 30, 6, 10, 4, 18, 5, 12];
-    let bx = 32;
-    bars.forEach((bw, i) => {
-      if (i % 2 === 0) {
-        ctx.fillStyle = 'rgba(255,255,255,0.3)';
-        ctx.fillRect(bx, 520, bw, 48);
-      }
-      bx += bw + 3;
-    });
+    // Small decorative logo/symbol at bottom-right
+    const logoX = 512 - 75, logoY = 645, logoS = 25;
+    ctx.strokeStyle = '#718096';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(logoX + logoS/2, logoY + logoS/2, logoS/2, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(logoX + 5, logoY + logoS/2);
+    ctx.lineTo(logoX + logoS - 5, logoY + logoS/2);
+    ctx.moveTo(logoX + logoS/2, logoY + 5);
+    ctx.lineTo(logoX + logoS/2, logoY + logoS - 5);
+    ctx.stroke();
 
-    // ID
-    ctx.fillStyle = '#4a5a66';
-    ctx.font = 'bold 12px "Courier New",monospace';
-    ctx.textAlign = 'right';
-    ctx.fillText('DEV-ID: GR-2024-0892', 512-32, 620);
     ctx.restore();
 
     // ── DRAW BACK (Right Half: 512 to 1024, height 768) ──
@@ -626,16 +678,29 @@ function initLanyard3D() {
     uvAttr.needsUpdate = true;
   }
 
+  // Glassmorphic fallback material
+  const glassMatFallback = new THREE.MeshPhysicalMaterial({
+    map: cardTex,
+    roughness: 0.15,
+    metalness: 0.1,
+    transmission: 0.65,
+    thickness: 1.5,
+    clearcoat: 1.0,
+    transparent: true,
+    opacity: 0.92,
+    side: THREE.DoubleSide
+  });
+
   const frontMesh = new THREE.Mesh(
     new THREE.PlaneGeometry(CARD_W3D, CARD_H3D),
-    new THREE.MeshBasicMaterial({ map: cardTex })
+    glassMatFallback
   );
   mapPlaneUVs(frontMesh.geometry, 0.0, 0.5, 0.0, 0.75);
   cardVisual.add(frontMesh);
 
   const backMesh = new THREE.Mesh(
     new THREE.PlaneGeometry(CARD_W3D, CARD_H3D),
-    new THREE.MeshBasicMaterial({ map: cardTex })
+    glassMatFallback
   );
   mapPlaneUVs(backMesh.geometry, 0.5, 1.0, 0.0, 0.75);
   backMesh.rotation.y = Math.PI;
@@ -679,12 +744,18 @@ function initLanyard3D() {
         cardTex.flipY = false;
         cardTex.needsUpdate = true;
 
+        // Glassmorphism main physical material (roughness, transmission, clearcoat)
         const baseMat = new THREE.MeshPhysicalMaterial({
           map: cardTex,
-          roughness: 0.3,
-          metalness: 0.5,
-          clearcoat: 1,
-          clearcoatRoughness: 0.15
+          roughness: 0.15,
+          metalness: 0.1,
+          transmission: 0.65,
+          thickness: 1.5,
+          clearcoat: 1.0,
+          clearcoatRoughness: 0.1,
+          transparent: true,
+          opacity: 0.92,
+          side: THREE.DoubleSide
         });
 
         const metalMat = new THREE.MeshStandardMaterial({
@@ -770,6 +841,58 @@ function initLanyard3D() {
   const strapMesh = new THREE.Mesh(ribbonGeometry, strapMat);
   strapMesh.frustumCulled = false;
   scene.add(strapMesh);
+
+  // ── CYBER NANO PARTICLES SYSTEM ──────────────────────────────────────────
+  const particleCount = 70;
+  const particleGeo = new THREE.BufferGeometry();
+  const particlePositions = new Float32Array(particleCount * 3);
+  const particleSpeeds = [];
+
+  for (let i = 0; i < particleCount; i++) {
+    // Distribute particles in a box around the card area
+    const px = CARD_WORLD_X + (Math.random() - 0.5) * 6;
+    const py = CARD_WORLD_Y + (Math.random() - 0.5) * 6;
+    const pz = (Math.random() - 0.5) * 4;
+
+    particlePositions[i * 3 + 0] = px;
+    particlePositions[i * 3 + 1] = py;
+    particlePositions[i * 3 + 2] = pz;
+
+    particleSpeeds.push({
+      x: (Math.random() - 0.5) * 0.1,
+      y: 0.15 + Math.random() * 0.25, // float upwards
+      z: (Math.random() - 0.5) * 0.1,
+      baseX: px,
+      amplitude: 0.2 + Math.random() * 0.35,
+      freq: 1 + Math.random() * 2,
+      phase: Math.random() * Math.PI
+    });
+  }
+
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+
+  // Circular glowing dot canvas texture for the particles
+  const pCanvas = document.createElement('canvas');
+  pCanvas.width = 16; pCanvas.height = 16;
+  const pCtx = pCanvas.getContext('2d');
+  const pGrad = pCtx.createRadialGradient(8, 8, 0, 8, 8, 8);
+  pGrad.addColorStop(0, 'rgba(0, 209, 255, 1)');
+  pGrad.addColorStop(0.3, 'rgba(0, 209, 255, 0.4)');
+  pGrad.addColorStop(1, 'rgba(0, 209, 255, 0)');
+  pCtx.fillStyle = pGrad;
+  pCtx.fillRect(0, 0, 16, 16);
+  const particleTex = new THREE.CanvasTexture(pCanvas);
+
+  const particleMat = new THREE.PointsMaterial({
+    size: 0.12,
+    map: particleTex,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+
+  const particles = new THREE.Points(particleGeo, particleMat);
+  scene.add(particles);
 
   // ── VERLET PHYSICS — 5 nodes: fixed → j1 → j2 → j3/clip → card ───────────
   // rest length REST = 1.6 makes the strap visibly longer and realistic
@@ -990,6 +1113,45 @@ function initLanyard3D() {
 
     // Update flat ribbon
     updateRibbonGeometry(ribbonGeometry, pts, 0.08);
+
+    // ── UPDATE REACTIVE LIGHT ──
+    const cardWorldPos = new THREE.Vector3();
+    cardBody.getWorldPosition(cardWorldPos);
+    reactiveLight.position.copy(cardWorldPos);
+    reactiveLight.position.z -= 0.5; // keep behind
+
+    // Pulsing reactive intensity
+    const speed = Math.abs(velX);
+    const intensity = 4.5 + Math.min(speed * 0.4, 8.0) + Math.sin(clock.getElapsedTime() * 4) * 0.5;
+    reactiveLight.intensity = intensity;
+
+    // ── UPDATE PARTICLES ──
+    const pPosAttr = particleGeo.getAttribute('position');
+    const pArray = pPosAttr.array;
+    const time = clock.getElapsedTime();
+
+    for (let i = 0; i < particleCount; i++) {
+      let cy = pArray[i * 3 + 1];
+      cy += particleSpeeds[i].y * dt;
+
+      // Wrap around Y boundaries
+      if (cy > 2.0) {
+        cy = -5.0;
+      }
+
+      const baseIdx = i * 3;
+      const speedData = particleSpeeds[i];
+      // Drift horizontally with sine waves
+      pArray[baseIdx + 0] = speedData.baseX + Math.sin(time * speedData.freq + speedData.phase) * speedData.amplitude;
+      pArray[baseIdx + 1] = cy;
+      
+      // Drift in depth (Z)
+      pArray[baseIdx + 2] += speedData.z * dt;
+      if (Math.abs(pArray[baseIdx + 2]) > 2) {
+        speedData.z *= -1; // bounce
+      }
+    }
+    pPosAttr.needsUpdate = true;
 
     renderer.render(scene, camera);
   }
