@@ -179,16 +179,23 @@ function renderProjects() {
     allGrid.innerHTML = '';
     if (filteredProjects.length === 0) {
       allGrid.innerHTML = `
-        <div class="no-projects-msg col-span-full text-center py-12 text-on-surface-variant">
+        <div class="no-projects-msg col-span-full text-center py-12 text-on-surface-variant animate-project-card">
           <span class="material-symbols-outlined text-4xl mb-3 text-muted">search_off</span>
           <h3 class="text-lg font-bold">Proyek Tidak Ditemukan</h3>
           <p class="text-sm">Coba kata kunci pencarian atau filter kategori lainnya.</p>
         </div>
       `;
     } else {
-      filteredProjects.forEach(proj => {
-        allGrid.appendChild(createProjectCard(proj));
+      filteredProjects.forEach((proj, idx) => {
+        const card = createProjectCard(proj);
+        card.classList.add('project-card-animate');
+        card.style.animationDelay = `${idx * 0.04}s`;
+        allGrid.appendChild(card);
       });
+      // Re-trigger 3D tilt bind
+      if (typeof init3DTilt === 'function') {
+        init3DTilt();
+      }
     }
   }
 }
@@ -251,6 +258,18 @@ function createProjectCard(project) {
 function openProjectModal(project) {
   const modal = document.getElementById('projectModal');
   if (!modal) return;
+
+  // Render gutter line numbers for IDE style code editor look
+  const linesContainer = document.getElementById('modalCodeLines');
+  if (linesContainer) {
+    linesContainer.innerHTML = '';
+    const totalLines = 26; // Covers height beautifully
+    for (let i = 1; i <= totalLines; i++) {
+      const span = document.createElement('span');
+      span.textContent = String(i).padStart(2, '0');
+      linesContainer.appendChild(span);
+    }
+  }
 
   document.getElementById('modalRole').textContent = project.role;
   document.getElementById('modalTitle').textContent = project.title;
@@ -391,6 +410,82 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(typeAnimation, 1000);
   renderBentoTools();
   renderProjects();
+
+  // ==========================================================================
+  // PREMIUM UI/UX INTERACTIVE HELPERS (Glow Tracker & 3D Tilt)
+  // ==========================================================================
+  
+  // 1. Mouse-Tracking Spotlight Glow
+  const mouseGlow = document.getElementById('mouseGlow');
+  if (mouseGlow) {
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let glowX = mouseX;
+    let glowY = mouseY;
+    
+    window.addEventListener('mousemove', (e) => {
+      mouseGlow.style.opacity = '1';
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    window.addEventListener('mouseleave', () => {
+      mouseGlow.style.opacity = '0';
+    });
+
+    function updateGlow() {
+      // Linear interpolation for silky smooth spring movement
+      glowX += (mouseX - glowX) * 0.08;
+      glowY += (mouseY - glowY) * 0.08;
+      
+      mouseGlow.style.left = `${glowX}px`;
+      mouseGlow.style.top = `${glowY}px`;
+      
+      requestAnimationFrame(updateGlow);
+    }
+    updateGlow();
+  }
+
+  // 2. 3D Holographic Card Tilt with Glossy Sheen
+  function init3DTilt() {
+    const cards = document.querySelectorAll('.glass-card, .project-card');
+    cards.forEach(card => {
+      // Prevent double bindings
+      if (card.querySelector('.card-sheen')) return;
+
+      const sheen = document.createElement('div');
+      sheen.className = 'card-sheen';
+      card.appendChild(sheen);
+
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const xc = rect.width / 2;
+        const yc = rect.height / 2;
+        
+        // Calculate tilt rotation angles (max 8 degrees for smooth micro-interaction)
+        const rotateX = -(y - yc) / 12;
+        const rotateY = (x - xc) / 12;
+        
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.015, 1.015, 1.015)`;
+        
+        // Track mouse position relative to card dimensions to shift sheen reflection
+        const pctX = (x / rect.width) * 100;
+        const pctY = (y / rect.height) * 100;
+        sheen.style.background = `radial-gradient(circle at ${pctX}% ${pctY}%, rgba(255, 255, 255, 0.065) 0%, transparent 60%)`;
+        sheen.style.opacity = '1';
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        sheen.style.opacity = '0';
+      });
+    });
+  }
+  window.init3DTilt = init3DTilt; // Expose globally for projects filter refresh
+  init3DTilt();
 
 });
 
