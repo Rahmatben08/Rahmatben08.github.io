@@ -1,5 +1,24 @@
 const projectsData = [
   {
+    id: "fincorp-enterprise",
+    githubUrl: "https://github.com/Rahmatben08/fincorp-enterprise",
+    title: "Sistem Keuangan Enterprise & Portal Karyawan - PT Expro Gio Nusantara",
+    role: "Full-Stack & DevOps Engineer",
+    category: "web",
+    techStack: ["React", "Java Spring Boot", "Go", "PostgreSQL", "Keycloak SSO", "Docker"],
+    shortDescription: "Sistem ERP keuangan & payroll terintegrasi skala enterprise untuk PT Expro Gio Nusantara dengan arsitektur microservices, Keycloak SSO, dan Docker.",
+    fullDescription: "Sistem ERP keuangan terintegrasi berskala enterprise yang dirancang untuk PT Expro Gio Nusantara guna mengotomatisasi operasional finansial internal, payroll karyawan, invoicing, dan approval transaksi. Aplikasi ini mengimplementasikan arsitektur microservices terdistribusi yang memisahkan core business logic (Java Spring Boot), modul penggajian (Go Payroll Service), dan otentikasi tunggal (Keycloak SSO), diorkestrasi menggunakan Docker Compose.",
+    features: [
+      "Integrasi Single Sign-On (SSO) menggunakan Keycloak terenkripsi OAuth2/OIDC untuk otentikasi terpusat.",
+      "Arsitektur Microservices yang memisahkan API core (Java Spring Boot) dan payroll engine (Go Payroll Service) untuk performa modular.",
+      "Sistem Multi-Role Approval di mana pengeluaran operasional besar (> Rp50 juta) wajib disetujui Manajer secara real-time.",
+      "Manajemen Payroll terotomatisasi berdasarkan rekam kehadiran, tunjangan divisi, potongan BPJS, dan visualisasi capaian target KPI.",
+      "Audit Trail & Logging terstruktur yang melacak dan mencatat kronologi aksi pengguna secara real-time untuk keperluan transparansi audit.",
+      "Kontainerisasi penuh menggunakan Docker Compose untuk mengorkestrasi PostgreSQL, Keycloak, Spring Boot, Go, dan React."
+    ],
+    architecture: "Menggunakan pola arsitektur Microservices terdistribusi dengan API Gateway. Validasi token JWT dilakukan secara terdesentralisasi di setiap service via Keycloak Identity Provider. PostgreSQL bertindak sebagai database relasional utama dengan skema relasi yang terindeks."
+  },
+  {
     id: "spk-konseling-pkbi",
     githubUrl: "https://github.com/Rahmatben08/spk-konseling-pkbi",
     title: "Sistem Pendukung Keputusan (SPK) Konseling PKBI Sumatera Selatan",
