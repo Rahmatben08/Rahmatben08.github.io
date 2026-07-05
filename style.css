@@ -709,3 +709,212 @@ body {
     height: 32px;
     transition: fill 0.3s ease, transform 0.3s ease;
 }
+
+/* ==========================================================================
+   LANGUAGE TOGGLE BUTTON
+   ========================================================================== */
+#langToggle {
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVE — 480px and below
+   ========================================================================== */
+@media (max-width: 480px) {
+
+    /* ── Navigation ── */
+    .floating-nav > div {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /* ── Hero Section ── */
+    #home {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    #home h1 .text-outline {
+        font-size: 3.5rem !important;
+        line-height: 1;
+    }
+
+    #home h2.font-headline-md {
+        font-size: 1rem;
+    }
+
+    #home p.body-lg {
+        font-size: 0.875rem;
+    }
+
+    /* Full-width CTA buttons on very small screens */
+    #home .flex.flex-col.sm\\:flex-row {
+        width: 100%;
+    }
+
+    #home a.bg-indigo-accent,
+    #home a.glass-card {
+        width: 100%;
+        justify-content: center;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        font-size: 0.75rem;
+    }
+
+    /* ── Section Headings ── */
+    .font-headline-lg.text-4xl {
+        font-size: 1.75rem !important;
+    }
+
+    .font-headline-lg.text-3xl {
+        font-size: 1.4rem !important;
+    }
+
+    /* ── Expertise / Bento Grid ── */
+    #expertise {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    /* ── Projects Section ── */
+    #projects {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    /* Filter buttons scrollable on mobile */
+    #projects .flex.flex-wrap.gap-2 {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    #projects .flex.flex-wrap.gap-2::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Search bar full width */
+    #searchProjects {
+        font-size: 0.875rem;
+    }
+
+    /* Project cards 1-column */
+    #allProjectsGrid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* ── Experience & Education Section ── */
+    #experience {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    /* Make experience grid single-column on mobile */
+    #experience .grid.grid-cols-1.lg\\:grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-dot {
+        display: none;
+    }
+
+    /* ── About Section ── */
+    #about {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    /* Stack about section vertically */
+    #about .grid.md\\:grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+
+    /* Profile photo container on mobile */
+    #about .relative.h-\\[420px\\] {
+        height: 280px !important;
+    }
+
+    /* Stats row wraps on mobile */
+    #about .flex.flex-wrap {
+        gap: 1.5rem;
+    }
+
+    /* ── Contact Section ── */
+    #contact {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    #contact h2 {
+        font-size: 1.75rem !important;
+        line-height: 1.2;
+    }
+
+    /* ── Footer ── */
+    footer {
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+
+    footer .flex.flex-col.md\\:flex-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    /* ── Modal ── */
+    .modal-card {
+        width: 95vw !important;
+        max-height: 90vh;
+        margin: 1rem;
+        border-radius: 1rem;
+    }
+
+    .modal-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .modal-content-area {
+        padding: 1rem;
+    }
+
+    .modal-title {
+        font-size: 1rem;
+    }
+
+    .modal-meta-section {
+        margin-top: 0.75rem;
+    }
+
+    /* ── Section Padding ── */
+    .py-24 {
+        padding-top: 3.5rem;
+        padding-bottom: 3.5rem;
+    }
+
+    /* ── Mobile Drawer ── */
+    .mobile-drawer {
+        width: 85vw;
+    }
+}
+
+/* Tablet breakpoint 481–768px */
+@media (min-width: 481px) and (max-width: 768px) {
+
+    #allProjectsGrid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    #home h1 .text-outline {
+        font-size: 4.5rem !important;
+    }
+
+    #contact h2 {
+        font-size: 2.25rem !important;
+    }
+}

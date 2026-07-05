@@ -113,7 +113,7 @@
 
     
     <!-- Custom Style Fallback -->
-    <link rel="stylesheet" href="style.css?v=3.7.0">
+    <link rel="stylesheet" href="style.css?v=3.8.0">
 </head>
 <body class="font-body-md text-on-surface overflow-x-hidden relative">
 
@@ -132,16 +132,28 @@
                 <span>Ghali Rahmat</span>
             </a>
             <div class="hidden md:flex items-center gap-8">
-                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" href="#home">Beranda</a>
-                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" href="#expertise">Keahlian</a>
-                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" href="#projects">Proyek</a>
-                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" href="#experience">Pengalaman</a>
-                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" href="#about">Tentang</a>
-                <a class="bg-indigo-accent text-white px-6 py-2 rounded-full font-label-md text-label-md hover:bg-opacity-90 shadow-indigo-accent transition-all hover:scale-105" href="#contact">Hubungi</a>
+                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" data-i18n="nav.home" href="#home">Beranda</a>
+                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" data-i18n="nav.expertise" href="#expertise">Keahlian</a>
+                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" data-i18n="nav.projects" href="#projects">Proyek</a>
+                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" data-i18n="nav.experience" href="#experience">Pengalaman</a>
+                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" data-i18n="nav.about" href="#about">Tentang</a>
+                <a class="bg-indigo-accent text-white px-6 py-2 rounded-full font-label-md text-label-md hover:bg-opacity-90 shadow-indigo-accent transition-all hover:scale-105" data-i18n="nav.contact" href="#contact">Hubungi</a>
+                <!-- Language Toggle -->
+                <button id="langToggle" onclick="toggleLang()" class="flex items-center gap-1.5 border border-white/15 hover:border-indigo-accent px-3 py-1.5 rounded-full text-xs font-bold text-on-surface-variant hover:text-white transition-all">
+                    <span id="langFlag">🇮🇩</span>
+                    <span id="langLabel">EN</span>
+                </button>
             </div>
-            <button class="md:hidden text-on-surface" id="mobileNavToggle">
-                <span class="material-symbols-outlined">menu</span>
-            </button>
+            <div class="flex items-center gap-3 md:hidden">
+                <!-- Lang Toggle Mobile -->
+                <button onclick="toggleLang()" class="flex items-center gap-1 border border-white/15 hover:border-indigo-accent px-2.5 py-1 rounded-full text-xs font-bold text-on-surface-variant hover:text-white transition-all">
+                    <span id="langFlagMobile">🇮🇩</span>
+                    <span id="langLabelMobile">EN</span>
+                </button>
+                <button class="text-on-surface" id="mobileNavToggle">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -157,12 +169,12 @@
             </button>
         </div>
         <ul class="drawer-links">
-            <li><a href="#home">Beranda</a></li>
-            <li><a href="#expertise">Keahlian</a></li>
-            <li><a href="#projects">Proyek</a></li>
-            <li><a href="#experience">Pengalaman</a></li>
-            <li><a href="#about">Tentang</a></li>
-            <li><a href="#contact">Hubungi</a></li>
+            <li><a href="#home" data-i18n="nav.home">Beranda</a></li>
+            <li><a href="#expertise" data-i18n="nav.expertise">Keahlian</a></li>
+            <li><a href="#projects" data-i18n="nav.projects">Proyek</a></li>
+            <li><a href="#experience" data-i18n="nav.experience">Pengalaman</a></li>
+            <li><a href="#about" data-i18n="nav.about">Tentang</a></li>
+            <li><a href="#contact" data-i18n="nav.contact">Hubungi</a></li>
         </ul>
     </div>
 
@@ -173,36 +185,30 @@
         <section id="home" class="relative h-screen min-h-screen flex items-center justify-between px-6 md:px-16 lg:px-24 overflow-hidden bg-surface" style="margin-top: -8rem; padding-top: 8rem;">
             <div class="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center h-full">
                 <!-- Left Column (Text & Buttons) -->
-                <div class="md:col-span-7 text-left space-y-6 flex flex-col justify-center animate-in fade-in duration-1000 fade-in-up visible">
+                <div class="md:col-span-7 text-center md:text-left space-y-6 flex flex-col justify-center items-center md:items-start animate-in fade-in duration-1000 fade-in-up visible">
                     <!-- Status indicator -->
-                    <div class="inline-flex items-center gap-2 bg-surface-container-high border border-surface-border px-3 py-1 rounded-full mb-2 self-start">
+                    <div class="inline-flex items-center gap-2 bg-surface-container-high border border-surface-border px-3 py-1 rounded-full mb-2">
                         <div class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></div>
                         <span class="font-label-caps text-[10px] text-on-surface-variant tracking-wider">Tersedia untuk Kolaborasi & Proyek</span>
                     </div>
                     
-                    <h2 class="font-label-caps text-secondary-fixed tracking-[0.2em] mb-2 text-left">MAHASISWA D4 MI POLSRI</h2>
+                    <h2 class="font-label-caps text-secondary-fixed tracking-[0.2em] mb-2 text-left" data-i18n="hero.subtitle">MAHASISWA D4 MI POLSRI</h2>
                     
-                    <h1 class="font-headline-lg text-headline-lg md:text-[80px] leading-none mb-4 relative w-full flex flex-col items-start">
+                    <h1 class="font-headline-lg text-headline-lg md:text-[80px] leading-none mb-4 relative w-full flex flex-col items-center md:items-start">
                         <span class="text-outline block opacity-80">GHALI</span>
-                        <span class="text-outline block opacity-80 mt-[-10px] ml-4 md:ml-12">RAHMAT</span>
+                        <span class="text-outline block opacity-80 mt-[-10px] md:ml-12">RAHMAT</span>
                     </h1>
                     
-                    <h2 class="font-headline-md text-headline-md text-on-surface-variant text-left mt-2">
-                        Saya seorang <span id="typing-text" class="typing font-bold text-white"></span>
+                    <h2 class="font-headline-md text-headline-md text-on-surface-variant text-center md:text-left mt-2">
+                        <span data-i18n="hero.intro">Saya seorang</span> <span id="typing-text" class="typing font-bold text-white"></span>
                     </h2>
                     
-                    <p class="body-lg text-on-surface-variant text-left max-w-xl leading-relaxed">
-                        Membangun produk teknologi dari ide kreatif hingga implementasi kode yang solid. Berfokus pada Full-Stack Web Development, Android Native App, dan AI/Machine Learning Engineering.
-                    </p>
+                    <p class="body-lg text-on-surface-variant text-center md:text-left max-w-xl leading-relaxed" data-i18n="hero.desc">Membangun produk teknologi dari ide kreatif hingga implementasi kode yang solid. Berfokus pada Full-Stack Web Development, Android Native App, dan AI/Machine Learning Engineering.</p>
 
                     <!-- CTAs -->
-                    <div class="flex flex-col sm:flex-row items-start gap-4 pt-4">
-                        <a class="w-full sm:w-auto bg-indigo-accent text-white px-8 py-3.5 rounded-full font-label-md hover:scale-[1.05] active:scale-[0.98] transition-all shadow-indigo-accent uppercase tracking-widest font-bold text-center" href="#projects">
-                            Lihat Proyek
-                        </a>
-                        <a class="w-full sm:w-auto glass-card text-on-surface border border-white/10 px-8 py-3.5 rounded-full font-label-md hover:border-indigo-accent transition-all uppercase tracking-widest font-bold text-center" href="#contact">
-                            Hubungi Saya
-                        </a>
+                    <div class="flex flex-col sm:flex-row items-center md:items-start gap-4 pt-4 w-full sm:w-auto">
+                        <a class="w-full sm:w-auto bg-indigo-accent text-white px-8 py-3.5 rounded-full font-label-md hover:scale-[1.05] active:scale-[0.98] transition-all shadow-indigo-accent uppercase tracking-widest font-bold text-center" href="#projects" data-i18n="hero.cta1">Lihat Proyek</a>
+                        <a class="w-full sm:w-auto glass-card text-on-surface border border-white/10 px-8 py-3.5 rounded-full font-label-md hover:border-indigo-accent transition-all uppercase tracking-widest font-bold text-center" href="#contact" data-i18n="hero.cta2">Hubungi Saya</a>
                     </div>
                 </div>
 
@@ -226,7 +232,7 @@
         <!-- SECTION 2: EXPERTISE (BENTO BOX GRID) -->
         <section class="py-24 px-6 md:px-16 max-w-7xl mx-auto fade-in-up" id="expertise">
             <div class="mb-12">
-                <h2 class="font-headline-lg text-4xl font-bold text-on-surface">Keahlian Utama</h2>
+                <h2 class="font-headline-lg text-4xl font-bold text-on-surface" data-i18n="expertise.title">Keahlian Utama</h2>
                 <div class="w-12 h-1 bg-indigo-accent mt-3"></div>
             </div>
             
@@ -314,8 +320,8 @@
             <div class="px-6 md:px-16 max-w-7xl mx-auto">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
                     <div>
-                        <h2 class="font-headline-lg text-4xl font-bold text-on-surface">Proyek Pilihan</h2>
-                        <p class="text-on-surface-variant mt-2">Daftar studi kasus rekayasa perangkat lunak dan desain antarmuka nyata.</p>
+                        <h2 class="font-headline-lg text-4xl font-bold text-on-surface" data-i18n="projects.title">Proyek Pilihan</h2>
+                        <p class="text-on-surface-variant mt-2" data-i18n="projects.subtitle">Daftar studi kasus rekayasa perangkat lunak dan desain antarmuka nyata.</p>
                     </div>
                     
                     <!-- Filter Controls (Centered/Right) -->
@@ -348,7 +354,7 @@
                 <div>
                     <div class="mb-8 flex items-center gap-3">
                         <span class="material-symbols-outlined text-indigo-accent text-3xl font-bold">work</span>
-                        <h2 class="font-headline-lg text-3xl font-bold text-on-surface">Pengalaman Kerja</h2>
+                        <h2 class="font-headline-lg text-3xl font-bold text-on-surface" data-i18n="experience.work">Pengalaman Kerja</h2>
                     </div>
                     
                     <div class="space-y-6 relative border-l-2 border-white/10 pl-6 ml-3">
@@ -383,7 +389,7 @@
                     <!-- Education Section -->
                     <div class="mb-8 flex items-center gap-3">
                         <span class="material-symbols-outlined text-indigo-accent text-3xl font-bold">school</span>
-                        <h2 class="font-headline-lg text-3xl font-bold text-on-surface">Pendidikan</h2>
+                        <h2 class="font-headline-lg text-3xl font-bold text-on-surface" data-i18n="experience.education">Pendidikan</h2>
                     </div>
                     
                     <div class="space-y-6 relative border-l-2 border-white/10 pl-6 ml-3 mb-10">
@@ -464,31 +470,27 @@
                 <div class="relative aspect-[4/5] max-w-md mx-auto md:mx-0 w-full group">
                     <div class="absolute inset-0 bg-indigo-accent/30 rounded-3xl rotate-3 group-hover:rotate-6 transition-transform duration-500 -z-10 blur-xl"></div>
                     <div class="glass-card rounded-3xl overflow-hidden h-full rim-light border-indigo-accent/20">
-                        <div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105 flex items-center justify-center bg-surface-container" style="min-height: 400px; background-image: url('profile.jpg');">
+                        <div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105 flex items-center justify-center bg-surface-container" style="min-height: 400px; background-image: url('profile.jpg'); background-position: center top;">
                         </div>
                     </div>
                 </div>
                 
                 <div class="space-y-6">
-                    <h2 class="font-headline-lg text-4xl font-bold text-on-surface">Tentang Saya</h2>
-                    <p class="body-lg text-on-surface-variant leading-relaxed">
-                        Saya Ghali Rahmat Ben Bela, kreator multidisiplin yang bergerak di persimpangan estetika desain aplikasi dan rekayasa kode backend yang efisien.
-                    </p>
-                    <p class="body-lg text-on-surface-variant leading-relaxed">
-                        Bagi saya, kerapian baris kode dan presisi tata letak visual adalah kunci utama dalam menghadirkan produk digital bernilai tinggi. Saya percaya bahwa setiap komponen kode harus memiliki tujuan optimasi dan setiap pixel desain harus mempermudah aksesibilitas pengguna.
-                    </p>
+                    <h2 class="font-headline-lg text-4xl font-bold text-on-surface" data-i18n="about.title">Tentang Saya</h2>
+                    <p class="body-lg text-on-surface-variant leading-relaxed" data-i18n="about.desc1">Hai! Saya Ghali — developer muda asal Palembang yang suka membangun produk digital dari nol. Dari merancang UI yang cantik di Figma, mengkode backend Laravel yang bersih, hingga ngoprek Android Native Kotlin. 🚀</p>
+                    <p class="body-lg text-on-surface-variant leading-relaxed" data-i18n="about.desc2">Saya percaya kode yang rapi dan desain yang presisi adalah fondasi produk yang bertahan lama. Saat ini aktif di PT Expro Gio Nusantara sambil menyelesaikan studi D4 Manajemen Informatika di POLSRI. Terbuka untuk kolaborasi dan peluang menarik!</p>
                     <div class="flex flex-wrap items-center gap-10 pt-4">
                         <div>
                             <div class="text-indigo-accent font-display-lg text-5xl mb-1" id="statProjects">12</div>
-                            <div class="text-on-surface-variant text-xs font-label-md uppercase tracking-widest">Proyek Aktif</div>
+                            <div class="text-on-surface-variant text-xs font-label-md uppercase tracking-widest" data-i18n="about.stat1">Proyek Aktif</div>
                         </div>
                         <div>
                             <div class="text-indigo-accent font-display-lg text-5xl mb-1">2</div>
-                            <div class="text-on-surface-variant text-xs font-label-md uppercase tracking-widest">Klien BUMN</div>
+                            <div class="text-on-surface-variant text-xs font-label-md uppercase tracking-widest" data-i18n="about.stat2">Klien BUMN</div>
                         </div>
                         <div>
                             <div class="text-indigo-accent font-display-lg text-5xl mb-1">2+</div>
-                            <div class="text-on-surface-variant text-xs font-label-md uppercase tracking-widest">Thn Pengalaman</div>
+                            <div class="text-on-surface-variant text-xs font-label-md uppercase tracking-widest" data-i18n="about.stat3">Thn Pengalaman</div>
                         </div>
                     </div>
                 </div>
@@ -501,11 +503,9 @@
                 <div class="absolute inset-0 bg-indigo-accent/5 group-hover:bg-indigo-accent/10 transition-colors duration-500"></div>
                 <div class="absolute w-96 h-96 bg-indigo-accent/20 blur-[100px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 group-hover:bg-indigo-accent/30 transition-colors duration-500"></div>
                 
-                <h2 class="font-display-lg text-3xl md:text-6xl text-white leading-tight font-bold relative z-10">Siap untuk membangun<br/>sesuatu yang hebat?</h2>
+                <h2 class="font-display-lg text-3xl md:text-6xl text-white leading-tight font-bold relative z-10" data-i18n="contact.title">Siap untuk membangun<br/>sesuatu yang hebat?</h2>
                 
-                <p class="text-on-surface-variant body-lg max-w-xl mx-auto relative z-10 text-base md:text-lg">
-                    Apakah Anda memiliki proyek kolaborasi, ide aplikasi, atau sekadar ingin berdiskusi? Jangan ragu untuk menghubungi saya.
-                </p>
+                <p class="text-on-surface-variant body-lg max-w-xl mx-auto relative z-10 text-base md:text-lg" data-i18n="contact.desc">Apakah Anda memiliki proyek kolaborasi, ide aplikasi, atau sekadar ingin berdiskusi? Jangan ragu untuk menghubungi saya.</p>
                 
                 <div class="pt-6 relative z-10 flex flex-col items-center justify-center gap-4">
                     <a class="inline-flex items-center gap-2 bg-indigo-accent text-white px-8 py-3.5 rounded-full font-headline-md hover:scale-105 transition-transform shadow-indigo-accent font-bold uppercase tracking-wider text-sm" href="mailto:ghalirahmat094@gmail.com">
@@ -540,7 +540,7 @@
     <footer class="w-full border-t border-white/5 bg-transparent mt-12 pb-10">
         <div class="flex flex-col md:flex-row justify-between items-center px-6 md:px-16 max-w-7xl mx-auto font-body-md text-sm text-on-surface-variant opacity-70">
             <div class="mb-4 md:mb-0">
-                <p>© 2026 Ghali Rahmat. Built with precision.</p>
+                <p data-i18n="footer.copy">© 2026 Ghali Rahmat. Built with precision.</p>
             </div>
             <div class="flex gap-6">
                 <a class="hover:text-white transition-colors" href="https://linkedin.com/in/ghali-rahmat-9a9271304" target="_blank">LinkedIn</a>
@@ -611,7 +611,7 @@
     </div>
 
     <!-- Script Files -->
-    <script src="projects.js?v=3.7.0"></script>
-    <script src="app.js?v=3.7.0"></script>
+    <script src="projects.js?v=3.8.0"></script>
+    <script src="app.js?v=3.8.0"></script>
 </body>
 </html>

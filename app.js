@@ -489,8 +489,132 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+
 // ==========================================================================
-// 3D LANYARD BADGE — Vanilla Three.js port of 3D_CARD-main/components/band/App.js
-// Upgraded to match user's reference image with Glassmorphism, PointLight Glow,
-// and floating cyber nano-particles.
+// i18n LANGUAGE TOGGLE — ID / EN
 // ==========================================================================
+const translations = {
+  id: {
+    "nav.home": "Beranda",
+    "nav.expertise": "Keahlian",
+    "nav.projects": "Proyek",
+    "nav.experience": "Pengalaman",
+    "nav.about": "Tentang",
+    "nav.contact": "Hubungi",
+    "hero.status": "Tersedia untuk Kolaborasi & Proyek",
+    "hero.subtitle": "MAHASISWA D4 MI POLSRI",
+    "hero.intro": "Saya seorang",
+    "hero.desc": "Membangun produk teknologi dari ide kreatif hingga implementasi kode yang solid. Berfokus pada Full-Stack Web Development, Android Native App, dan AI/Machine Learning Engineering.",
+    "hero.cta1": "Lihat Proyek",
+    "hero.cta2": "Hubungi Saya",
+    "expertise.title": "Keahlian Utama",
+    "projects.title": "Proyek Pilihan",
+    "projects.subtitle": "Daftar studi kasus rekayasa perangkat lunak dan desain antarmuka nyata.",
+    "experience.work": "Pengalaman Kerja",
+    "experience.education": "Pendidikan",
+    "experience.certs": "Sertifikasi & Pelatihan",
+    "about.title": "Tentang Saya",
+    "about.desc1": "Hai! Saya Ghali — developer muda asal Palembang yang suka membangun produk digital dari nol. Dari merancang UI yang cantik di Figma, mengkode backend Laravel yang bersih, hingga ngoprek Android Native Kotlin. 🚀",
+    "about.desc2": "Saya percaya kode yang rapi dan desain yang presisi adalah fondasi produk yang bertahan lama. Saat ini aktif di PT Expro Gio Nusantara sambil menyelesaikan studi D4 Manajemen Informatika di POLSRI. Terbuka untuk kolaborasi dan peluang menarik!",
+    "about.stat1": "Proyek Aktif",
+    "about.stat2": "Klien BUMN",
+    "about.stat3": "Thn Pengalaman",
+    "contact.title": "Siap untuk membangun<br/>sesuatu yang hebat?",
+    "contact.desc": "Apakah Anda memiliki proyek kolaborasi, ide aplikasi, atau sekadar ingin berdiskusi? Jangan ragu untuk menghubungi saya.",
+    "contact.cta": "Kirim Email",
+    "footer.copy": "© 2026 Ghali Rahmat. Built with precision.",
+  },
+  en: {
+    "nav.home": "Home",
+    "nav.expertise": "Expertise",
+    "nav.projects": "Projects",
+    "nav.experience": "Experience",
+    "nav.about": "About",
+    "nav.contact": "Contact",
+    "hero.status": "Available for Collaboration & Projects",
+    "hero.subtitle": "D4 INFORMATICS MANAGEMENT · POLSRI",
+    "hero.intro": "I am a",
+    "hero.desc": "Building technology products from creative ideas to solid code implementation. Focused on Full-Stack Web Development, Android Native Apps, and AI/Machine Learning Engineering.",
+    "hero.cta1": "View Projects",
+    "hero.cta2": "Contact Me",
+    "expertise.title": "Core Expertise",
+    "projects.title": "Selected Projects",
+    "projects.subtitle": "Real-world software engineering and UI/UX design case studies.",
+    "experience.work": "Work Experience",
+    "experience.education": "Education",
+    "experience.certs": "Certifications & Training",
+    "about.title": "About Me",
+    "about.desc1": "Hey! I'm Ghali — a young developer from Palembang who loves building digital products from scratch. From crafting beautiful UI in Figma, writing clean Laravel backends, to tinkering with Android Native Kotlin. 🚀",
+    "about.desc2": "I believe clean code and precise design are the foundation of lasting products. Currently active at PT Expro Gio Nusantara while completing my D4 Informatics Management degree at POLSRI. Open to collaborations and exciting opportunities!",
+    "about.stat1": "Active Projects",
+    "about.stat2": "BUMN Clients",
+    "about.stat3": "Yrs Experience",
+    "contact.title": "Ready to build<br/>something great?",
+    "contact.desc": "Have a collaboration project, app idea, or just want to chat? Feel free to reach out to me.",
+    "contact.cta": "Send Email",
+    "footer.copy": "© 2026 Ghali Rahmat. Built with precision.",
+  }
+};
+
+const rolesById = [
+  "Full-Stack Web Developer",
+  "Android Native Developer",
+  "AI & ML Engineering Enthusiast",
+  "Mahasiswa D4 MI POLSRI"
+];
+const rolesByEn = [
+  "Full-Stack Web Developer",
+  "Android Native Developer",
+  "AI & ML Engineering Enthusiast",
+  "D4 Informatics Management Student"
+];
+
+let currentLang = 'id';
+
+function applyTranslations(lang) {
+  const t = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) {
+      // Use innerHTML for keys that contain HTML like <br/>
+      if (key === 'contact.title') {
+        el.innerHTML = t[key];
+      } else {
+        el.textContent = t[key];
+      }
+    }
+  });
+
+  // Update flag + label for desktop and mobile
+  const isId = lang === 'id';
+  ['', 'Mobile'].forEach(suffix => {
+    const flag = document.getElementById('langFlag' + suffix);
+    const label = document.getElementById('langLabel' + suffix);
+    if (flag) flag.textContent = isId ? '🇮🇩' : '🇬🇧';
+    if (label) label.textContent = isId ? 'EN' : 'ID';
+  });
+
+  // Update typing roles
+  if (lang === 'en') {
+    roles.length = 0;
+    rolesByEn.forEach(r => roles.push(r));
+  } else {
+    roles.length = 0;
+    rolesById.forEach(r => roles.push(r));
+  }
+
+  // Store pref
+  localStorage.setItem('lang', lang);
+}
+
+function toggleLang() {
+  currentLang = currentLang === 'id' ? 'en' : 'id';
+  applyTranslations(currentLang);
+}
+
+// Init lang from localStorage on load
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('lang') || 'id';
+  currentLang = saved;
+  applyTranslations(saved);
+});
