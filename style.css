@@ -702,3 +702,10 @@ body {
         display: none !important;
     }
 }
+
+/* Social Icon SVG fallback sizes */
+.flex.justify-center.gap-8 svg {
+    width: 32px;
+    height: 32px;
+    transition: fill 0.3s ease, transform 0.3s ease;
+}
