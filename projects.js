@@ -19,40 +19,6 @@ const projectsData = [
     architecture: "Menggunakan pola arsitektur Microservices terdistribusi dengan API Gateway. Validasi token JWT dilakukan secara terdesentralisasi di setiap service via Keycloak Identity Provider. PostgreSQL bertindak sebagai database relasional utama dengan skema relasi yang terindeks."
   },
   {
-    id: "simpleplan-pertamina",
-    githubUrl: "https://github.com/Rahmatben08/simpleplan-regsumbagsel",
-    title: "Aplikasi Monitoring DIPA & Pagu Regional Sumbagsel - Pertamina Patra Niaga",
-    role: "Full-Stack Developer",
-    category: "web",
-    techStack: ["PHP", "Laravel", "MySQL", "JavaScript", "Bootstrap 5", "Chart.js"],
-    shortDescription: "Aplikasi web monitoring real-time alokasi DIPA & Pagu anggaran belanja operasional untuk Pertamina Patra Niaga Regional Sumbagsel.",
-    fullDescription: "Sistem aplikasi monitoring terintegrasi yang dikembangkan untuk Pertamina Patra Niaga Regional Sumbagsel (simpleplan-regsumbagsel.com). Aplikasi ini dirancang untuk memantau alokasi Dana Isian Pelaksanaan Anggaran (DIPA) dan Pagu anggaran belanja operasional secara real-time, mempermudah pelacakan realisasi keuangan di setiap divisi regional.",
-    features: [
-      "Pemantauan pagu anggaran belanja dan realisasi DIPA secara real-time di tingkat regional.",
-      "Sistem otentikasi aman dan Role-Based Access Control (RBAC) untuk manajemen otorisasi admin dan user divisi.",
-      "Dashboard pelaporan visual ringkas performa belanja anggaran bulanan menggunakan Chart.js.",
-      "Ekspor rekap data laporan realisasi anggaran dalam format Excel & PDF untuk arsip audit keuangan."
-    ],
-    architecture: "Aplikasi monolithic berbasis MVC menggunakan Laravel Framework, dengan database relasional MySQL. Mengimplementasikan query optimization untuk penanganan kalkulasi data keuangan yang dinamis."
-  },
-  {
-    id: "fert-innovation",
-    githubUrl: "https://github.com/Rahmatben08/fert-innovation",
-    title: "Aplikasi Fert Innovation - PT Pupuk Indonesia (Persero)",
-    role: "Application Developer & Cybersecurity Tester",
-    category: "web",
-    techStack: ["PHP", "Laravel", "PostgreSQL", "Docker", "Security Testing"],
-    shortDescription: "Aplikasi inovasi pupuk terintegrasi untuk PT Pupuk Indonesia (Persero) dilengkapi pengujian penetrasi keamanan (Penetration Testing).",
-    fullDescription: "Pengembangan dan pemeliharaan aplikasi Fert Innovation untuk PT Pupuk Indonesia (Persero) guna menunjang inovasi produk pertanian berkelanjutan. Proyek ini mencakup implementasi fitur kolaboratif riset serta pengujian keamanan (Penetration Testing) untuk mengidentifikasi celah kerentanan sistem sebelum perilisan produksi.",
-    features: [
-      "Kolaborasi pencatatan riset dan inovasi produk pupuk berkelanjutan terpusat.",
-      "Pengujian penetrasi keamanan (Penetration Testing) berkala untuk mendeteksi kerentanan XSS, SQLi, dan IDOR.",
-      "Dashboard analitik visual kontribusi ide inovasi per divisi kerja.",
-      "Penerapan patch keamanan dan pengamanan endpoint API berbasis JWT."
-    ],
-    architecture: "Backend API berbasis Laravel dikombinasikan dengan database PostgreSQL, berjalan di atas Docker container untuk kemudahan integrasi berkelanjutan."
-  },
-  {
     id: "spk-konseling-pkbi",
     githubUrl: "https://github.com/Rahmatben08/spk-konseling-pkbi",
     title: "Sistem Pendukung Keputusan (SPK) Konseling PKBI Sumatera Selatan",
