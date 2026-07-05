@@ -586,11 +586,14 @@ function applyTranslations(lang) {
   });
 
   // Update flag + label for desktop and mobile
+  // Show the TARGET language (what you switch TO when clicked)
+  // When in 'id' mode → show 🇬🇧 EN  (click to go English)
+  // When in 'en' mode → show 🇮🇩 ID  (click to go Indonesian)
   const isId = lang === 'id';
   ['', 'Mobile'].forEach(suffix => {
     const flag = document.getElementById('langFlag' + suffix);
     const label = document.getElementById('langLabel' + suffix);
-    if (flag) flag.textContent = isId ? '🇮🇩' : '🇬🇧';
+    if (flag) flag.textContent = isId ? '🇬🇧' : '🇮🇩';
     if (label) label.textContent = isId ? 'EN' : 'ID';
   });
 
