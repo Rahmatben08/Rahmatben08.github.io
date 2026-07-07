@@ -1,5 +1,7 @@
 /* THEME VARIABLES */
 :root {
+    --nav-bg: rgba(255, 255, 255, 0.75);
+    --nav-border: rgba(0, 0, 0, 0.08);
     --glow-color: rgba(99, 102, 241, 0.6);
     --glow-shadow-1: rgba(99, 102, 241, 0.3);
     --glow-shadow-2: rgba(99, 102, 241, 0.1);
@@ -56,6 +58,8 @@
     --color-indigo-accent: #6366f1;
 }
 .dark {
+    --nav-bg: rgba(11, 19, 38, 0.75);
+    --nav-border: rgba(255, 255, 255, 0.08);
     --glow-color: rgba(0, 209, 255, 0.45);
     --glow-shadow-1: rgba(0, 209, 255, 0.35);
     --glow-shadow-2: rgba(0, 209, 255, 0.15);
@@ -213,9 +217,9 @@ body {
     left: 50%;
     transform: translateX(-50%);
     border-radius: 999px;
-    background: rgba(11, 19, 38, 0.75);
+    background: var(--nav-bg);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--nav-border);
 }
 
 .logo-circle {
@@ -240,8 +244,8 @@ body {
     right: 0;
     width: 280px;
     height: 100%;
-    background-color: #0b1326;
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: var(--color-surface);
+    border-left: 1px solid var(--nav-border);
     z-index: 200;
     padding: 30px;
     display: flex;
@@ -263,7 +267,7 @@ body {
 }
 
 .drawer-close {
-    color: #9ca3af;
+    color: var(--color-on-surface-variant);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -279,7 +283,7 @@ body {
 .drawer-links a {
     font-size: 16px;
     font-weight: 600;
-    color: #9ca3af;
+    color: var(--color-on-surface-variant);
     transition: all 0.3s ease;
     display: block;
     padding: 10px 0;
@@ -456,7 +460,7 @@ body {
     width: 100%;
     max-width: 900px;
     background-color: #0d1117;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--nav-border);
     border-radius: 16px;
     box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7);
     overflow: hidden;
@@ -628,7 +632,7 @@ body {
     height: 350px;
     background: rgba(10, 15, 30, 0.45);
     backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--nav-border);
     border-radius: 28px;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
     transform-style: preserve-3d;

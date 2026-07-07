@@ -110,9 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
         navLinks.forEach(link => {
           if (link.getAttribute('href') === `#${id}`) {
             link.classList.remove('text-on-surface-variant');
-            link.classList.add('text-white', 'border-b-2', 'border-indigo-accent');
+            link.classList.add('text-on-surface', 'border-b-2', 'border-indigo-accent');
           } else {
-            link.classList.remove('text-white', 'border-b-2', 'border-indigo-accent');
+            link.classList.remove('text-on-surface', 'border-b-2', 'border-indigo-accent');
             link.classList.add('text-on-surface-variant');
           }
         });
@@ -278,7 +278,7 @@ function createProjectCard(project) {
 
   // Populate Tech Stack SVGs alongside text
   const techTagsHtml = project.techStack.map(tech => `
-    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-on-surface-variant">
+    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-surface-variant border border-outline-variant rounded-full text-xs text-on-surface-variant">
       <span class="w-3.5 h-3.5 flex items-center justify-center">${getTechIcon(tech)}</span>
       <span>${tech}</span>
     </span>
@@ -287,10 +287,10 @@ function createProjectCard(project) {
   card.innerHTML = `
     <div>
       <div class="flex justify-between items-center mb-4">
-        <span class="text-xs font-bold bg-[#6366f1]/15 text-[#c0c1ff] px-2.5 py-1 rounded-full uppercase tracking-wider">${project.role}</span>
+        <span class="text-xs font-bold bg-[#6366f1]/15 text-indigo-accent px-2.5 py-1 rounded-full uppercase tracking-wider">${project.role}</span>
         <span class="flex items-center">${catIcon}</span>
       </div>
-      <h3 class="text-xl font-bold text-white mb-2">${project.title}</h3>
+      <h3 class="text-xl font-bold text-on-surface mb-2">${project.title}</h3>
       <p class="text-sm text-on-surface-variant line-clamp-3 mb-6 leading-relaxed">${project.shortDescription}</p>
     </div>
     
@@ -340,7 +340,7 @@ function openProjectModal(project) {
   tagsWrap.innerHTML = '';
   project.techStack.forEach(tech => {
     const span = document.createElement('span');
-    span.className = 'inline-flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-[#8b949e]';
+    span.className = 'inline-flex items-center gap-1.5 px-3 py-1 bg-surface-variant border border-outline-variant rounded-full text-xs text-[#8b949e]';
     span.innerHTML = `
       <span class="w-3.5 h-3.5 flex items-center justify-center">${getTechIcon(tech)}</span>
       <span>${tech}</span>
