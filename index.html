@@ -38,53 +38,54 @@
             theme: {
                 extend: {
                     colors: {
-                        "outline-variant": "#464554",
-                        "surface-tint": "#c0c1ff",
-                        "surface-bright": "#31394d",
-                        "on-tertiary": "#4f2500",
-                        "on-surface": "#dae2fd",
-                        "on-secondary-fixed": "#001e2f",
-                        "on-error": "#690005",
-                        "outline": "#908fa0",
-                        "inverse-on-surface": "#283044",
-                        "primary-container": "#8083ff",
-                        "primary-fixed": "#e1e0ff",
-                        "on-primary-fixed-variant": "#2f2ebe",
-                        "on-primary-container": "#0d0096",
-                        "on-tertiary-container": "#452000",
-                        "surface-container-low": "#131b2e",
-                        "secondary-fixed-dim": "#89ceff",
-                        "surface-container-highest": "#2d3449",
-                        "tertiary": "#ffb783",
-                        "surface": "#0b1326",
-                        "background": "#0b1326",
-                        "on-primary-fixed": "#07006c",
-                        "inverse-surface": "#dae2fd",
-                        "on-tertiary-fixed-variant": "#703700",
-                        "on-secondary-container": "#00344e",
-                        "secondary": "#89ceff",
-                        "primary": "#c0c1ff",
-                        "error-container": "#93000a",
-                        "primary-fixed-dim": "#c0c1ff",
-                        "on-secondary": "#00344d",
-                        "error": "#ffb4ab",
-                        "on-surface-variant": "#c7c4d7",
-                        "surface-container": "#171f33",
-                        "surface-variant": "#2d3449",
-                        "secondary-container": "#00a2e6",
-                        "surface-container-lowest": "#060e20",
-                        "tertiary-fixed-dim": "#ffb783",
-                        "inverse-primary": "#494bd6",
-                        "on-error-container": "#ffdad6",
-                        "on-tertiary-fixed": "#301400",
-                        "on-background": "#dae2fd",
-                        "surface-container-high": "#222a3d",
-                        "secondary-fixed": "#c9e6ff",
-                        "tertiary-fixed": "#ffdcc5",
-                        "tertiary-container": "#d97721",
-                        "on-primary": "#1000a9",
-                        "surface-dim": "#0b1326",
-                        "on-secondary-fixed-variant": "#004c6e"
+                        "outline-variant": "var(--color-outline-variant)",
+                        "surface-tint": "var(--color-surface-tint)",
+                        "surface-bright": "var(--color-surface-bright)",
+                        "on-tertiary": "var(--color-on-tertiary)",
+                        "on-surface": "var(--color-on-surface)",
+                        "on-secondary-fixed": "var(--color-on-secondary-fixed)",
+                        "on-error": "var(--color-on-error)",
+                        "outline": "var(--color-outline)",
+                        "inverse-on-surface": "var(--color-inverse-on-surface)",
+                        "primary-container": "var(--color-primary-container)",
+                        "primary-fixed": "var(--color-primary-fixed)",
+                        "on-primary-fixed-variant": "var(--color-on-primary-fixed-variant)",
+                        "on-primary-container": "var(--color-on-primary-container)",
+                        "on-tertiary-container": "var(--color-on-tertiary-container)",
+                        "surface-container-low": "var(--color-surface-container-low)",
+                        "secondary-fixed-dim": "var(--color-secondary-fixed-dim)",
+                        "surface-container-highest": "var(--color-surface-container-highest)",
+                        "tertiary": "var(--color-tertiary)",
+                        "surface": "var(--color-surface)",
+                        "background": "var(--color-background)",
+                        "on-primary-fixed": "var(--color-on-primary-fixed)",
+                        "inverse-surface": "var(--color-inverse-surface)",
+                        "on-tertiary-fixed-variant": "var(--color-on-tertiary-fixed-variant)",
+                        "on-secondary-container": "var(--color-on-secondary-container)",
+                        "secondary": "var(--color-secondary)",
+                        "primary": "var(--color-primary)",
+                        "error-container": "var(--color-error-container)",
+                        "primary-fixed-dim": "var(--color-primary-fixed-dim)",
+                        "on-secondary": "var(--color-on-secondary)",
+                        "error": "var(--color-error)",
+                        "on-surface-variant": "var(--color-on-surface-variant)",
+                        "surface-container": "var(--color-surface-container)",
+                        "surface-variant": "var(--color-surface-variant)",
+                        "secondary-container": "var(--color-secondary-container)",
+                        "surface-container-lowest": "var(--color-surface-container-lowest)",
+                        "tertiary-fixed-dim": "var(--color-tertiary-fixed-dim)",
+                        "inverse-primary": "var(--color-inverse-primary)",
+                        "on-error-container": "var(--color-on-error-container)",
+                        "on-tertiary-fixed": "var(--color-on-tertiary-fixed)",
+                        "on-background": "var(--color-on-background)",
+                        "surface-container-high": "var(--color-surface-container-high)",
+                        "secondary-fixed": "var(--color-secondary-fixed)",
+                        "tertiary-fixed": "var(--color-tertiary-fixed)",
+                        "tertiary-container": "var(--color-tertiary-container)",
+                        "on-primary": "var(--color-on-primary)",
+                        "surface-dim": "var(--color-surface-dim)",
+                        "on-secondary-fixed-variant": "var(--color-on-secondary-fixed-variant)",
+                        "indigo-accent": "var(--color-indigo-accent)",
                     },
                     borderRadius: {
                         "DEFAULT": "0.25rem",
@@ -133,7 +134,7 @@
 
     
     <!-- Custom Style Fallback -->
-    <link rel="stylesheet" href="style.css?v=4.3.0">
+    <link rel="stylesheet" href="style.css?v=4.4.0">
 </head>
 <body class="font-body-md text-on-surface overflow-x-hidden relative">
 
@@ -179,8 +180,18 @@
                     <span id="langFlag">🇮🇩</span>
                     <span id="langLabel">EN</span>
                 </button>
+                <!-- Theme Toggle -->
+                <button id="themeToggle" onclick="toggleTheme()" class="flex items-center justify-center border border-white/15 hover:border-indigo-accent w-8 h-8 rounded-full text-on-surface-variant hover:text-white transition-all">
+                    <span class="material-symbols-outlined text-[18px] theme-icon-dark hidden">dark_mode</span>
+                    <span class="material-symbols-outlined text-[18px] theme-icon-light block">light_mode</span>
+                </button>
             </div>
             <div class="flex items-center gap-3 md:hidden">
+                <!-- Theme Toggle Mobile -->
+                <button onclick="toggleTheme()" class="flex items-center justify-center border border-white/15 hover:border-indigo-accent w-7 h-7 rounded-full text-on-surface-variant hover:text-white transition-all">
+                    <span class="material-symbols-outlined text-[16px] theme-icon-dark hidden">dark_mode</span>
+                    <span class="material-symbols-outlined text-[16px] theme-icon-light block">light_mode</span>
+                </button>
                 <!-- Lang Toggle Mobile -->
                 <button onclick="toggleLang()" class="flex items-center gap-1 border border-white/15 hover:border-indigo-accent px-2.5 py-1 rounded-full text-xs font-bold text-on-surface-variant hover:text-white transition-all">
                     <span id="langFlagMobile">🇮🇩</span>
@@ -670,6 +681,6 @@
 
     <!-- Script Files -->
     <script src="projects.js?v=4.3.0"></script>
-    <script src="app.js?v=4.3.0"></script>
+    <script src="app.js?v=4.4.0"></script>
 </body>
 </html>

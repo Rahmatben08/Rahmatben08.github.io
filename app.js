@@ -764,6 +764,56 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================================================
+// THEME TOGGLE — DARK / LIGHT
+// ==========================================================================
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.classList.contains('dark');
+  
+  if (isDark) {
+    html.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+    updateThemeIcons('light');
+  } else {
+    html.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+    updateThemeIcons('dark');
+  }
+}
+
+function updateThemeIcons(theme) {
+  const darkIcons = document.querySelectorAll('.theme-icon-dark');
+  const lightIcons = document.querySelectorAll('.theme-icon-light');
+  
+  if (theme === 'dark') {
+    darkIcons.forEach(icon => icon.classList.remove('hidden'));
+    darkIcons.forEach(icon => icon.classList.add('block'));
+    lightIcons.forEach(icon => icon.classList.add('hidden'));
+    lightIcons.forEach(icon => icon.classList.remove('block'));
+  } else {
+    lightIcons.forEach(icon => icon.classList.remove('hidden'));
+    lightIcons.forEach(icon => icon.classList.add('block'));
+    darkIcons.forEach(icon => icon.classList.add('hidden'));
+    darkIcons.forEach(icon => icon.classList.remove('block'));
+  }
+}
+
+// Initialize theme on load
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  const html = document.documentElement;
+  
+  if (savedTheme === 'light') {
+    html.classList.remove('dark');
+    updateThemeIcons('light');
+  } else {
+    // Default is dark
+    html.classList.add('dark');
+    updateThemeIcons('dark');
+  }
+});
+
+// ==========================================================================
 // i18n LANGUAGE TOGGLE — ID / EN
 // ==========================================================================
 const translations = {
