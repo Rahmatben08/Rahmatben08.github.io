@@ -678,6 +678,92 @@ function renderSkillBars() {
 document.addEventListener('DOMContentLoaded', renderSkillBars);
 
 // ==========================================================================
+// PRELOADER
+// ==========================================================================
+window.addEventListener('load', () => {
+  const preloader = document.getElementById('preloader');
+  if (preloader) {
+    // Add slight delay so the logo pulse is visible
+    setTimeout(() => {
+      preloader.style.opacity = '0';
+      setTimeout(() => preloader.remove(), 700);
+    }, 500);
+  }
+});
+
+// ==========================================================================
+// CUSTOM CURSOR
+// ==========================================================================
+document.addEventListener('DOMContentLoaded', () => {
+  const cursor = document.getElementById('customCursor');
+  const cursorDot = document.getElementById('customCursorDot');
+  
+  if (cursor && cursorDot && window.innerWidth >= 768) {
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      // Dot follows instantly
+      cursorDot.style.left = `${mouseX}px`;
+      cursorDot.style.top = `${mouseY}px`;
+    });
+
+    // Outer ring follows with easing
+    function renderCursor() {
+      cursorX += (mouseX - cursorX) * 0.2;
+      cursorY += (mouseY - cursorY) * 0.2;
+      cursor.style.left = `${cursorX}px`;
+      cursor.style.top = `${cursorY}px`;
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+
+    // Expand cursor on interactive elements
+    const interactives = document.querySelectorAll('a, button, input, textarea, select, .glass-card');
+    interactives.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1.8)';
+        cursor.style.backgroundColor = 'rgba(99,102,241,0.1)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+        cursor.style.backgroundColor = 'transparent';
+      });
+    });
+  }
+});
+
+// ==========================================================================
+// COPY EMAIL TOAST NOTIFICATION
+// ==========================================================================
+document.addEventListener('DOMContentLoaded', () => {
+  const copyBtn = document.getElementById('btnCopyEmail');
+  const toast = document.getElementById('toast');
+  
+  if (copyBtn && toast) {
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText('ghalirahmat094@gmail.com').then(() => {
+        toast.classList.add('show');
+        // Original icon and text replacement
+        const originalHTML = copyBtn.innerHTML;
+        copyBtn.innerHTML = 'Tersalin! <span class="material-symbols-outlined text-[18px]">check</span>';
+        copyBtn.classList.add('bg-emerald-500', 'shadow-emerald-500/50');
+        
+        setTimeout(() => {
+          toast.classList.remove('show');
+          copyBtn.innerHTML = originalHTML;
+          copyBtn.classList.remove('bg-emerald-500', 'shadow-emerald-500/50');
+        }, 3000);
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
+    });
+  }
+});
+
+// ==========================================================================
 // i18n LANGUAGE TOGGLE — ID / EN
 // ==========================================================================
 const translations = {

@@ -133,11 +133,27 @@
 
     
     <!-- Custom Style Fallback -->
-    <link rel="stylesheet" href="style.css?v=4.2.0">
+    <link rel="stylesheet" href="style.css?v=4.3.0">
 </head>
 <body class="font-body-md text-on-surface overflow-x-hidden relative">
 
-    <!-- Ambient Glowing Spotlights -->
+    <!-- Preloader -->
+    <div id="preloader" class="fixed inset-0 z-[100] bg-surface flex flex-col items-center justify-center transition-opacity duration-700">
+        <div class="relative flex items-center justify-center mb-4">
+            <div class="absolute inset-0 bg-indigo-accent/20 blur-xl rounded-full animate-pulse"></div>
+            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-accent to-secondary-container flex items-center justify-center animate-bounce shadow-[0_0_20px_rgba(99,102,241,0.5)]">
+                <span class="font-headline-lg font-bold text-white text-2xl">GR</span>
+            </div>
+        </div>
+        <div class="h-1 w-32 bg-surface-container rounded-full overflow-hidden">
+            <div class="h-full bg-indigo-accent animate-[loading_1.5s_ease-in-out_infinite]"></div>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div id="customCursor" class="hidden md:block fixed w-5 h-5 rounded-full border-2 border-indigo-accent/80 pointer-events-none z-[110] transition-transform duration-100 -translate-x-1/2 -translate-y-1/2 mix-blend-screen shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
+    <div id="customCursorDot" class="hidden md:block fixed w-1.5 h-1.5 rounded-full bg-indigo-accent pointer-events-none z-[110] transition-all duration-75 -translate-x-1/2 -translate-y-1/2"></div>
+
     <div class="ambient-lights">
         <div class="light-1"></div>
         <div class="light-2"></div>
@@ -226,9 +242,12 @@
                     <p class="body-lg text-on-surface-variant text-center md:text-left max-w-xl leading-relaxed" data-i18n="hero.desc">Membangun produk teknologi dari ide kreatif hingga implementasi kode yang solid. Berfokus pada Full-Stack Web Development, Android Native App, dan AI/Machine Learning Engineering.</p>
 
                     <!-- CTAs -->
-                    <div class="flex flex-col sm:flex-row items-center md:items-start gap-4 pt-4 w-full sm:w-auto">
+                    <div class="flex flex-col sm:flex-row items-center md:items-start gap-4 pt-4 w-full sm:w-auto relative z-20">
                         <a class="w-full sm:w-auto bg-indigo-accent text-white px-8 py-3.5 rounded-full font-label-md hover:scale-[1.05] active:scale-[0.98] transition-all shadow-indigo-accent uppercase tracking-widest font-bold text-center" href="#projects" data-i18n="hero.cta1">Lihat Proyek</a>
-                        <a class="w-full sm:w-auto glass-card text-on-surface border border-white/10 px-8 py-3.5 rounded-full font-label-md hover:border-indigo-accent transition-all uppercase tracking-widest font-bold text-center" href="#contact" data-i18n="hero.cta2">Hubungi Saya</a>
+                        <a href="CV_Ghali_Rahmat_Complete.pdf" download class="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-outline hover:border-indigo-accent text-on-surface hover:text-indigo-accent hover:bg-indigo-accent/5 px-8 py-3.5 rounded-full font-label-md hover:scale-[1.05] active:scale-[0.98] transition-all uppercase tracking-widest font-bold text-center cursor-pointer">
+                            <span class="material-symbols-outlined text-[18px]">download</span>
+                            <span data-i18n="hero.cta2">Unduh CV</span>
+                        </a>
                     </div>
                 </div>
 
@@ -534,9 +553,10 @@
                 <p class="text-on-surface-variant body-lg max-w-xl mx-auto relative z-10 text-base md:text-lg" data-i18n="contact.desc">Apakah Anda memiliki proyek kolaborasi, ide aplikasi, atau sekadar ingin berdiskusi? Jangan ragu untuk menghubungi saya.</p>
                 
                 <div class="pt-6 relative z-10 flex flex-col items-center justify-center gap-4">
-                    <a class="inline-flex items-center gap-2 bg-indigo-accent text-white px-8 py-3.5 rounded-full font-headline-md hover:scale-105 transition-transform shadow-indigo-accent font-bold uppercase tracking-wider text-sm" href="mailto:ghalirahmat094@gmail.com">
-                        Kirim Email <span class="material-symbols-outlined">mail</span>
-                    </a>
+                    <button id="btnCopyEmail" class="inline-flex items-center gap-2 bg-indigo-accent text-white px-8 py-3.5 rounded-full font-headline-md hover:scale-105 transition-transform shadow-indigo-accent font-bold uppercase tracking-wider text-sm">
+                        Salin Email <span class="material-symbols-outlined text-[18px]">content_copy</span>
+                    </button>
+                    <a class="text-xs text-on-surface-variant hover:text-white transition-colors underline" href="mailto:ghalirahmat094@gmail.com">Atau buka aplikasi email</a>
                 </div>
                 
                 <!-- Social Icons list -->
@@ -636,6 +656,12 @@
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] bg-surface-container-high border border-outline-variant text-on-surface px-6 py-3 rounded-full flex items-center gap-3 shadow-2xl transition-all duration-300 translate-y-20 opacity-0 pointer-events-none">
+        <span class="material-symbols-outlined text-emerald-400">check_circle</span>
+        <span class="font-label-md text-sm">Email berhasil disalin!</span>
+    </div>
+
     <!-- Scroll To Top Button -->
     <button id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Kembali ke atas"
         class="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-indigo-accent text-white shadow-lg shadow-indigo-accent/40 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 hover:scale-110 hover:shadow-indigo-accent/60">
@@ -643,7 +669,7 @@
     </button>
 
     <!-- Script Files -->
-    <script src="projects.js?v=4.2.0"></script>
-    <script src="app.js?v=4.2.1"></script>
+    <script src="projects.js?v=4.3.0"></script>
+    <script src="app.js?v=4.3.0"></script>
 </body>
 </html>

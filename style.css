@@ -22,6 +22,29 @@ body {
     overflow: hidden;
 }
 
+/* ==========================================================================
+   PRELOADER & TOAST ANIMATIONS
+   ========================================================================== */
+@keyframes loading {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+#toast.show {
+    transform: translate(-50%, 0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Hide default cursor on desktop since we have a custom one */
+@media (min-width: 768px) {
+    body, a, button, input, textarea, select {
+        cursor: none !important;
+    }
+}
+
+
 .light-1 {
     position: absolute;
     top: -10%;
