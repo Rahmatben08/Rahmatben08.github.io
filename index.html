@@ -169,31 +169,31 @@
                 <span>Ghali Rahmat</span>
             </a>
             <div class="hidden md:flex items-center gap-8">
-                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" data-i18n="nav.home" href="#home">Beranda</a>
-                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" data-i18n="nav.expertise" href="#expertise">Keahlian</a>
-                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" data-i18n="nav.projects" href="#projects">Proyek</a>
-                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" data-i18n="nav.experience" href="#experience">Pengalaman</a>
-                <a class="font-label-md text-label-md text-on-surface-variant hover:text-white transition-colors" data-i18n="nav.about" href="#about">Tentang</a>
+                <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-i18n="nav.home" href="#home">Beranda</a>
+                <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-i18n="nav.expertise" href="#expertise">Keahlian</a>
+                <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-i18n="nav.projects" href="#projects">Proyek</a>
+                <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-i18n="nav.experience" href="#experience">Pengalaman</a>
+                <a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-i18n="nav.about" href="#about">Tentang</a>
                 <a class="bg-indigo-accent text-white px-6 py-2 rounded-full font-label-md text-label-md hover:bg-opacity-90 shadow-indigo-accent transition-all hover:scale-105" data-i18n="nav.contact" href="#contact">Hubungi</a>
                 <!-- Language Toggle -->
-                <button id="langToggle" onclick="toggleLang()" class="flex items-center gap-1.5 border border-white/15 hover:border-indigo-accent px-3 py-1.5 rounded-full text-xs font-bold text-on-surface-variant hover:text-white transition-all">
+                <button id="langToggle" onclick="toggleLang()" class="flex items-center gap-1.5 border border-outline-variant hover:border-indigo-accent px-3 py-1.5 rounded-full text-xs font-bold text-on-surface-variant hover:text-on-surface transition-all">
                     <span id="langFlag">🇮🇩</span>
                     <span id="langLabel">EN</span>
                 </button>
                 <!-- Theme Toggle -->
-                <button id="themeToggle" onclick="toggleTheme()" class="flex items-center justify-center border border-white/15 hover:border-indigo-accent w-8 h-8 rounded-full text-on-surface-variant hover:text-white transition-all">
+                <button id="themeToggle" onclick="toggleTheme()" class="flex items-center justify-center border border-outline-variant hover:border-indigo-accent w-8 h-8 rounded-full text-on-surface-variant hover:text-on-surface transition-all">
                     <span class="material-symbols-outlined text-[18px] theme-icon-dark hidden">dark_mode</span>
                     <span class="material-symbols-outlined text-[18px] theme-icon-light block">light_mode</span>
                 </button>
             </div>
             <div class="flex items-center gap-3 md:hidden">
                 <!-- Theme Toggle Mobile -->
-                <button onclick="toggleTheme()" class="flex items-center justify-center border border-white/15 hover:border-indigo-accent w-7 h-7 rounded-full text-on-surface-variant hover:text-white transition-all">
+                <button onclick="toggleTheme()" class="flex items-center justify-center border border-outline-variant hover:border-indigo-accent w-7 h-7 rounded-full text-on-surface-variant hover:text-on-surface transition-all">
                     <span class="material-symbols-outlined text-[16px] theme-icon-dark hidden">dark_mode</span>
                     <span class="material-symbols-outlined text-[16px] theme-icon-light block">light_mode</span>
                 </button>
                 <!-- Lang Toggle Mobile -->
-                <button onclick="toggleLang()" class="flex items-center gap-1 border border-white/15 hover:border-indigo-accent px-2.5 py-1 rounded-full text-xs font-bold text-on-surface-variant hover:text-white transition-all">
+                <button onclick="toggleLang()" class="flex items-center gap-1 border border-outline-variant hover:border-indigo-accent px-2.5 py-1 rounded-full text-xs font-bold text-on-surface-variant hover:text-on-surface transition-all">
                     <span id="langFlagMobile">🇮🇩</span>
                     <span id="langLabelMobile">EN</span>
                 </button>
@@ -247,7 +247,7 @@
                     </h1>
                     
                     <h2 class="font-headline-md text-headline-md text-on-surface-variant text-center md:text-left mt-2">
-                        <span data-i18n="hero.intro">Saya seorang</span> <span id="typing-text" class="typing font-bold text-white"></span>
+                        <span data-i18n="hero.intro">Saya seorang</span> <span id="typing-text" class="typing font-bold text-on-surface"></span>
                     </h2>
                     
                     <p class="body-lg text-on-surface-variant text-center md:text-left max-w-xl leading-relaxed" data-i18n="hero.desc">Membangun produk teknologi dari ide kreatif hingga implementasi kode yang solid. Berfokus pada Full-Stack Web Development, Android Native App, dan AI/Machine Learning Engineering.</p>
@@ -275,7 +275,7 @@
             
             <!-- Scroll Indicator -->
             <div class="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce opacity-40">
-                <span class="material-symbols-outlined text-white text-3xl">keyboard_double_arrow_down</span>
+                <span class="material-symbols-outlined text-on-surface text-3xl">keyboard_double_arrow_down</span>
             </div>
         </section>
 
@@ -389,13 +389,13 @@
                     <div class="projects-control-panel flex flex-col sm:flex-row gap-4 w-full md:w-auto">
                         <div class="search-bar-wrap relative">
                             <span class="material-symbols-outlined search-icon absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
-                            <input type="text" id="projectSearchInput" class="w-full sm:w-[260px] pl-10 pr-4 py-2 bg-surface-container-high border border-white/10 rounded-full text-sm outline-none text-white focus:border-indigo-accent transition-all" placeholder="Cari proyek...">
+                            <input type="text" id="projectSearchInput" class="w-full sm:w-[260px] pl-10 pr-4 py-2 bg-surface-container-high border border-outline-variant rounded-full text-sm outline-none text-on-surface focus:border-indigo-accent transition-all" placeholder="Cari proyek...">
                         </div>
                         <div class="filter-buttons flex gap-2 overflow-x-auto pb-1 sm:pb-0">
-                            <button class="filter-btn active text-xs font-bold px-4 py-2 rounded-full border border-white/10" data-filter="all">Semua</button>
-                            <button class="filter-btn text-xs font-bold px-4 py-2 rounded-full border border-white/10" data-filter="web">Web</button>
-                            <button class="filter-btn text-xs font-bold px-4 py-2 rounded-full border border-white/10" data-filter="mobile">Android</button>
-                            <button class="filter-btn text-xs font-bold px-4 py-2 rounded-full border border-white/10" data-filter="design">Design</button>
+                            <button class="filter-btn active text-xs font-bold px-4 py-2 rounded-full border border-outline-variant" data-filter="all">Semua</button>
+                            <button class="filter-btn text-xs font-bold px-4 py-2 rounded-full border border-outline-variant" data-filter="web">Web</button>
+                            <button class="filter-btn text-xs font-bold px-4 py-2 rounded-full border border-outline-variant" data-filter="mobile">Android</button>
+                            <button class="filter-btn text-xs font-bold px-4 py-2 rounded-full border border-outline-variant" data-filter="design">Design</button>
                         </div>
                     </div>
                 </div>
@@ -418,12 +418,12 @@
                         <h2 class="font-headline-lg text-3xl font-bold text-on-surface" data-i18n="experience.work">Pengalaman Kerja</h2>
                     </div>
                     
-                    <div class="space-y-6 relative border-l-2 border-white/10 pl-6 ml-3">
+                    <div class="space-y-6 relative border-l-2 border-outline-variant pl-6 ml-3">
                         <!-- Job 1 -->
                         <div class="glass-card rim-light rounded-2xl p-6 relative">
                             <div class="absolute -left-[35px] top-6 w-4 h-4 rounded-full bg-indigo-accent border-4 border-background"></div>
                             <span class="inline-block text-xs font-bold bg-indigo-accent/10 border border-indigo-accent/20 text-indigo-accent px-2.5 py-1 rounded-full mb-3">Mei 2026 - Sekarang</span>
-                            <h3 class="text-lg font-bold text-white">Officer / IT Lead & Developer</h3>
+                            <h3 class="text-lg font-bold text-on-surface">Officer / IT Lead & Developer</h3>
                             <h4 class="text-sm text-on-surface-variant font-medium">PT EXPRO GIO NUSANTARA</h4>
                             <ul class="list-disc pl-4 mt-3 text-sm text-on-surface-variant space-y-2">
                                 <li>Merancang dan mengembangkan <strong>FinCorp Enterprise</strong>, aplikasi sistem keuangan internal dan portal payroll terintegrasi PT Expro Gio Nusantara menggunakan React, Spring Boot, Go, dan Docker.</li>
@@ -435,7 +435,7 @@
                         <div class="glass-card rim-light rounded-2xl p-6 relative">
                             <div class="absolute -left-[35px] top-6 w-4 h-4 rounded-full bg-indigo-accent border-4 border-background"></div>
                             <span class="inline-block text-xs font-bold bg-indigo-accent/10 border border-indigo-accent/20 text-indigo-accent px-2.5 py-1 rounded-full mb-3">Mei 2026 - Sekarang</span>
-                            <h3 class="text-lg font-bold text-white">Staff Administrasi</h3>
+                            <h3 class="text-lg font-bold text-on-surface">Staff Administrasi</h3>
                             <h4 class="text-sm text-on-surface-variant font-medium">Lembaga Sertifikasi Edutech Cendikia Nusantara</h4>
                             <ul class="list-disc pl-4 mt-3 text-sm text-on-surface-variant space-y-2">
                                 <li>Mengelola administrasi program sertifikasi kompetensi dan dokumentasi operasional harian lembaga secara terstruktur.</li>
@@ -453,12 +453,12 @@
                         <h2 class="font-headline-lg text-3xl font-bold text-on-surface" data-i18n="experience.education">Pendidikan</h2>
                     </div>
                     
-                    <div class="space-y-6 relative border-l-2 border-white/10 pl-6 ml-3 mb-10">
+                    <div class="space-y-6 relative border-l-2 border-outline-variant pl-6 ml-3 mb-10">
                         <!-- School 1 -->
                         <div class="glass-card rim-light rounded-2xl p-6 relative">
                             <div class="absolute -left-[35px] top-6 w-4 h-4 rounded-full bg-indigo-accent border-4 border-background"></div>
                             <span class="inline-block text-xs font-bold bg-indigo-accent/10 border border-indigo-accent/20 text-indigo-accent px-2.5 py-1 rounded-full mb-3">2024 - Sekarang</span>
-                            <h3 class="text-lg font-bold text-white">D4 Manajemen Informatika</h3>
+                            <h3 class="text-lg font-bold text-on-surface">D4 Manajemen Informatika</h3>
                             <h4 class="text-sm text-on-surface-variant font-medium">Politeknik Negeri Sriwijaya (POLSRI)</h4>
                             <p class="text-sm text-on-surface-variant mt-3 leading-relaxed">
                                 Mahasiswa aktif dengan fokus pada pemrograman web/mobile tingkat lanjut, struktur data relasional, manajemen proyek IT, kecerdasan buatan (Artificial Intelligence), serta machine learning pipeline.
@@ -472,13 +472,13 @@
                         <h2 class="font-headline-lg text-3xl font-bold text-on-surface">Sertifikasi & Pelatihan</h2>
                     </div>
                     
-                    <div class="space-y-4 relative border-l-2 border-white/10 pl-6 ml-3">
+                    <div class="space-y-4 relative border-l-2 border-outline-variant pl-6 ml-3">
                         <!-- Cert 1 -->
                         <div class="glass-card rim-light rounded-xl p-5 relative">
                             <div class="absolute -left-[35px] top-5 w-4 h-4 rounded-full bg-indigo-accent border-4 border-background"></div>
                             <div class="flex justify-between items-start gap-4">
                                 <div>
-                                    <h3 class="text-base font-bold text-white">Artificial Intelligence & Data Science</h3>
+                                    <h3 class="text-base font-bold text-on-surface">Artificial Intelligence & Data Science</h3>
                                     <h4 class="text-xs text-on-surface-variant font-medium">Dicoding Indonesia</h4>
                                     <p class="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
                                         • Belajar Dasar AI & Generative AI<br/>
@@ -494,7 +494,7 @@
                             <div class="absolute -left-[35px] top-5 w-4 h-4 rounded-full bg-indigo-accent border-4 border-background"></div>
                             <div class="flex justify-between items-start gap-4">
                                 <div>
-                                    <h3 class="text-base font-bold text-white">Database & Software Engineering</h3>
+                                    <h3 class="text-base font-bold text-on-surface">Database & Software Engineering</h3>
                                     <h4 class="text-xs text-on-surface-variant font-medium">Dicoding Indonesia</h4>
                                     <p class="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
                                         • Belajar Dasar SQL (Structured Query Language)<br/>
@@ -510,7 +510,7 @@
                             <div class="absolute -left-[35px] top-5 w-4 h-4 rounded-full bg-indigo-accent border-4 border-background"></div>
                             <div class="flex justify-between items-start gap-4">
                                 <div>
-                                    <h3 class="text-base font-bold text-white">Financial Literacy & Business</h3>
+                                    <h3 class="text-base font-bold text-on-surface">Financial Literacy & Business</h3>
                                     <h4 class="text-xs text-on-surface-variant font-medium">Dicoding Indonesia</h4>
                                     <p class="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
                                         • Introduction to Financial Literacy
@@ -559,7 +559,7 @@
                 <div class="absolute inset-0 bg-indigo-accent/5 group-hover:bg-indigo-accent/10 transition-colors duration-500"></div>
                 <div class="absolute w-96 h-96 bg-indigo-accent/20 blur-[100px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 group-hover:bg-indigo-accent/30 transition-colors duration-500"></div>
                 
-                <h2 class="font-display-lg text-3xl md:text-6xl text-white leading-tight font-bold relative z-10" data-i18n="contact.title">Siap untuk membangun<br/>sesuatu yang hebat?</h2>
+                <h2 class="font-display-lg text-3xl md:text-6xl text-on-surface leading-tight font-bold relative z-10" data-i18n="contact.title">Siap untuk membangun<br/>sesuatu yang hebat?</h2>
                 
                 <p class="text-on-surface-variant body-lg max-w-xl mx-auto relative z-10 text-base md:text-lg" data-i18n="contact.desc">Apakah Anda memiliki proyek kolaborasi, ide aplikasi, atau sekadar ingin berdiskusi? Jangan ragu untuk menghubungi saya.</p>
                 
@@ -567,7 +567,7 @@
                     <button id="btnCopyEmail" class="inline-flex items-center gap-2 bg-indigo-accent text-white px-8 py-3.5 rounded-full font-headline-md hover:scale-105 transition-transform shadow-indigo-accent font-bold uppercase tracking-wider text-sm">
                         Salin Email <span class="material-symbols-outlined text-[18px]">content_copy</span>
                     </button>
-                    <a class="text-xs text-on-surface-variant hover:text-white transition-colors underline" href="mailto:ghalirahmat094@gmail.com">Atau buka aplikasi email</a>
+                    <a class="text-xs text-on-surface-variant hover:text-on-surface transition-colors underline" href="mailto:ghalirahmat094@gmail.com">Atau buka aplikasi email</a>
                 </div>
                 
                 <!-- Social Icons list -->
@@ -600,9 +600,9 @@
                 <p data-i18n="footer.copy">© 2026 Ghali Rahmat. Built with precision.</p>
             </div>
             <div class="flex gap-6">
-                <a class="hover:text-white transition-colors" href="https://linkedin.com/in/ghali-rahmat-9a9271304" target="_blank">LinkedIn</a>
-                <a class="hover:text-white transition-colors" href="https://github.com/Rahmatben08" target="_blank">GitHub</a>
-                <a class="hover:text-white transition-colors" href="https://instagram.com/ghalirahmat" target="_blank">Instagram</a>
+                <a class="hover:text-on-surface transition-colors" href="https://linkedin.com/in/ghali-rahmat-9a9271304" target="_blank">LinkedIn</a>
+                <a class="hover:text-on-surface transition-colors" href="https://github.com/Rahmatben08" target="_blank">GitHub</a>
+                <a class="hover:text-on-surface transition-colors" href="https://instagram.com/ghalirahmat" target="_blank">Instagram</a>
             </div>
         </div>
     </footer>

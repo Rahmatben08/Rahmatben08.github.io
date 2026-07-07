@@ -1,5 +1,8 @@
 /* THEME VARIABLES */
 :root {
+    --glow-color: rgba(99, 102, 241, 0.6);
+    --glow-shadow-1: rgba(99, 102, 241, 0.3);
+    --glow-shadow-2: rgba(99, 102, 241, 0.1);
     --glass-bg: rgba(255, 255, 255, 0.5);
     --glass-bg-hover: rgba(255, 255, 255, 0.8);
     --glass-border: rgba(0, 0, 0, 0.05);
@@ -53,6 +56,9 @@
     --color-indigo-accent: #6366f1;
 }
 .dark {
+    --glow-color: rgba(0, 209, 255, 0.45);
+    --glow-shadow-1: rgba(0, 209, 255, 0.35);
+    --glow-shadow-2: rgba(0, 209, 255, 0.15);
     --glass-bg: rgba(30, 41, 59, 0.3);
     --glass-bg-hover: rgba(30, 41, 59, 0.55);
     --glass-border: rgba(255, 255, 255, 0.05);
@@ -112,10 +118,10 @@
 
 /* Dark Background & Base */
 body {
-    background-color: #0b1326;
-    color: #dae2fd;
     font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
     scroll-behavior: smooth;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
 }
 
 /* Background Ambient Glows (Floating Spotlights) */
@@ -724,8 +730,8 @@ body {
 /* Text Outline Style from User */
 .text-outline {
     color: transparent;
-    -webkit-text-stroke: 1.5px rgba(0, 209, 255, 0.45); /* glowing cyan border */
-    text-shadow: 0 0 15px rgba(0, 209, 255, 0.35), 0 0 35px rgba(0, 209, 255, 0.15); /* cyan neon glow */
+    -webkit-text-stroke: 1.5px var(--glow-color); /* glowing cyan border */
+    text-shadow: 0 0 15px var(--glow-shadow-1), 0 0 35px var(--glow-shadow-2); /* cyan neon glow */
     transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
