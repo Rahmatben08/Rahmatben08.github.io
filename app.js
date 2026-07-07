@@ -551,6 +551,133 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ==========================================================================
+// SCROLL-TO-TOP BUTTON — Show after scrolling 400px
+// ==========================================================================
+(function () {
+  const btn = document.getElementById('scrollTopBtn');
+  if (!btn) return;
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+    } else {
+      btn.style.opacity = '0';
+      btn.style.pointerEvents = 'none';
+    }
+  }, { passive: true });
+})();
+
+// ==========================================================================
+// COUNTER ANIMATION — Count-up on scroll into view
+// ==========================================================================
+function animateCounter(el, target, suffix = '', duration = 1200) {
+  const start = performance.now();
+  const isDecimal = target % 1 !== 0;
+
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // Ease out cubic
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = isDecimal
+      ? (eased * target).toFixed(1)
+      : Math.round(eased * target);
+    el.textContent = current + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const statEls = [
+    { id: 'statProjects', target: 12, suffix: '' },
+  ];
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseFloat(el.dataset.counterTarget);
+      const suffix = el.dataset.counterSuffix || '';
+      animateCounter(el, target, suffix);
+      counterObserver.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+
+  // Observe statProjects
+  const sp = document.getElementById('statProjects');
+  if (sp) {
+    sp.dataset.counterTarget = '12';
+    sp.dataset.counterSuffix = '';
+    sp.textContent = '0';
+    counterObserver.observe(sp);
+  }
+
+  // Observe the 2+ Thn Pengalaman stat (sibling div)
+  document.querySelectorAll('.text-indigo-accent.font-display-lg').forEach(el => {
+    if (el.textContent.trim() === '2+') {
+      el.dataset.counterTarget = '2';
+      el.dataset.counterSuffix = '+';
+      el.textContent = '0+';
+      counterObserver.observe(el);
+    }
+  });
+});
+
+// ==========================================================================
+// SKILL PROGRESS BARS
+// ==========================================================================
+const skillsData = [
+  { name: 'Laravel / PHP',       pct: 88, color: '#FF2D20' },
+  { name: 'JavaScript / Node',   pct: 80, color: '#F7DF1E' },
+  { name: 'Kotlin / Android',    pct: 78, color: '#7B52FF' },
+  { name: 'MySQL / PostgreSQL',  pct: 82, color: '#00758F' },
+  { name: 'Python / AI-ML',      pct: 70, color: '#3776AB' },
+  { name: 'React / Tailwind',    pct: 75, color: '#61DAFB' },
+  { name: 'Figma / UI Design',   pct: 85, color: '#A259FF' },
+  { name: 'Docker / DevOps',     pct: 60, color: '#2496ED' },
+];
+
+function renderSkillBars() {
+  const grid = document.getElementById('skillBarsGrid');
+  if (!grid) return;
+
+  grid.innerHTML = skillsData.map(s => `
+    <div class="skill-bar-item">
+      <div class="flex justify-between items-center mb-1.5">
+        <span class="text-sm font-semibold text-on-surface">${s.name}</span>
+        <span class="text-xs font-bold skill-pct" style="color:${s.color}">0%</span>
+      </div>
+      <div class="h-2 rounded-full bg-white/5 overflow-hidden">
+        <div class="skill-bar-fill h-full rounded-full transition-none"
+             style="width:0%; background:${s.color}; box-shadow: 0 0 8px ${s.color}55;"
+             data-target="${s.pct}">
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Animate on scroll into view
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+        const target = parseInt(bar.dataset.target);
+        bar.style.transition = 'width 1.2s cubic-bezier(0.16,1,0.3,1)';
+        bar.style.width = target + '%';
+        const pctEl = bar.closest('.skill-bar-item').querySelector('.skill-pct');
+        if (pctEl) animateCounter(pctEl, target, '%', 1200);
+      });
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.3 });
+
+  observer.observe(grid);
+}
+
+document.addEventListener('DOMContentLoaded', renderSkillBars);
+
+// ==========================================================================
 // i18n LANGUAGE TOGGLE — ID / EN
 // ==========================================================================
 const translations = {
