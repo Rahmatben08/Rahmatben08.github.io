@@ -748,7 +748,9 @@ document.addEventListener('DOMContentLoaded', () => {
         toast.classList.add('show');
         // Original icon and text replacement
         const originalHTML = copyBtn.innerHTML;
-        copyBtn.innerHTML = 'Tersalin! <span class="material-symbols-outlined text-[18px]">check</span>';
+        const currentLang = document.documentElement.lang || 'id';
+        const copiedText = currentLang === 'id' ? 'Tersalin!' : 'Copied!';
+        copyBtn.innerHTML = `${copiedText} <span class="material-symbols-outlined text-[18px]">check</span>`;
         copyBtn.classList.add('bg-emerald-500', 'shadow-emerald-500/50');
         
         setTimeout(() => {
@@ -845,6 +847,9 @@ const translations = {
     "contact.title": "Siap untuk membangun<br/>sesuatu yang hebat?",
     "contact.desc": "Apakah Anda memiliki proyek kolaborasi, ide aplikasi, atau sekadar ingin berdiskusi? Jangan ragu untuk menghubungi saya.",
     "contact.cta": "Kirim Email",
+    "contact.copyEmail": "Salin Email",
+    "contact.openApp": "Atau buka aplikasi email",
+    "contact.copied": "Tersalin!",
     "footer.copy": "© 2026 Ghali Rahmat. Built with precision.",
   },
   en: {
@@ -875,6 +880,9 @@ const translations = {
     "contact.title": "Ready to build<br/>something great?",
     "contact.desc": "Have a collaboration project, app idea, or just want to chat? Feel free to reach out to me.",
     "contact.cta": "Send Email",
+    "contact.copyEmail": "Copy Email",
+    "contact.openApp": "Or open email app",
+    "contact.copied": "Copied!",
     "footer.copy": "© 2026 Ghali Rahmat. Built with precision.",
   }
 };
