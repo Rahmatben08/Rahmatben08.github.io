@@ -508,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 2. 3D Holographic Card Tilt with Glossy Sheen
   function init3DTilt() {
-    const cards = document.querySelectorAll('.glass-card, .project-card');
+    const cards = document.querySelectorAll('.glass-card:not(.no-tilt), .project-card:not(.no-tilt)');
     cards.forEach(card => {
       // Prevent double bindings
       if (card.querySelector('.card-sheen')) return;
