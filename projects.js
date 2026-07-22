@@ -1,5 +1,23 @@
 const projectsData = [
   {
+    id: "sias-bukit-asam",
+    githubUrl: "https://github.com/Rahmatben08/sias-bukit-asam",
+    title: "Sistem Informasi Arsip Surat PT Bukit Asam Tbk Kertapati",
+    role: "Full-Stack Developer",
+    category: "web",
+    techStack: ["Laravel", "PHP", "MySQL", "HTML5", "CSS3", "Figma"],
+    shortDescription: "Sistem informasi pengelolaan arsip surat masuk dan keluar berbasis web di PT Bukit Asam Tbk Unit Dermaga Kertapati Palembang.",
+    fullDescription: "Aplikasi web yang dirancang khusus untuk mendigitalisasi proses administrasi persuratan di PT Bukit Asam Tbk Unit Kertapati Port. Menggantikan proses pencatatan manual menjadi sistem terintegrasi yang lebih aman, cepat, dan terstruktur, mengurangi risiko kehilangan dokumen, serta mempercepat pencarian arsip.",
+    features: [
+      "Pengelolaan data surat masuk dan surat keluar secara digital.",
+      "Sistem manajemen disposisi surat dari pimpinan ke pihak berwenang.",
+      "Fitur pencarian arsip surat secara cepat dan terstruktur.",
+      "Pembuatan laporan rekapitulasi surat secara otomatis.",
+      "Manajemen hak akses pengguna menggunakan autentikasi terenkripsi."
+    ],
+    architecture: "Sistem ini dibangun menggunakan arsitektur MVC (Model-View-Controller) dari framework Laravel, dikombinasikan dengan database relasional MySQL. Menggunakan sistem routing Laravel untuk navigasi yang efisien dan fitur keamanan bawaan framework untuk melindungi data arsip yang bersifat rahasia."
+  },
+  {
     id: "fincorp-enterprise",
     githubUrl: "https://github.com/Rahmatben08/fincorp-enterprise",
     title: "Sistem Keuangan & Portal Karyawan PT Expro Gio Nusantara",
