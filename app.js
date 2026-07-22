@@ -589,8 +589,9 @@ function animateCounter(el, target, suffix = '', duration = 1200) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const statEls = [
-    { id: 'statProjects', target: 12, suffix: '' },
+  const stats = [
+    { id: 'statProjects', target: 13, suffix: '' },
+    { id: 'statExp', target: 2, suffix: '+' }
   ];
 
   const counterObserver = new IntersectionObserver((entries) => {
@@ -607,7 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Observe statProjects
   const sp = document.getElementById('statProjects');
   if (sp) {
-    sp.dataset.counterTarget = '12';
+    sp.dataset.counterTarget = '13';
     sp.dataset.counterSuffix = '';
     sp.textContent = '0';
     counterObserver.observe(sp);

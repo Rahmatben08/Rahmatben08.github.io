@@ -1,0 +1,1993 @@
+RANCANG BANGUN SISTEM INFORMASI ARSIP
+SURAT MASUK DAN KELUAR BERBASIS WEBSITE PADA  
+PT BUKIT ASAM TBK UNIT KERTAPATI PALEMBANG
+LAPORAN KERJA PRAKTIK
+Disusun Untuk Memenuhi Syarat Mata Kuliah Kerja Praktik
+Program Studi Diploma-IV Manajemen Informatika
+ Politeknik Negeri Sriwijaya
+Oleh :
+Nadiya Fahminatul Hasanah
+(
+0623408330
+72
+)
+Olivia Amanda
+(
+0623408330
+74
+)
+JURUSAN MANAJEMEN INFORMATIKA
+POLITEKNIK NEGERI SRIWIJAYA
+PALEMBANG
+2026
+MOTTO PERSEMBAHAN
+"
+ ”
+ (
+ 
+Nadiya Fahminatul Hasanah
+ 
+)
+"
+ 
+" 
+(
+Olivia Amanda
+) 
+Kami
+ 
+persembahkan
+ 
+untuk
+ 
+:
+Allah SWT atas segala rahmat, karunia, kesehatan, dan kemudahan yang diberikan sehingga laporan ini dapat diselesaikan degan baik.
+Diri kami sendiri yang telah berusaha, berjuang, dan bertanggung jawab dalam menyelesaikan seluruh rangkaian kegiatan Kerja Praktik hingga penyusunan laporan ini.
+Kedua orang tua, keluarga, serta saudara/i tercinta yang senantiasa memberikan doa, kasih sayang, motivasi dan dukungan baik moril maupun material.
+Ibu Dr. Delta Khairunnisa, S.E, M.Si
+ selaku dosen pembimbing yang dengan sabar meluangkan waktu dan pikiran dalam memberikan arahan serta bimbingan selama penyusunan laporan ini. Dukungan dan masukan yang diberikan sangat membantu penulis dalam menyelesaikan laporan dengan baik.
+Seluruh dosen dan staf jurusan Manajemen Informatika yang telah memberikan ilmu pengetahuan, pengalaman dan dukungan selama masa perkuliahan.
+Pimpinan seluruh Staf dan Karyawan IT Support yang telah memberikan kesempatan, pengalaman, serta bimbingan selama pelaksanan kerja Praktik.
+Politeknik Negeri Sriwijaya sebagai institusi pendidikan yang telah menjadi tempat kami menimba ilmu dan mengembangkan kemampuan akademik maupun nonakademik.
+Teman-teman seperjuangan yang selalu memberikan bantuan, semangat, dan kerja sama selama proses Kerja Praktik serta penyusunan laporan.
+Semua pihak yang tidak dapat disebutkan satu per satu yang telah memberikan kontribusi, dukungan, dan bantuan sehingga laporan ini dapat terselesaikan dengan baik.
+ABSTRAK
+Pengelolaan arsip surat masuk dan surat keluar di PT Bukit Asam TBK Unit Dermaga Kertapati Palembang masih dilakukan secara manual sehingga menimbulkan kendala seperti kesulitan pencarian data, Risiko kehilangan dokumen, keterlambatan dalam pengelolaan arsip. Untuk mengatasi permasalahan tersebut, dirancang sebuah sistem informasi Arsip Surat Masuk dan Keluar berbasis Website menggunakan Laravel dan MySQL. Sistem ini menyediakan fitur pengelolaan surat masuk, surat keluar, disposisi, pencarian arsip, serta pembuatan laporan. Dengan adanya sistem ini, proses pengelolaan arsip menjadi lebih cepat, terstruktur, aman, dan efisien sehingga dapat mendukung digitalisasi administrasi di PT Bukit Asam Tbk Unit Dermaga Kertapati Palembang.
+Kata Kunci : Arsip Surat, Surat Masuk, Surat Keluar, Website, Laravel, MySQL.
+ABSTRACT
+The management of incoming and outgoing mail archives at PT Bukit Asam TBK, Kertapati Pier Unit, Palembang, is still done manually, resulting in challenges such as difficulty in retrieval of data, the risk of document loss, and delays in archive management. To address these issues, a website-based Incoming and Outgoing Mail Archives information system was designed using Laravel and MySQL. This system provides features for managing incoming and outgoing mail, disposition, archive searches, and report generation. This system makes the archive management process faster, more structured, secure, and efficient, supporting the digitalization of administration at PT Bukit Asam Tbk, Kertapati Pier Unit, Palembang.
+Keywords: Mail Archives, Incoming Mail, Outgoing Mail, Website, Laravel,
+ 
+MySQL.
+KATA PENGANTAR
+Puji syukur kami panjatkan kepada Allah SWT yang telah melimpahkan rahmat, serta hidayah-Nya sehingga kami dapat menyelesaikan laporan kerja praktik yang berjudul “Rancang Bangun Sistem Informasi Arsip Surat Masuk Dan Keluar Berbasis Website Pada PT Bukit Asam Dermaga Kertapati” ini dengan tepat waktu.
+Laporan kerja praktik ini disusun berdasarkan apa yang telah kami lakukan pada saat di kantor yakni bertempat di PT. Bukit Asam Kertapati Port. Jl. Stasiun Kereta Api, Kertapati, Kec. Kertapati, Kota Palembang, Prov. Sumatera Selatan dimulai dari tanggal 02 Februari 2026 s/d 20 juni 2026. 
+Laporan kerja praktik ini disusun untuk memenuhi kurikulum dalam menyelesaikan pendidikan Diploma DIV Jurusan Manajemen Informatika Politeknik Negeri Sriwijaya. Dalam kesempatan ini juga, penulis mengucapkan terimakasih yang sebesar-besarnya kepada semua pihak yang telah mendukung dan membantu dalam penyusunan laporan kerja praktik ini khususnya kepada: 
+Bapak Ir. Irawan Rusnadi, M.T. selaku Direktur Politeknik Negeri Sriwijaya;
+Bapak Dr. Yusri, S.Pd, M.Pd. selaku Wakil Direktur I Politeknik Negeri Sriwijaya;
+Bapak M. Husni Mubarok, S.E., M.Si,Ak. selaku Wakil Direktur II Politeknik Negeri Sriwijaya;
+Bapak 
+Ir. 
+Dicky Seprianto,S.T.,M.T.IPM. selaku Wakil Direktur III Politeknik Negeri Sriwijaya;
+Ibu Dr. Irma Salamah,S.T.,M.T.I. selaku Wakil Direktur IV Politeknik Negeri Sriwijaya;
+Bapak 
+Ir. 
+Sony Oktapriandi, S.Kom.,M.Kom. selaku Ketua Jurusan Manajemen Informatika Politeknik Negeri Sriwijaya;
+Ibu Herlinda Kusmiati,S.Kom.,M.Kom. selaku Kepala Program Studi Jurusan Manajemen Informatika Politeknik Negeri Sriwijaya;
+Bapak 
+Ir. 
+Sulistiyanto, S.Kom.,M.T.I. selaku Sekretaris Jurusan Manajemen Informatika Politeknik Negeri Sriwijaya;
+Ibu Dr. Delta Khairunnisa, S.E, M.Si selaku Dosen Pembimbing Manajemen Informatika Politeknik Negeri Sriwijaya Palembang. 
+Palembang, 8 Juli 2026
+  Penulis
+DAFTAR  ISI
+MOTTO
+ 
+DAN
+ PERSEMBAHAN
+I
+ABSTRAK
+Ii
+ABSTRACT
+Iii
+DAFTAR ISI
+Vi
+KATA PENGANTAR
+Iv
+DAFTAR GAMBAR
+Ix
+DAFTAR TABEL
+Xi
+BAB I
+ 
+PENDAHULUAN
+1
+1.1
+Latar Belakang
+1
+1.2
+Rumusan Masalah
+3
+1.3
+Batasan Masalah
+3
+1.4 
+Tujuan Dan Manfaat
+3
+1.4.1
+Tujuan
+3
+1.4.2
+Manfaat
+4
+1.5
+Metodologi Pelaksanaan Kerja Praktik
+5
+1.5.1
+Jadwal Pelaksanaan Kerja Praktik
+5
+1.
+6
+Sistematika Penulisan
+5
+BAB II 
+TINJAUAN UMUM
+7
+2.1 
+Profil 
+PT Bukit Asam Tbk
+7
+2.2 
+Sejarah Singkat PT Bukit Asam Tbk
+8
+2.3 
+Visi
+, Misi, Nilai dan Budaya PT Bukit Asam Tbk
+9
+2.3.1
+Visi
+9
+2.3.2
+Misi
+9
+2.3.
+3
+Misi
+9
+2.4
+Logo dan Makna Perusahaan
+11
+2.4.1
+Logo Perusahaan
+12
+2.4.2
+Makna Logo PT Bukit Asam Tbk
+13
+2.5
+Struktur Perusahaan PT Bukit Asam Tbk
+15
+2.6
+Pr
+ofil PT Bukit Asam Tbk Unit Kertapati Port
+18
+2.7
+Struktur Organisasi PT Bukit Asam Tbk Kertapati Port
+20
+BAB III TINJAUAN PUSTAK
+A
+23
+3.1
+Teori Judul
+23
+3.1.1
+Pengertian Perancangan
+23
+3.2
+Pengertian Sistem
+20
+3.3
+Pe
+ngertian Informasi
+24
+3.
+4
+Sistem Informasi
+31
+    
+3.
+5
+A
+rsip
+35
+3.
+6
+Surat
+36
+3.
+7
+Surat Masuk dan Surat Keluar
+36
+3.
+7.
+1
+Surat Masuk
+23
+3.
+7.2
+Surat Keluar
+23
+3.
+7.3
+Prosedur Pengelolaan Surat
+23
+3.
+8
+Sistem Informasi Arsip Surat
+36
+3.
+9
+Website
+36
+3.
+10
+Basis Data
+36
+3.
+11
+UML
+ (Unified Modeling Language)
+36
+3.
+11.1
+Use Case Diagram
+38
+3.
+11.2
+Activity Diagram
+39
+3.
+11.3
+Class Diagram
+40
+3.
+11.4
+Sequence Diagram
+41
+3.
+11.5
+ERD 
+(Entitiy Relationship Diagram)
+42
+3.
+12
+Teknologi yang Digunakan
+43
+3.
+12.1
+Laravel
+43
+3.
+12.2
+Figma
+44
+3.
+12.3
+HTML
+44
+3.
+12.4
+CSS
+44
+3.
+12.5
+PHP
+45
+3.
+12.6
+MySQL
+45
+3.
+13
+Penelitian Terdahulu
+45
+3.
+14
+Kerangka Pemikiran
+46
+BAB IV HASIL DAN PEMBAHASAN
+47
+4.
+1
+Gambaran Umum Sistem
+47
+4.
+1
+.
+1
+Perancangan Sistem
+47
+4.
+1
+.
+2
+Use Case Diagram
+48
+4.
+1
+.
+3
+Activity Diagram3
+49
+4.
+1
+.
+4
+Sequence Diagram
+51
+4.
+1
+.
+5
+Class Diagram
+52
+4.
+1
+.
+6
+ERD (Entitiy Relationship Diagram)
+53
+4.
+1
+.
+7
+Struktur Tabel
+54
+4.
+2
+Rancangan Tampilan 
+Wireframe
+56
+4.
+2
+.
+1
+Halaman Login
+56
+4.
+2
+.
+2
+Halaman Dashboard
+57
+4.
+2
+.
+3
+Daftar Surat Masuk
+58
+4.
+2
+.
+4
+Detail Surat Masuk
+59
+4.
+2
+.
+5
+Daftar Surat Keluar
+60
+4.
+2
+.
+6
+Tambah Surat Keluar
+61
+4.
+2
+.
+7
+Disposisi
+62
+4.
+3
+Tampilan Website
+64
+4.
+3
+.
+1
+Halaman Login
+64
+4.
+3
+.
+2
+Halaman Dashboard
+65
+4.
+3
+.
+3
+Halaman Surat Masuk
+65
+4.
+3
+.
+4
+Halaman Tambah Surat Masuk
+66
+4.
+3
+.
+5
+Halaman Surat Keluar
+67
+4.
+3
+.
+6
+Halaman Tambah Surat Keluar
+67
+4.
+3
+.
+7
+Halaman Arsip Surat
+68
+4.
+3
+.
+8
+Halaman Disposisi
+69
+4.
+3
+.
+9
+Halaman Tambah Disposisi Surat
+69
+4.
+3
+.
+10
+Halaman Data User
+70
+4.
+3
+.
+11
+Halaman Registrasi Tambah Data User
+71
+4.
+3
+.
+12
+Halaman Laporan
+73
+4.
+3
+.
+13
+Halaman Pengaturan
+74
+4.
+4
+Implementasi Sistem
+75
+4.
+5
+Implementasi Arsitektur Laravel (MVC)
+75
+4.
+5
+.1
+Model
+75
+4.
+5
+.2
+View
+76
+4.
+5
+.
+3
+Controller
+76
+4.
+6
+Routing pada Laravel
+76
+4.
+7
+Pengujian Sistem
+77
+4.
+8
+Kelebihan dan Kekurangan Sistem
+77
+4.
+9
+Analisis Sistem
+77
+BAB V KESIMPULAN DAN SARAN
+79
+5.1
+Kesimpulan
+79
+5.2
+Saran
+79
+DAFTAR PUSTAKA
+81
+LAMPIRAN
+DAFTAR GAMBAR
+G
+ambar 2. 1
+ 
+Budaya 
+“Core Values AKHLAK”
+8
+Gambar 2. 2
+ 
+Logo Perusahaan
+9
+Gambar 2. 
+3
+ S
+imbol Logo PT Bukit Asam Tbk
+11
+Gambar 2. 
+4
+ 
+Kata Bukit Asam
+13
+Gambar 2. 
+5
+ 
+Lambang MIND ID
+14
+Gambar 2. 
+6
+ 
+Struktur Organisasi PT Bukit Asam Tbk
+14
+Gambar 2. 
+7
+ 
+Struktur Organisasi PT Bukit Asam Tbk Unit Kertapati Port
+14
+Gambar 
+4
+. 
+1
+ 
+Use Case Diagram Pengelolaan Arsip Surat
+49
+Gambar 
+4
+. 
+2
+ 
+A
+ctivity Diagram
+50
+Gambar 
+4
+. 
+3
+ 
+S
+equence Diagram
+55
+Gambar 
+4
+. 
+4
+ 
+Class Diagram
+84
+Gambar 
+4
+. 
+5
+ 
+ERD 
+(Entity Relationship Diagram)
+ 
+86
+DAFTAR TABEL
+tabel 3. 1
+ Simbol 
+Use Case 
+Diagram
+24
+Tabel 3. 2
+ Simbol 
+Activity 
+Diagram
+27
+Tabel 3. 
+3
+ Simbol 
+Sequens 
+Diagram
+29
+Tabel 3. 
+4
+ Simbol Class 
+Diagram
+30
+Tabel 3. 
+5
+ Simbol 
+Erd
+ (
+Entity Relationship 
+Diagram
+)
+32
+Tabel 3. 
+6
+ Penelitian Terdahulu
+37
+ 
+BAB 
+I
+PENDAHULUAN
+1.1
+  
+Latar Belakang
+      
+ 
+Industri pertambangan batubara merupakan salah satu sektor yang memiliki peran penting dalam penyediaan energi, baik untuk kebutuhan domestik maupun global. Menurut (PT Bukit Asam Tbk, 2023), PT Bukit Asam merupakan salah satu perusahaan pertambangan batubara terbesar di Indonesia yang memiliki peran penting dalam kegiatan produksi dan distribusi batubara nasional. Perusahaan ini juga mengelola berbagai infrastruktur pendukung seperti pelabuhan serta jalur transportasi batubara yang digunakan untuk mendistribusikan hasil produksi ke berbagai wilayah. Salah satu unit operasional penting adalah Dermaga Kertapati yang berlokasi di Palembang, Sumatera Selatan yang berfungsi sebagai terminal bongkar muat batubara untuk kebutuhan domestik maupun ekspor.
+Menurut (PT Bukit Asam Tbk, 2022) kapasitas angkutan batubara menuju Dermaga Kertapati terus mengalami peningkatan dari sekitar 5 juta ton tahun dan ditargetkan mencapai 7 juta ton per tahun sebagai bagian dari pengembangan infrastruktur logistik perusahaan. Kegiatan operasionalnya, PT Bukit Asam Dermaga Kertapati melakukan banyak aktivitas administrasi yang berkaitan dengan pengelolaan surat masuk dan surat keluar, baik surat internal maupun eksternal. Surat-surat tersebut digunakan sebagai media komunikasi resmi antara perusahaan dengan pihak lain yang terkait dengan kegiatan operasional perusahaan.
+Proses pengelolaan arsip surat masuk dan surat keluar di PT Bukit Asam Dermaga Kertapati masih dilakukan secara manual, yaitu dengan pencatatan menggunakan buku agenda maupun penyimpanan dokumen dalam bentuk fisik. Proses tersebut menyebabkan beberapa kendala, seperti sulitnya mencari kembali data surat yang telah lama disimpan,
+resiko kehilangan dokumen, kerusakan arsip, serta keterlambatan dalam proses pendapatan surat. (Rouf & Marasabessy, 2024).
+Pengelolaan arsip secara manual juga membutuhkan ruang penyimpanan yang cukup besar dan kurang efektif dalam mendukung kebutuhan administrasi yang cepat dan efisien. Permasalahan lain yang sering terjadi adalah sulitnya melakukan 
+monitoring
+ terhadap surat yang masuk maupun surat yang telah dikirim dalam periode tertentu. Pencatatan yang masih dilakukan secara manual juga perpotensi menyebabkan terjadinya kesalahan pencatatan, duplikasi data, serta kurang efektifnya proses pembuatan laporan arsip surat. Kondisi tersebut dapat mempengaruhi efektivitas kerja pegawai dalam mengelola administrasi perusahaan serta menghambat proses pelayanan informasi apabila data surat tidak dapat ditemukan dengan cepat
+ 
+(Ainul Faradisa & Soffiana Agustin, 2025)
+.
+Perkembangan teknologi informasi, penggunaan sistem informasi berbasis web dapat menjadi solusi yang efektif untuk meningkatkan efisiensi dalam pengelolaan arsip surat. Sistem informasi arsip surat berbasis web memungkinkan proses pencatatan surat masuk dan surat keluar dilakukan secara digital seingga data dapat tersimpan secara terpusat dalam basis data. Selain itu, sistem ini dapat menyediakan fitur pencarian data surat pengunggahan dokumen digital, pengelolaan disposisi surat, serta membuat laporan arsip secara cepat dan terstruktur
+ 
+(Sari & Setiawan, 2025)
+.
+Pemanfaatan teknologi digital dalam pengelolaan administrasi juga terbukti mampu meningkatkan efektivitas kerja serta transparansi dalam pengelolaan dokumen perusahaan. Serta digital dapat membantu perusahaan dalam melakukan pengelolaan data secara lebih akurat, aman, dan efisien sehingga proses administrasi dapat berjalan dengan lebih baik.
+Berdasarkan permasalahan diatas, maka diperlukan perancangan suatu sistem informasi yang mampu membantu proses pengelolaan arsip surat masuk dan surat keluar secara digital dan terintegrasi.
+Dalam laporan kerja praktik ini penulis mengambil judul “Rancang Bangun Sistem Informasi Arsip Surat Masuk dan Surat Keluar Berbasis Web pada PT Bukit Asam Dermaga Kertapati”. Guna meningkatkan efisiensi kerja, meminimalisir kesalahan, serta mendukung pengelolaan data yang lebih terstruktur dan aman.
+1.2
+  
+Rumusan Masalah
+Berdasarkan latar belakang 
+di atas, maka rumusan masalah dalam kegiatan ini adalah:
+Bagaimana 
+merancang sistem informasi arsip surat masuk dan surat keluar berbasis web yang efektif dan efisien?
+Batasan Masalah
+Penulis menetapkan batasan masalah sebagai berikut:
+Sistem yang dirancang mencakup pengelolahan arsip surat masuk dan keluar.
+Sistem berbasis web dan digunakan dalam lingkungan internal kantor.
+Sistem menyediakan fitur input data surat, penyimpanan, pencarian, dan pembuatan laporan.
+Sistem tidak membahas aspek keamanan tingkat lanjut secara mendalam.
+Tujuan dan Manfaat
+Tujuan
+Tujuan dari kegiatan kerja praktik ini adalah 
+untuk menganalisis sistem pengelolaan arsip surat masuk dan keluar yang masih dilakukan secara manual di PT Bukit Asam Dermaga Kertapati, serta mengidentifikasi kendala yang muncul seperti kesulitan pencarian, risiko kehilangan, keterlambatan, dan duplikasi data. Berdasarkan
+hasil analisis tersebut, kerja praktik ini bertujuan merancang sistem informasi arsip surat berbasis web yang terintegrasi sehingga meningkatkan efektivitas dan efisiensi pengelolaan arsip. Sistem ini diharapkan dapat menyediakan fitur input data, pencarian cepat, mampu penyimpanan terpusat, serta pembuatan laporan otomatis, sehingga mendukung digitalisasi administrasi
+ 
+perusahaan agar lebih akurat, aman, dan 
+transparan. Selain itu, kegiatan ini juga bertujuan memberikan rekomendasi penerapan sistem informasi sebagai solusi alternatif untuk meningkatkan kualitas pelayanan administrasi perusahaan.
+Manfaat
+Kegiatan Kerja Praktik ini diharapkan dapat memberikan manfaat baik bagi penulis, Lembaga Politeknik Negeri Sriwijaya, dan bagi PT Bukit Asam. Adapun manfaat dari Praktik Magang ini adalah sebagai berikut:
+Bagi Penulis 
+Kegiatan kerja praktik ini memberikan kesempatan bagi mahasiswa untuk memperoleh pengalaman nyata dalam penerapan teknologi informasi, khususnya dalam merancang sistem informasi arsip surat berbasis web. Melalui praktik ini, mahasiswa dapat melatih keterampilan teknis, analisis, serta penulisan akademik yang relevan dengan dunia kerja. Selain itu, kegiatan ini juga menumbuhkan sikap profesional, disiplin, tanggung jawab, dan kemampuan bekerja sama di lingkungan industri sehingga mahasiswa lebih siap menghadapi tantangan dunia kerja setelah lulus.
+Bagi Lembaga Politeknik Negeri Sriwijaya
+Kerja praktik ini bermanfaat bagi kampus sebagai sarana memperkuat hubungan dengan dunia industri, sehingga kurikulum yang diterapkan
+ 
+semakin relevan dengan kebutuhan nyata. kegiatan dapat dijadikan bahan evaluasi untuk pengembangan pembelajaran berbasis praktik dan teknologi informasi. Selain itu, keberhasilan mahasiswa dalam melaksanakan kerja praktik juga sebagai bahan evaluasi bagi pihak kampus dalam mengembangkan kurikulum yang lebih sesuai dengan perkembangan teknologi dan kebutuhan industri Dengan demikian, lulusan Hasil yang dihasilkam diharapkan memiliki kompetensi yang lebih siap pakai, tidak hanya dari segi teori tetapi juga dari keterampilan dan pengalaman kerja.
+ 
+Kegiatan ini juga menjadi salah satu bentuk kontribusi mahasiswa dalam membawa nama baik lembaga, sehingga dapat meningkatkan citra dan kepercayaan dari pihak industri terhadap Politeknik Negeri Sriwijaya. Sebagai 
+institusi pendidikan yang mampu mencetak lulusan yang kompeten dan profesional.
+Bagi Perusahaan
+Manfaat bagi perusahaan adalah tersedianya solusi alternatif berupa sistem arsip berbasis web yang lebih efisien dibandingkan pencatatan manual. Sistem ini mempermudah pencarian, penyimpanan, dan pelaporan arsip surat sehingga mendukung kelancaran operasional serta mengurangi risiko kehilangan dan keterlambatan. Kehadiran mahasiswa magang juga memberikan tambahan tenaga kerja yang dapat membantu proses administrasi, sekaligus menjadi bentuk kontribusi perusahaan dalam pengembangan sumber daya manusia melalui pembimbingan dan pemberian pengalaman kerja nyata
+Metodologi Pelaksanaan Kerja Praktik
+Jadwal Pelaksanaan Kerja Praktik
+Adapun waktu, durasi dan tempat pelaksanaan kegiatan kerja praktik ini yaitu sebagai berikut:
+Waktu
+: 2 Februari 2026 s.d 29 Mei 2026
+Durasi
+: 4 (Empat) Bulan
+Tempat
+: 
+PT. Bukit Asam Persero Tbk, Unit Dermaga Kertapati
+Alamat
+: 
+Jalan Stasiun Kereta Api, Palembang, Sumatera Selatan.
+Tabel 1.1
+ Jadwal Pelaksanaan Kerja Praktik
+No
+Hari
+Jam
+ 
+Masuk
+Jam
+ 
+Pulang
+1
+Senin s/d 
+Kamis
+07.00
+ WIB
+16.00
+ WIB
+2
+Jumat
+07.00
+ WIB
+16.00
+ WIB
+Sistematika Penulisan
+Agar mempermudah dalam memahami isi laporan kerja praktik ini, maka penulisan laporan disusun dalam beberapa bab sebagai berikut:
+BAB I 
+ 
+ 
+PENDAHULUAN
+Bab ini berisi tentang latar belakang, rumusan masalah, batasan masalah, 
+ 
+tujuan dan manfaat, metodologi pelaksanaan
+ 
+, serta sistematika penulisan.
+BAB II TINJAUAN UMUM
+Bab ini berisi teori-teori yang mendukung perancangan sistem, seperti konsep sistem informasi, website, database, serta teknologi yang digunakan.
+BAB III TINJAUAN PUSTAKA
+Bab ini membahas mengenai perancangan sistem yang akan dibuat, mulai dari desain sistem, diagram, hingga perancangan database dan antarmuka.
+BAB IV HASIL DAN PEMBAHASAN
+Bab ini menjelaskan hasil dari implementasi sistem serta pembahasan mengenai fitur-fitur yang telah dibuat.
+BAB V PENUTUP
+Bab ini berisi kesimpulan dari hasil perancangan sistem serta saran untuk pengembangan lebih lanjut.
+BAB I
+I
+TINJAUAN UMUM
+Profil 
+PT Bukit Asam Tbk
+PT Bukit Asam Tbk (PTBA) merupakan perusahaan pertambangan batu bara milik negara Indonesia yang berstatus sebagai Badan Usaha Milik Negara (BUMN) dan terdaftar di Bursa Efek Indonesia dengan kode saham PTBA. Perusahaan ini secara resmi didirikan pada tanggal 2 Maret 1981 berdasarkan Peraturan Pemerintah Nomor 42 Tahun 1980 tentang Penyertaan Modal Negara Republik Indonesia untuk pendirian Perusahaan Perseroan (Persero) Tambang Batu Bara Bukit Asam. Saat ini, PT Bukit Asam Tbk merupakan bagian dari holding BUMN pertambangan, yaitu MIND ID (PT Mineral Industri Indonesia), dengan kepemilikan saham sebesar 65,93%. Hal ini menjadikan PT Bukit Asam Tbk sebagai satu-satunya perusahaan batu bara milik negara yang memiliki peran strategis dalam mendukung ketahanan energi nasional. (Suri et al., 2021)
+.
+Dalam kegiatan operasionalnya, PT Bukit Asam Tbk mengelola beberapa wilayah tambang yang tersebar di berbagai daerah di Indonesia, antara lain Sumatera Selatan, Riau, Kalimantan Timur, dan Sumatera Barat, dengan total luas wilayah mencapai sekitar 65.632 hektar. Hingga akhir tahun 2022, perusahaan memiliki total sumber daya batu bara sebesar 5,85 miliar ton dan cadangan sebesar 3,02 miliar ton. PT Bukit Asam Tbk memiliki peran penting dalam memenuhi kebutuhan energi nasional melalui kegiatan eksplorasi, produksi, pengolahan, hingga distribusi batu bara. Perusahaan juga terus melakukan pengembangan usaha di bidang energi untuk mengingkatkan nilai tambah dan daya saing perusahaan (Ikhsan Hilal Syafaat et al., 2025)
+.
+Menurut (Gultom, 2025) sebagai perusahaan energi yang berorientasi pada masa depan, PT Bukit Asam Tbk tidak hanya berfokus pada kegiatan penambangan, tetapi juga mengembangkan berbagai inovasi di bidang teknologi dan energi untuk meningkatkan  efisiensi  operasional.  Perusahaan  juga  berkom
+ 
+ itmen  dalam menjaga 
+kelestarian lingkungan melalui penerapan praktik pertambangan yang berkelanjutan serta ramah lingkungan.
+Sejarah Singkat PT Bukit Asam Tbk
+Sejarah PT Bukit Asam Tbk bermula pada tahun 1919, ketika kegiatan penambangan batu bara pertama kali dilakukan oleh Pemerintah Kolonial Belanda
+ 
+di Tambang Air Laya, Tanjung Enim, Kabupaten Muara Enim, Provinsi Sumatera Selatan. Pada saat itu, sistem penambangan yang digunakan adalah metode tambang terbuka (open-pit mining). PT Bukit Asam (Persero) Tbk merupakan Badan usaha milik negara (BUMN) yang bergerak di bidang pertambangan baubatara dan memiliki peran strategis dalam penyediaan energi nasional. Kegiatan penambangan batubara di wilayah Tanjung Enim, Sumatera Selatan telah dimulai sejak tahun 1919 pada masa pemerintahan kolonial belanda pengelolaan tambang batubara diambil alih oleh pemerintah indonesia setelah kemerdekaan. Pengelolaan tambang berada di bawah jembatan pertambangan umum pada tahun 1950 (PT Bukit Asam Tbk, 2023).
+Pemerintah mendirikan perusahaan Negara (PN TABA) Tambang Batubara Bukit Asam pada tahun 1981 sebagai bentuk pengelolaan yang lebih terstruktur. Perkembangan industri serta peningkatan kebutuhan energi mendorong perubahan status perusahaan. Status perusahaan berubah menjadi PT Bukit Asam (Persero) pada tahun 1990. Perusahaan resmi menjadi perusahaan terbuka dengan nama PT Bukit Asam (Persero) Tbk pada tahun 2002 setelah mencatatkan saham di Bursa Efek Indonesia dengan kode saham “PTBA”. Sejak saat itu, nama perusahaan berubah menjadi PT Tambang Batubara Bukit Asam (persero) Tbk (PT Bukit Asam Tbk, 2023).
+Pada tahun 2017, PT Bukit Asam Tbk resmi bergabung dalam holding BUMN Pertambangan yang dipimpin oleh PT Indonesia Asahan Aluminium (Persero). Bergabungnya perusahaan ke dalam holding ini menjadi langkah strategis dalam memperkuat sinergi antar perusahaan pertambangan milik negara. Pada tahun 2023, dibentuk BUMN Induk Industri Pertambangan dengan nama PT Mineral Industri Indonesia (Persero) atau yang dikenal sebagai MIND ID. Dalam struktur ini, PT Bukit 
+Asam Tbk menjadi bagian dari holding bersama beberapa perusahaan pertambangan lainnya seperti PT ANTAM Tbk dan PT Timah Tbk, sehingga semakin memperkuat posisi perusahaan dalam industri pertambangan nasional maupun global.Perusahaan membangun berbagai fasilitas penunjang
+untuk mendukung distribusi dan pemasaran batubara. Unit Dermaga Kertapati di Palembang, Sumatera Selatan menjadi salah satu fasilitas strategis dalam proses pengangkutan dan pengapalan batubara melalui jalur perairan batubara dari tambang Tanjung Enim diangkut menggunakan kereta api melalui kerja sama dengan PT Kereta Api Indonesia menuju Dermaga Kertapati. Proses pemindahan batubara ke kapal tongkang dilakukan menggunakan sistem conveyor dan shiploader. Dermaga Kertapati berperan sebagai penghubung antara transportasi darat dan transportasi laut rantai logistik perusahaan.Pengembangan fasilitas terus dilakukan untuk efesiensi operasioal. Infrastruktur seperti apron feeder, conveyor system, stockpile, dan shiploader digunakan untuk menunjang kelancaran distribusi batubara. (Akbar et al., 2023)
+.
+Visi, Misi, Nilai, dan Budaya PT Bukit Asam Tbk
+Visi
+Menjadi perusahaan energi kelas dunia peduli lingkungan
+Misi
+Untuk mewujudkan visi tersebut, PT Bukit Asam Tbk memiliki misi sebagai mengelola sumber energi dengan mengembangkan kompetensi korporasi dan keunggulan insani untuk memberikan nilai tambah maksimal bagi stakeholder dan lingkungan.
+Nilai dan Budaya Perusahaan 
+Dalam menjalankan 
+kegiatan operasionalnya, PT Bukit Asam Tbk berpedoman pada nilai dan budaya perusahaan yang kuat sebagai dasar dalam membentuk sikap, perilaku, serta etos kerja seluruh karyawan. Budaya perusahaan menjadi salah satu faktor penting dalam mendukung tercapainya tujuan perusahaan, karena tidak hanya 
+berpengaruh pada kinerja individu, tetapi juga pada kinerja organisasi secara keseluruhan (Suri et al., 2021)
+.
+Sejak tahun 2020, berdasarkan Surat Edaran Menteri BUMN Nomor SE-7/MBU/07/2020 tanggal 1 Juli 2020 tentang Nilai-Nilai Utama (Core Values) Sumber Daya Manusia BUMN, seluruh perusahaan BUMN diwajibkan untuk menerapkan nilai utama yang dikenal dengan AKHLAK. Nilai-nilai ini menjadi pedoman dalam membentuk budaya kerja yang profesional, berintegritas, serta mampu beradaptasi dengan perkembangan zaman. Penerapan nilai AKHLAK juga diharapkan dapat memperkuat sinergi antar karyawan serta meningkatkan kualitas kinerja perusahaan secara berkelanjutan.
+Gambar 2.1 
+Budaya 
+“Core Values AKHLAK”
+Sebagai bentuk komitmen dalam menerapkan nilai-nilai tersebut, PT Bukit Asam Tbk telah melakukan berbagai upaya, salah satunya melalui ikrar dan komitmen bersama yang dilakukan oleh jajaran Direksi untuk menjalankan nilai 
+AKHLAK
+ secara konsisten serta menjadi contoh (role model) bagi seluruh karyawan.
+Adapun nilai-nilai utama dalam budaya 
+AKHLAK
+ yang diterapkan dlingkungan PT Bukit Asam Tbk adalah sebagai berikut:
+Amanah
+Memegang teguh kepercayaan yang diberikan.
+Memenuhi janji dan komitmen
+Bertanggung jawab atas tugas, keputusan, dan tindakan yang dilakukan
+Berpegang teguh kepada nilai moral dan etika
+Kompeten
+Terus belajar dan mengembangkan kapabilitas
+Meningkatkan kompetensi diri untuk menjawab tantangan yang selalu berubah
+Membantu orang lain belajar
+Menyelesaikan tugas dengan kualitas terbaik
+Harmonis
+Saling peduli dan menghargai perbedaan
+Menghargai setiap orang apapun latar belakangnya
+Suka menolong orang lain
+Membangun lingkungan kerja yang kondusif
+Loyal
+Berdedikasi dan mengutamakan kepentingan Bangsa dan Negara.
+Menjaga nama baik sesama karyawan, pimpinan, BUMN, dan negara
+Rela berkorban untuk tujuan yang lebih besar
+Patuh kepada pimpinan sepanjang tidak bertentangan dengan hukum dan etika
+Adaftif
+Terus
+berinovasi
+ dan
+antusias
+dalam
+menggerakkan
+ataupun menghadapi perubahan
+Cepat menyesuaikan diri untuk menjadi lebih baik
+Terus-menerus melakukan perbaikan mengikuti
+ 
+perkembangan teknologi
+Bertindak proaktif
+Kolaboratif
+Membangun kerja sama yang sinergis
+Cepat menyesuaikan diri untuk menjadi lebih baik
+Terbuka dalam bekerja sama untuk menghasilkan nilai tambah
+Menggerakkan pemanfaatan berbagai sumber daya untuk tujuan.
+Logo dan Makna Perusahaan
+Logo merupakan salah satu elemen penting dalam identitas suatu perusahaan yang berfungsi sebagai simbol visual untuk merepresentasikan nilai, visi, dan karakter 
+perusahaan. Logo tidak hanya digunakan sebagai pembeda dengan perusahaan lain, tetapi juga menjadi sarana komunikasi yang menggambarkan citra dan filosofi perusahaan kepada masyarakat. Oleh karena itu, setiap elemen yang terdapat dalam logo biasanya memiliki makna tertentu yang mencerminkan arah dan tujuan perusahaan (Dawami, 2025)
+.
+Sebagai perusahaan yang bergerak di bidang energi dan pertambangan, PT Bukit Asam Tbk memiliki logo yang dirancang untuk mencerminkan semangat pertumbuhan, inovasi, serta komitmen terhadap keberlanjutan. Logo tersebut menjadi representasi visual dari perjalanan perusahaan dalam mengelola sumber daya energi secara optimal sekaligus menjaga keseimbangan dengan lingkungan.Sebagai identitas perusahaan, logo juga memiliki peran strategis dalam membangun kepercayaan publik serta memperkuat citra perusahaan di mata pemangku kepentingan. Dengan desain yang sederhana namun memiliki makna mendalam, logo PT Bukit Asam Tbk diharapkan dapat mencerminkan profesionalisme, integritas, serta orientasi perusahaan terhadap masa depan. (Ainun et al., 2023)
+.
+Logo Perusahaan
+Logo perusahaan merupakan identitas visual utama yang digunakan untuk merepresentasikan karakter, nilai, serta citra suatu perusahaan. PT Bukit Asam Tbk memiliki logo resmi yang digunakan dalam berbagai aktivitas perusahaan sebagai bentuk identitas yang mudah dikenali oleh masyarakat maupun para pemangku kepentingan.
+Logo perusahaan terdiri dari dua komponen utama yang menjadi satu kesatuan yang utuh dan tidak dapat dipisahkan, yaitu logo simbol dan logo nama. Kedua komponen tersebut harus selalu dirangkaikan dalam setiap penggunaannya dan tidak diperkenankan untuk ditampilkan secara terpisah. Ketentuan mengenai penggunaan logo ini telah diatur secara resmi melalui Surat Keputusan Direksi Nomor 556/0100/2021 tentang Panduan Dasar Identitas PT Bukit Asam Tbk.
+Logo PT Bukit Asam Tbk digunakan dalam berbagai kegiatan perusahaan, baik dalam aktivitas operasional, administrasi, maupun publikasi. Penggunaan logo dapat 
+ditemukan pada dokumen resmi perusahaan, website perusahaan, laporan tahunan, media promosi, hingga berbagai bentuk komunikasi visual lainnya. Dengan penggunaan yang konsisten, logo menjadi salah satu sarana penting dalam membangun citra perusahaan yang profesional dan terpercaya. (Suri et al., 2021)
+.
+Secara visual, logo PT Bukit Asam Tbk merupakan perpaduan antara bentuk dan warna yang dirancang secara harmonis. Desain logo tersebut tidak hanya mempertimbangkan aspek estetika, tetapi juga mengandung nilai filosofis yang mencerminkan karakter perusahaan sebagai entitas yang bergerak di bidang energi dan pertambangan. Setiap elemen yang terdapat
+ 
+dalam logo memiliki arti tersendiri yang menggambarkan semangat perusahaan dalam berkembang dan berinovasi.
+Penggunaan warna dan bentuk yang konsisten pada logo juga bertujuan untuk memperkuat identitas perusahaan sehingga mudah dikenali oleh masyarakat luas. Selain itu, konsistensi tersebut juga mencerminkan profesionalisme perusahaan dalam menjaga standar identitas visualnya. Dengan demikian, logo tidak hanya berfungsi sebagai simbol, tetapi juga sebagai representasi dari nilai, visi, dan arah pengembangan perusahaan di masa depan
+ 
+Sumber
+ 
+:
+ 
+https://brandfetch.com/ptba.co.id
+               
+Gambar 2.2
+  Logo Perusahaan
+Makna Logo PT Bukit Asam Tbk
+Logo PT Bukit Asam Tbk tidak hanya berfungsi sebagai identitas visual tetapi juga memiliki makna filosofis yang mencerminkan nilai, visi, serta arah pengembangan perusahaan. Setiap elemen yang terdapat dalam logo dirancang untuk merepresentasikan karakter perusahaan sebagai entitas yang bergerak di bidang energi yang terus berkembang dan beradaptasi dengan perubahan zaman.Secara keseluruhan, logo PT Bukit Asam Tbk menggambarkan semangat transformasi perusahaan menuju 
+perusahaan energi yang modern, inovatif, dan berkelanjutan. Hal ini sejalan dengan komitmen perusahaan dalam mendukung ketahanan energi nasional serta menjaga keseimbangan antara kegiatan operasional dan kelestarian lingkungan.
+Gambar
+ 
+2.3
+ 
+Simbol
+ 
+logo
+ 
+PT
+ 
+Bukit
+ 
+Asam
+ 
+Tbk
+Simbol logo Bukit Asam menggambarkan Bumi, Tanah, dan Matahari. Simbol ini berasal dari huruf “B” dan ditransformasikan secara abstrak menjadi simbol matahari yang terbit dari bumi (dalam hal ini Bukit Asam) yang mencerminkan awal dari masa depan yang cerah. Warna kuning mencerminkan matahari (energi), warna biru mencerminkan “Corporate Image” yang menunjukkan pengalaman dan jati diri yang tangguh, serta warna merah kecoklatan menunjukkan lingkungan yang subur
+.
+Gambar
+ 
+2.4
+ Kata
+ 
+Bukit 
+Asam
+Kata Bukit Asam digunakan sebagai nama logo, dirangkaikan pada simbol logo sebelah kanan dengan bagian bawah huruf sejajar dengan simbol. Nama logo yang dirangkaikan dengan simbol logo merupakan kesatuan yang tidak dapat dipisahkan.
+    
+Gambar
+ 
+2.5
+ 
+Lambang
+ 
+MIND 
+ID
+Dalam rangka penyeragaman dengan Mining Industry Indonesia (MIND ID)
+ 
+dan anggota holding lainnya, Perusahaan melakukan penyesuaian dengan menambahkan konfigurasi MIND ID pada logo PTBA. Lambang MIND ID yang diletakkan pada sisi kanan atas konfigurasi logo PTBA memiliki makna bahwa pada sisi solid melambangkan kekayaan alam yang kita eksplorasi dan kita manfaatkan bagi semua dan sisi sinergi melambangkan komitmen seluruh anggota untuk bekerja sama mencapai tujuan demi Indonesia
+Struktur Perusahaan PT Bukit Asam Tbk
+Struktur organisasi PT Bukit Asam Tbk disusun untuk mendukung efektivitas pengelolaan perusahaan serta memastikan setiap fungsi berjalan secara optimal sesuai dengan tugas dan tanggung jawabnya. Struktur ini menggambarkan pembagian wewenang, koordinasi, serta hubungan kerja antar unit dalam perusahaan. Secara umum, struktur organisasi PT Bukit Asam Tbk dipimpin oleh Direktur Utama yang bertanggung jawab atas keseluruhan kegiatan operasional dan strategis perusahaan. Dalam menjalankan tugasnya, Direktur Utama didukung oleh beberapa direktur yang membawahi bidang-bidang utama sesuai dengan fungsi perusahaan.
+Adapun susunan utama dalam struktur organisasi PT Bukit Asam Tbk adalah sebagai berikut:
+Direktur Utama
+Direktur Utama memiliki tanggung jawab utama dalam memimpin perusahaan, menentukan arah kebijakan strategis, serta memastikan seluruh kegiatan operasional berjalan sesuai dengan visi dan misi perusahaan
+.
+Direktur Hilirisasi dan Diversifikasi Produk
+Direkt
+orat
+ ini bertanggung jawab dalam pengembangan produk turunan batu bara serta diversifikasi usaha untuk meningkatkan nilai tambah perusahaan. Unit yang berada di bawahnya antara lain
+:
+Project Management Office
+Mine Development
+Logistic & Infrastructure Development
+Energy Business Development
+Downstream Business Development
+Direktur Keuangan dan Manajemen Risiko
+Direktorat ini mengelola aspek keuangan perusahaan serta pengendalian risiko. Unit kerja yang berada di bawahnya meliputi:
+Budgeting & Accounting
+Corporate Finance
+Portfolio Management
+Information Technology
+Risk Management
+Direktur Sumber Daya Manusia
+Direktorat ini bertanggung jawab dalam pengelolaan sumber daya manusia serta pengembangan kompetensi karyawan. Unit kerja yang berada di bawahnya antara lain:
+Strategic Human Capita
+Human Capital Operations
+Asset Management & Supporting Civil Infrastructure
+Legal & Regulatory Affairs
+Sustainability
+Procurement
+Direktur Operasi dan Produksi
+Direktorat ini berperan dalam mengelola kegiatan operasional pertambangan dan produksi batu bara. Unit kerja di dalamnya meliputi:
+Production & Operation Optimization
+Corporate SHE (Safety, Health, and Environment)
+Planning
+Mining
+Coal Handling & Transportation
+Environmental Management & Mining Support
+Operational Services
+Maintenance
+Production & Mining
+ 
+Support Equipment Maintenance
+Direktur Komersial
+Direktorat ini bertanggung jawab dalam kegiatan pemasaran dan distribusi hasil produksi perusahaan. Unit kerja yang berada di bawahnya antara lain:
+Commercial
+Marketing
+Distribution
+Tarahan Port
+Kertapati Port
+Direktorat utama, terdapat juga unit pendukung yang berperan penting dalam menjaga tata kelola perusahaan, antara lain:
+Corporate Secretary
+Internal Audit
+Corporate Management System & Performance
+Struktur organisasi ini menunjukkan bahwa PT Bukit Asam Tbk memiliki sistem pengelolaan yang terstruktur dan terintegrasi, sehingga setiap aktivitas perusahaan dapat berjalan secara efektif dan efisien. Pembagian tugas yang jelas pada setiap direktorat juga memungkinkan perusahaan untuk fokus dalam mengembangkan setiap aspek bisnis secara optimal
+.
+Sumber: Data Internal PT Bukit Asam Tbk (2026)
+Gambar
+ 
+2.6
+ 
+Struktur
+ 
+Organisasi
+ 
+PT
+ 
+Bukit
+ 
+Asam
+ 
+Tbk
+Profil PT Bukit Asam Tbk Unit Kertapati Port
+Unit Kertapati Port merupakan salah satu fasilitas operasional milik PT Bukit Asam Tbk yang berlokasi di Palembang, Sumatera Selatan. Fasilitas ini memiliki peran strategis dalam mendukung proses distribusi batu bara dari area tambang menuju konsumen, baik untuk kebutuhan dalam negeri maupun ekspor. Keberadaan unit ini menjadi salah satu penghubung penting dalam rantai pasok energi, khususnya di wilayah Sumatera. (syahban, 2023).
+Dermaga Kertapati dirancang untuk menunjang kegiatan pengiriman batu bara melalui jalur Sungai Musi dengan menggunakan kapal tongkang. Batu bara yang didistribusikan berasal dari wilayah Tanjung Enim dan diangkut menuju Kertapati menggunakan kereta api yang dioperasikan oleh PT Kereta Api Indonesia (KAI). Setelah tiba di area dermaga, batu bara kemudian dipindahkan dan dimuat ke dalam tongkang untuk selanjutnya dikirim ke berbagai tujuan distribusi, baik ke pelabuhan lanjutan maupun langsung ke konsumen.
+Dalam menunjang kelancaran operasional, Dermaga Kertapati dilengkapi dengan berbagai fasilitas pendukung seperti conveyor system, dermaga khusus, area stockpile, serta peralatan bongkar muat yang dirancang untuk meningkatkan efisiensi dan kecepatan proses logistik. Seluruh fasilitas tersebut berperan penting dalam memastikan proses distribusi berjalan secara optimal, aman, dan tepat waktu. Selain itu, pengelolaan fasilitas juga memperhatikan aspek keselamatan kerja dan lingkungan sesuai dengan standar operasional perusahaan.
+Secara kapasitas, Dermaga Kertapati memiliki kemampuan stockpile mencapai sekitar 160.000 ton dan mampu melayani kapal dengan kapasitas hingga 6.000 DWT (deadweight tonnage). Adapun kapasitas pengangkutan batu bara melalui unit ini mencapai sekitar 7,5 juta ton per tahun, yang menunjukkan besarnya peran unit ini dalam mendukung kegiatan distribusi perusahaan.Dengan posisi geografis yang strategis di sepanjang Sungai Musi, Unit Kertapati Port menjadi salah satu titik penting dalam mendukung pengembangan sektor energi dan transportasi di wilayah Sumatera Selatan.
+Aktivitas operasional yang berlangsung secara terus-menerus di area ini menuntut adanya pengelolaan yang terstruktur, terutama dalam hal pemantauan kondisi fasilitas dan peralatan. Oleh karena itu, kegiatan inspeksi dan pemantauan perbaikan kerusakan menjadi hal yang sangat penting untuk memastikan seluruh fasilitas dapat berfungsi dengan baik. Dengan pengelolaan inspeksi yang optimal, potensi gangguan operasional dapat diminimalkan sehingga proses distribusi batu bara dapat berjalan secara efektif dan efisien
+Struktur Organisasi PT Bukit Asam Tbk Kertapati Port
+Struktur organisasi Unit Kertapati Port disusun untuk mendukung kelancaran operasional serta memastikan setiap kegiatan dapat berjalan secara efektif, efisien, dan terkoordinasi dengan baik. Struktur ini menggambarkan pembagian tugas, tanggung jawab, serta hubungan kerja antar bagian dalam organisasi. Pada Unit Kertapati Port, struktur organisasi dipimpin oleh seorang General Manager yang bertanggung jawab atas keseluruhan kegiatan operasional, pengelolaan sumber daya, serta pencapaian target kinerja unit. Dalam menjalankan tugasnya, General Manager didukung oleh beberapa departemen yang masing-masing memiliki fungsi dan tanggung jawab tertentu sesuai dengan bidangnya.
+Adapun departemen-departemen yang terdapat pada Unit Kertapati Port antara lain:
+Operation Departmen
+Departemen ini berperan sebagai:
+Operasional
+penerimaan,
+pembongkaran,
+penumpukan
+dan pengapalan batubara
+Pembersihan material pengotor, timbunan batubara halus di peralatan dan jalur conveyor
+Schedule pengiriman
+Administrasi penjualan
+Perencanaan pengiriman
+Pengaturan stock batubara
+Optimasi dan Pengendalian Kualitas dan Kuantitas
+Rencana Blending
+Transhipment
+Kajian Operasional
+HR, GS, Finance & CSR Department
+SDM (Kepegawaian)
+Administrasi Kepegawaian
+Protokol
+Hukum & Perizinan
+KeHumasan & Stakeholder
+Griya tamu, penginapan & Hotel
+Transportasi dan Layanan Umum
+Perawatan Balitas
+Pergudangan
+Administrasi Keuangan
+Pengelolaan arus kas, pembayaran dan penagihan piutang
+Pengendalian pembebanan biaya
+Keuangan (neraca, rugi laba)
+CSR
+Maintenance Department
+Perencanaan Perawatan
+Perawatan
+ 
+dan
+ 
+perbaikan
+ 
+alat
+ 
+(preventif,
+ 
+prediktif
+ 
+korektif, modifikasi dan fabrikasi)
+Ketersediaan material/suku cadang
+Dokumentasi Histori Alat
+Inspeksi, investigasi serta trouble shooting
+Perancangan dan perbaikan konstruksi sipil sederhana
+SHE & Security Department
+Pengawasan dan pembinaan K3L
+Perencanaan dan pengawasan lingkungan
+Investigasi Kecelakaan
+Pengamanan seluruh area dermaga (Security)
+Pemantauan & Pengelolaan lingkungan.
+Pengamanan seluruh bangunan yang ada di Kertapati Port dan di area Palembang
+P
+embagian tugas pada masing-masing departemen, setiap bagian juga memiliki unit kerja yang lebih spesifik dalam menjalankan fungsi operasional sehari-hari. 
+Pembagian ini bertujuan untuk meningkatkan efektivitas kerja serta memperjelas tanggung jawab pada setiap lini organisasi.
+Sumber:
+ 
+Data
+ 
+Internal
+ 
+PT
+ 
+Bukit
+ 
+Asam
+ 
+Tbk
+ 
+kertapari
+ 
+Port 
+(2026)
+Gambar 2.7
+ Struktur Organisasi PT Bukit Asam Unit Kertapati Port
+BAB III
+TINJAUAN PUSTAKA
+Teori Judul
+Pengertian Perancangan 
+Perancangan sistem merupakan tahap yang dilakukan setelah proses analisis kebutuhan yang bertujuan untuk merancang dan mendesain sistem sesuai dengan kebutuhan pengguna. Menurut (A’yun & Ganggi, 2019), perancangan adalah proses untuk merancang dan membangun sistem baru, sedangkan (Sri Mulyani et al., 2022) menyatakan bahwa perancangan merupakan penentuan proses dan data yang diperlukan oleh sistem agar dapat memenuhi kebutuhan pengguna.
+Menurut (K. N. Musthofa & W. Haryono, 2023), dalam pengembangan perangkat lunak, perancangan sistem juga merupakan bagian dari tahapan Software Development Life Cycle (SDLC) yang dilakukan setelah tahap analisis kebutuhan. Pada tahap ini, sistem dirancang secara lebih rinci untuk menggambarkan struktur data, alur proses, serta komponen-komponen yang akan digunakan dalam pembangunan sistem. Hasil dari tahap perancangan ini berupa model sistem seperti diagram UML, perancangan database, serta desain antarmuka yang akan menjadi acuan dalam tahap implementasi.
+Pengertian Sistem
+Menurut (Abdul, 2018), Sistem merupakan sekumpulan elemen atau komponen yang saling berhubungan dan bekerja sama untuk mencapai suatu tujuan tertentu. Setiap komponen dalam sistem memiliki peran masing-masing, namun tetap saling terintegrasi dalam satu kesatuan yang terstruktur. Sistem dirancang untuk mengelola berbagai aktivitas melalui mekanisme tertentu sehingga menghasilkan output yang bermanfaat bagi pengguna. Karakteristik sistem meliputi komponen sistem (components), batasan sistem (boundary), lingkungan luar sistem (environment), penghubung (interface), masukan (input), keluaran (output), pengolah (process), serta tujuan (goal). Komponen sistem merupakan bagian-bagian yang membentuk sistem 
+secara
+ 
+keseluruhan, sedangkan batasan sistem berfungsi untuk membedakan antara sistem dengan lingkungan di luar sistem. Selain itu, sistem juga memiliki alur kerja yang terdiri dari input, proses, dan output. Input merupakan data yang masuk ke dalam sistem, kemudian diproses melalui suatu mekanisme tertentu, dan menghasilkan output berupa informasi yang bermanfaat bagi pengguna.
+Secara sederhana, sistem dapat dipahami sebagai suatu alur kerja yang mengolah data menjadi informasi melalui proses tertentu. sistem adalah jaringan prosedur yang saling berhubungan untuk melaksanakan suatu kegiatan atau menyelesaikan suatu sasaran tertentu. Dengan demikian, sistem tidak hanya berfungsi sebagai alat pengolah data, tetapi juga sebagai sarana untuk mendukung pengambilan keputusan.Dalam konteks penelitian ini, sistem yang dimaksud adalah sistem pengelolaan arsip surat. Sistem ini berfungsi untuk mengelola data surat masuk dan surat keluar mulai dari proses pencatatan, penyimpanan, hingga pencarian kembali data arsip. Dengan adanya sistem ini, proses pengolahan data surat yang sebelumnya dilakukan secara manual dapat menjadi lebih terstruktur, cepat, dan akurat sehingga menghasilkan informasi yang lebih efektif dan efisien dalam mendukung kegiatan administrasi.
+P
+engertian Informasi
+Menurut (Iti Irwan et al., 2025), informasi merupakan data yang telah diolah sehingga memiliki makna dan dapat digunakan dalam pengambilan keputusan. Infrormasi yang berkualitas sangat penting dalam mendukung aktivitas organisasi. Kualitas informasi mencakup akurasi, ketepatan waktu, dan relevansi nilai infromasi ditentukan oleh manfaat yang diperoleh dari informasi tersebut dalam membantu pengambilan keputusan.
+Sistem Informasi
+Menurut (Salsabila, 2022), sistem informasi merupakan sistem yang digunakan untuk mengelola data menjadi informasi yang berguna. Sistem ini terdiri dari
+beberapa komponen yang saling berinteraksi. Komponen sistem informasi meliputi perangkat keras (hardware), perangkat lunak (software), Pengguna (brainware), Basis data (database), serta Jaringan komputer tujuan sistem informasi adalah untuk meningkatkan efisiensi kerja, mempermudah pengelolaan data, serta menghasilkan informasi yang cepat dan akurat.
+Arsip
+Menurut (Fitriyani Dinda et al., 2024), arsip merupakan kumpulan dokumen atau data yang disimpan secara sistematis karena memiliki nilai guna tertentu bagi individu maupun organisasi. Arsip tidak hanya berfungsi sebagai tempat penyimpanan informasi, tetapi juga sebagai sumber data yang dapat digunakan kembali apabila dibutuhkan.
+Menurut (Sri Mulyani et al., 2022), Dalam suatu organisasi, arsip memiliki peranan yang sangat penting karena menjadi pusat informasi yang mendukung berbagai kegiatan administrasi. Arsip digunakan sebagai alat bukti yang sah apabila terjadi suatu permasalahan atau sengketa, sebagai sumber informasi yang akurat dan terpercaya, serta sebagai bahan dalam proses pengambilan keputusan. Selain itu, arsip juga berfungsi sebagai alat pengawasan, bahan pertanggungjawaban, serta sebagai memori organisasi yang menyimpan riwayat kegiatan yang telah dilakukan.
+Menurut (Jely Husnita & el-Khaeri Kesuma, 2023), Berdasarkan fungsinya, arsip dibedakan menjadi beberapa jenis, di antaranya arsip aktif dan arsip inaktif. Arsip aktif adalah arsip yang masih sering digunakan dalam kegiatan operasional sehari-hari sehingga masih berada di unit kerja masing-masing. Sedangkan menurut (Mulyapradana et al., 2021), arsip inaktif adalah arsip yang frekuensi penggunaannya sudah menurun, namun masih memiliki nilai guna sehingga tetap disimpan sebagai referensi atau bukti di masa mendatang. Pengelolaan arsip yang baik akan memudahkan proses penyimpanan, pencarian, serta pemanfaatan kembali informasi yang terkandung di dalamnya.
+Dengan demikian, arsip memiliki peran yang sangat penting dalam mendukung kelancaran administrasi dan operasional suatu organisasi. Dalam konteks penelitian
+ 
+ini, arsip yang dimaksud adalah arsip surat, yaitu dokumen yang berkaitan dengan surat masuk dan surat keluar yang dikelola secara sistematis agar dapat diakses dengan mudah, cepat, dan akurat.
+Surat
+Menurut (Nilam Tayang et al., 2023), Surat merupakan sarana komunikasi tertulis yang digunakan untuk menyampaikan informasi, pesan, atau pemberitahuan dari satu pihak kepada pihak lain. Surat memiliki peranan penting dalam kehidupan sehari-hari, baik dalam lingkungan pribadi maupun dalam kegiatan organisasi dan instansi. Sebagai media komunikasi tertulis, surat memungkinkan informasi disampaikan secara jelas, terstruktur, dan dapat dipahami oleh penerima sesuai dengan maksud yang disampaikan oleh pengirim.
+Menurut (Mahardika, 2024), dalam perkembangannya, surat tidak hanya berbentuk dokumen fisik berupa kertas, tetapi juga dapat berbentuk digital yang dikirim melalui media elektronik. Meskipun demikian, fungsi utama surat tetap sama, yaitu ebagai alat komunikasi yang dapat didokumentasikan dan digunakan kembali di kemudian hari. Keunggulan surat dibandingkan dengan komunikasi lisan adalah sifatnya yang dapat disimpan, dijadikan bukti tertulis, serta memiliki kekuatan administratif bahkan hukum dalam kondisi tertentu.
+Surat memiliki beberapa fungsi penting dalam kegiatan administrasi, di antaranya sebagai alat komunikasi tertulis, sebagai bukti tertulis yang sah, sebagai alat pengingat, serta sebagai dokumen yang dapat dijadikan arsip. Menurut (Kartika & Supriyono, 2025), Surat sebagai alat komunikasi tertulis digunakan untuk menyampaikan berbagai informasi seperti pemberitahuan, permohonan, undangan, maupun laporan. Sebagai bukti tertulis, surat dapat digunakan sebagai dasar atau referensi dalam suatu kegiatan atau peristiwa. Selain itu, surat juga berfungsi sebagai alat pengingat karena isi surat 
+dapat digunakan untuk mengingat kembali informasi yang telah disampaikan sebelumnya.
+Menurut (Sawitri, 2017), surat dapat dibedakan menjadi beberapa jenis, antara lain surat resmi, surat pribadi, dan surat dinas. Menurut (Halima et al., 2025), Surat resmi merupakan surat yang digunakan dalam kegiatan formal dan biasanya dibuat oleh instansi atau organisasi dengan mengikuti aturan tertentu, seperti penggunaan bahasa baku dan format yang sistematis. Menurut (Wiyana et al., 2022), Surat pribadi adalah surat yang digunakan untuk kepentingan individu dan bersifat tidak formal. Sedangkan menurut (Emilda et al., 2022), surat dinas merupakan surat yang digunakan dalam lingkungan instansi atau organisasi untuk keperluan kedinasan yang berkaitan dengan tugas dan pekerjaan.
+Dalam suatu organisasi, surat memiliki peran yang sangat penting karena menjadi bagian dari sistem administrasi yang harus dikelola dengan baik. Menurut (Kisma & Yohanis, 2024), Setiap surat yang dibuat maupun diterima perlu dicatat, disimpan, dan diarsipkan secara sistematis agar mudah ditemukan kembali apabila diperlukan. Pengelolaan surat yang baik akan membantu meningkatkan efisiensi kerja, mempermudah akses informasi, serta mendukung kelancaran kegiatan operasional organisasi.
+Surat Masuk dan Surat Keluar
+3.7.1 Surat Masuk
+Menurut (Kisma & Yohanis, 2024), Surat masuk merupakan surat yang diterima oleh suatu instansi, organisasi, atau lembaga dari pihak luar maupun dari unit kerja lain di dalam organisasi tersebut. Surat masuk berisi berbagai macam informasi penting seperti pemberitahuan, permohonan, undangan, laporan, maupun instruksi yang berkaitan dengan kegiatan operasional organisasi. Oleh karena itu, setiap surat yang masuk harus dikelola dengan baik agar informasi yang terkandung di dalamnya dapat diproses secara tepat dan tidak menimbulkan kesalahan dalam pengambilan keputusan.
+Menurut (Adi Siswanto, 2022), Proses pengelolaan surat masuk dimulai dari tahap penerimaan surat. Pada tahap ini, surat diterima oleh bagian administrasi atau petugas yang bertanggung jawab dalam menangani surat-menyurat. Setelah diterima, surat akan diperiksa kelengkapan dan kejelasannya, seperti
+ 
+alamat pengirim, tanggal surat, serta isi dari surat tersebut. Pemeriksaan ini penting untuk memastikan bahwa surat yang diterima benar-benar ditujukan kepada instansi yang bersangkutan dan dapat diproses lebih lanjut.
+Menurut (Sharipuddin & Yani, 2018), pencatatan surat ke dalam buku agenda atau sistem informasi yang digunakan. Pencatatan ini biasanya meliputi nomor agenda, tanggal penerimaan, asal surat, nomor surat, serta perihal atau isi singkat surat. Tujuan dari pencatatan ini adalah untuk mendokumentasikan setiap surat yang masuk sehingga memudahkan dalam proses pencarian kembali dan sebagai bukti bahwa surat tersebut telah diterima oleh instansi.
+Setelah dicatat, surat akan melalui proses disposisi. Menurut (Adi Siswanto, 2022), Disposisi merupakan kegiatan pemberian arahan atau instruksi dari pimpinan kepada pihak yang berwenang untuk menindaklanjuti isi surat. Pada tahap ini, pimpinan akan menentukan kepada siapa surat tersebut harus diteruskan serta tindakan apa yang perlu dilakukan. Proses disposisi sangat penting karena menentukan alur penanganan surat dan memastikan bahwa setiap surat ditangani oleh pihak yang tepat. Tahap berikutnya adalah pengarsipan surat. Setelah surat selesai diproses dan ditindak lanjuti, surat akan disimpan sebagai arsip. 
+Menurut (Kartika & Supriyono, 2025), Pengarsipan dilakukan dengan cara mengelompokkan surat berdasarkan kategori tertentu, seperti tanggal, jenis surat, atau tingkat kepentingannya. Sistem pengarsipan yang baik akan memudahkan dalam pencarian surat di kemudian hari serta mengurangi risiko kehilangan dokumen. Dalam era digital saat ini, pengelolaan surat masuk tidak hanya dilakukan secara manual, tetapi juga dapat menggunakan sistem berbasis komputer. Penggunaan sistem ini memungkinkan proses pencatatan, disposisi, dan pengarsipan dilakukan secara lebih cepat, akurat, dan efisien. Selain itu, sistem digital juga memudahkan dalam pencarian 
+data serta meningkatkan keamanan dokumen karena dapat dilengkapi dengan sistem penyimpanan yang terintegrasi.
+Dengan pengelolaan yang baik, surat masuk dapat menjadi sumber informasi yang sangat penting bagi organisasi dalam menjalankan aktivitasnya. Pengelolaan yang terstruktur juga membantu meningkatkan efisiensi kerja, mempercepat proses pengambilan keputusan, serta menjaga ketertiban administrasi. Oleh karena itu, sistem pengelolaan surat masuk yang efektif sangat diperlukan dalam mendukung kelancaran operasional suatu organisasi
+3.7.2 Surat Keluar
+Surat keluar merupakan surat yang dibuat dan dikirim oleh suatu instansi, organisasi, atau lembaga kepada pihak lain, baik itu individu, instansi lain, maupun unit kerja di dalam organisasi. Menurut Web et al. (2019), Surat keluar berfungsi sebagai sarana komunikasi resmi yang digunakan untuk menyampaikan informasi, pemberitahuan, permohonan, laporan, undangan, maupun instruksi yang berkaitan dengan kegiatan operasional organisasi. Oleh karena itu, pembuatan dan pengelolaan surat keluar harus dilakukan secara sistematis agar informasi yang disampaikan dapat diterima dengan jelas dan tepat oleh pihak yang dituju.
+Menurut (Septiani & Sari, 2022), Proses pengelolaan surat keluar diawali dengan tahap pembuatan konsep surat. Pada tahap ini, isi surat disusun sesuai dengan tujuan dan kebutuhan komunikasi. Menurut (Karmizi et al., 2025), Penyusunan konsep surat harus menggunakan bahasa yang jelas, singkat, dan sesuai dengan kaidah penulisan yang berlaku, terutama untuk surat resmi. Selain itu, isi surat juga harus mencerminkan maksud dan tujuan yang ingin disampaikan agar tidak menimbulkan kesalahpahaman bagi penerima.
+Konsep surat selesai dibuat, tahap berikutnya adalah pengetikan atau penyusunan surat dalam format yang telah ditentukan. Surat resmi umumnya memiliki struktur yang terdiri dari kepala surat, nomor surat, tanggal, lampiran, perihal, alamat tujuan, isi surat, penutup, serta tanda tangan pejabat
+yang berwenang. Penulisan format surat yang benar sangat penting untuk menunjukkan profesionalisme dan kredibilitas organisasi.
+Selanjutnya, surat akan melalui tahap pemeriksaan dan persetujuan. Pada tahap ini, surat diperiksa kembali untuk memastikan tidak terdapat kesalahan, baik dari segi penulisan, isi, maupun kelengkapan informasi. Setelah itu, surat akan disetujui dan ditandatangani oleh pimpinan atau pejabat yang berwenang sebagai bentuk pengesahan. Persetujuan ini menunjukkan bahwa isi surat telah sesuai dan dapat dikirim kepada pihak yang dituju.
+Tahap berikutnya adalah pemberian nomor surat dan pencatatan. Setiap surat keluar harus diberikan nomor sebagai identitas unik yang membedakan satu surat dengan surat lainnya. Nomor surat biasanya dicatat dalam buku agenda atau sistem informasi yang digunakan oleh instansi. Pencatatan ini bertujuan untuk memudahkan pengelolaan, pelacakan, serta pencarian kembali surat apabila diperlukan di kemudian hari.
+Setelah melalui proses pencatatan, surat akan dikirim kepada pihak yang ditujuh. Pengiriman surat dapat dilakukan melalui berbagai cara, seperti secara langsung, melalui jasa pos, maupun melalui media elektronik seperti email. Pemilihan metode pengiriman disesuaikan dengan kebutuhan dan tingkat urgensi surat tersebut.
+Tahap terakhir dalam pengelolaan surat keluar adalah pengarsipan. Setiap surat yang telah dikirim harus disimpan salinannya sebagai arsip. Arsip ini penting sebagai bukti bahwa surat telah dibuat dan dikirim, serta dapat digunakan sebagai referensi di masa mendatang. Pengarsipan dilakukan secara sistematis agar surat mudah ditemukan kembali apabila dibutuhkan.
+Pengelolaan surat keluar juga telah banyak menggunakan sistem berbasis komputer yang memungkinkan proses pembuatan, pencatatan, hingga pengarsipan dilakukan secara lebih efisien dan terintegrasi. Sistem ini membantu meningkatkan kecepatan kerja, mengurangi kesalahan, serta mempermudah dalam pengelolaan data surat.
+Dengan pengelolaan yang baik, surat keluar dapat menjadi sarana komunikasi yang efektif dan mendukung kelancaran kegiatan organisasi. Selain itu, pengelolaan surat keluar yang terstruktur juga membantu menjaga ketertiban administrasi, meningkatkan profesionalisme, serta mempermudah proses dokumentasi dan pengendalian surat
+3.7.3 Prosedur Pengelolaan Surat
+Menurut (Kisma & Yohanis, 2024), Prosedur pengelolaan surat merupakan rangkaian kegiatan administratif yang dilakukan secara sistematis untuk menangani surat masuk maupun surat keluar dalam suatu instansi atau organisasi. Menurut (A’yun & Ganggi, 2019) Tujuan dari prosedur ini adalah untuk memastikan bahwa setiap surat dapat diterima, dicatat, diproses, didisposisikan, hingga disimpan dengan baik sehingga memudahkan pencarian kembali ketika dibutuhkan.
+Menurut (Hartanti et al., 2021), Tahapan pertama dalam pengelolaan surat adalah penerimaan surat. Pada tahap ini, surat yang masuk dari pihak luar diterima oleh petugas administrasi atau bagian tata usaha. Surat yang diterima kemudian diperiksa kelengkapannya, seperti alamat tujuan, tanggal, dan isi surat, untuk memastikan bahwa surat tersebut benar ditujukan kepada instansi yang bersangkutan.
+Tahapan selanjutnya adalah pencatatan surat. Menurut Menurut (Asmarany et al., 2026) Setiap surat yang masuk dicatat ke dalam buku agenda atau sistem informasi surat. Pencatatan ini meliputi nomor surat, tanggal surat, asal surat, perihal, serta keterangan lainnya. Pencatatan sangat penting karena berfungsi sebagai bukti administratif serta memudahkan pelacakan surat di kemudian hari.
+Setelah dicatat, surat akan masuk ke tahap proses disposisi. Disposisi adalah kegiatan penyaluran atau pemberian arahan dari pimpinan kepada bagian atau pihak yang berwenang untuk menindaklanjuti isi surat tersebut.
+Pada tahap ini, pimpinan biasanya memberikan instruksi mengenai tindakan apa yang harus dilakukan terhadap surat tersebut, seperti diproses lebih lanjut, ditanggapi, atau hanya untuk diketahui.
+Tahap berikutnya adalah penyimpanan arsip surat. Menurut (Kurniawan, Rahmat; Putra, 2025) Surat yang telah diproses akan disimpan secara teratur dalam bentuk arsip, baik secara fisik maupun digital. Penyimpanan ini dilakukan berdasarkan sistem tertentu, seperti berdasarkan tanggal, nomor surat, atau jenis surat, sehingga memudahkan dalam pencarian kembali jika sewaktu-waktu diperlukan.
+Surat masuk, terdapat juga surat keluar, yaitu surat yang dibuat dan dikirim oleh instansi kepada pihak lain sebagai bentuk komunikasi resmi. Surat keluar juga melalui proses pencatatan dan pengarsipan yang sama pentingnya. Setiap (A’yun & Ganggi, 2019) surat keluar dicatat dalam buku agenda surat keluar atau sistem, lengkap dengan nomor surat, tujuan surat, tanggal pengiriman, dan isi singkat surat. Hal ini bertujuan sebagai bukti bahwa instansi telah melakukan komunikasi resmi serta sebagai dokumentasi apabila diperlukan di masa mendatang.
+Dengan adanya prosedur pengelolaan surat yang baik dan terstruktur, kegiatan administrasi dalam suatu instansi dapat berjalan lebih efektif, tertib, dan efisien. Selain itu, risiko kehilangan dokumen penting dapat diminimalisir, serta proses pencarian data menjadi lebih cepat dan akurat.
+3.8 Sistem Informasi Arsip Surat
+Menurut (Sari & Setiawan, 2025) Sistem informasi arsip surat merupakan suatu sistem berbasis teknologi informasi yang dirancang untuk mengelola seluruh kegiatan administrasi surat, baik surat masuk maupun surat keluar, secara terintegrasi dan terstruktur. Sistem ini berfungsi untuk membantu instansi atau organisasi dalam melakukan pengelolaan data surat secara lebih efektif, mulai dari proses penerimaan, pencatatan, penyimpanan, pencarian, hingga pelaporan surat.
+Menurut Annisa dan Maiyana, (2025) Tujuan utama dari sistem informasi arsip surat adalah untuk mempermudah pengelolaan data surat serta meningkatkan efisiensi dan efektivitas kerja pegawai dalam menjalankan tugas administrasi. Dengan adanya sistem ini, proses yang sebelumnya dilakukan secara manual, seperti pencatatan di 
+buku agenda atau penyimpanan dalam map arsip, dapat dialihkan ke dalam sistem digital yang lebih cepat, akurat, dan aman.
+Menurut Putra dan Husna, (2019) Sistem ini memiliki beberapa manfaat penting. Pertama, mempermudah pencarian data surat, karena pengguna dapat menemukan arsip surat dengan cepat melalui fitur pencarian berdasarkan kata kunci, nomor surat, tanggal, atau pengirim. Kedua, mengurangi risiko kehilangan atau kerusakan arsip, karena data disimpan dalam bentuk digital yang dapat dilengkapi dengan sistem backup. Ketiga, meningkatkan efektivitas dan produktivitas kerja, karena proses administrasi menjadi lebih terorganisir dan tidak memerlukan waktu lama dalam pengelolaannya.
+Sistem informasi arsip surat juga mendukung transparansi dan akuntabilitas dalam pengelolaan dokumen. Setiap surat yang masuk maupun keluar dapat tercatat dengan jelas, termasuk informasi waktu, pengguna yang mengelola, serta status surat tersebut. Hal ini sangat membantu dalam proses monitoring dan evaluasi kinerja administrasi.
+Dalam penelitian ini, sistem informasi arsip surat dikembangkan berbasis web. Pemilihan platform web bertujuan agar sistem dapat diakses dengan mudah melalui berbagai perangkat yang terhubung dengan jaringan internet, tanpa perlu melakukan instalasi khusus. Dengan demikian, pengguna dapat mengelola data surat kapan saja dan di mana saja selama memiliki akses yang memadai.
+Penggunaan sistem berbasis web ini juga diharapkan mampu menggantikan sistem manual yang selama ini digunakan, yang cenderung kurang efisien, rentan terhadap kesalahan pencatatan, serta berisiko tinggi terhadap kehilangan dokumen. Dengan penerapan sistem informasi arsip surat yang terkomputerisasi, diharapkan pengelolaan surat menjadi lebih tertib, sistematis, dan sesuai dengan kebutuhan organisasi modern.
+3.9 Website
+Menurut (Indayanti et al., 2024), Website merupakan kumpulan halaman yang saling terhubung dan dapat diakses melalui jaringan internet dengan menggunakan aplikasi peramban (browser) seperti Google Chrome atau Mozilla Firefox. Website 
+berfungsi sebagai media penyampaian informasi secara online yang dapat diakses kapan saja dan di mana saja selama terhubung dengan internet. Dalam perkembangannya, website tidak hanya digunakan untuk menyampaikan informasi, tetapi juga dimanfaatkan sebagai media pengelolaan data dalam suatu sistem informasi. Website memungkinkan pengguna untuk berinteraksi langsung dengan sistem, seperti melakukan input data, pencarian, pengolahan, hingga penyajian informasi secara real-time.
+Secara umum, website dibedakan menjadi dua jenis, yaitu website statis dan website dinamis. Website statis memiliki tampilan dan isi yang tetap, sehingga perubahan hanya dapat dilakukan dengan mengubah kode secara langsung. Sementara itu, website dinamis memiliki konten yang dapat berubah sesuai dengan data yang tersimpan dalam database dan interaksi pengguna. Website dinamis inilah yang umumnya digunakan dalam pengembangan sistem informasi karena lebih fleksibel dan interaktif. Dalam penelitian ini, website digunakan sebagai media utama dalam pengembangan sistem informasi arsip surat berbasis web. Website berperan sebagai penghubung antara pengguna dengan sistem, sehingga seluruh proses pengelolaan surat dapat dilakukan secara terkomputerisasi.
+Melalui website ini, pengguna dapat melakukan berbagai aktivitas, seperti menginput data surat masuk dan surat keluar, melakukan pencarian arsip surat berdasarkan kata kunci tertentu, melihat detail informasi surat, serta mencetak laporan. Selain itu, sistem juga dapat menampilkan data secara real-time sehingga informasi yang disajikan selalu terbaru dan akurat. Penggunaan website dalam sistem arsip surat memberikan berbagai keuntungan, antara lain mempermudah akses data tanpa dibatasi tempat dan waktu, meningkatkanefisiensi kerja karena proses dilakukan secara otomatis, serta mengurangi risiko kehilangan data karena tersimpan dalam database. Dengan demikian, website mampu menggantikan sistem manual yang sebelumnya digunakan, yang cenderung kurang efektif dan memerlukan waktu lebih lama dalam pengelolaan arsip surat. Penerapan website dalam sistem informasi arsip surat menjadi 
+solusi yang tepat untuk meningkatkan kualitas pengelolaan administrasi surat secara lebih modern, cepat, dan terstruktur.
+3.10 Basis Data 
+(Database
+)
+Menurut (Andhika et al., 2024), Basis data (database) merupakan kumpulan data yang disimpan secara terstruktur dan sistematis di dalam suatu media penyimpanan, sehingga dapat diakses, dikelola, dan diperbarui dengan mudah. Dalam suatu sistem informasi, basis data memiliki peran yang sangat penting karena menjadi tempat utama untuk menyimpan seluruh data yang digunakan oleh sistem.
+Database digunakan untuk menyimpan data surat agar lebih terorganisir dan mudah dikelola. Data yang disimpan dalam database dapat berupa data surat masuk, surat keluar, data pengguna, serta informasi pendukung lainnya. Dengan penyimpanan yang terstruktur, data dapat diakses dengan cepat dan akurat sesuai kebutuhan pengguna.
+Menurut (Rouf & Marasabessy, 2024) DBMS (Database Management System) merupakan perangkat lunak yang digunakan untuk mengelola basis data. DBMS berfungsi sebagai penghubung antara pengguna dengan database, sehingga pengguna dapat melakukan berbagai operasi seperti menambah, mengubah, menghapus, dan mencari data tanpa harus memahami struktur penyimpanan secara langsung. Contoh DBMS yang sering digunakan dalam pengembangan sistem berbasis web adalah MySQL, PostgreSQL, dan Oracle.
+Dalam sistem informasi arsip surat berbasis web, database memiliki peran utama dalam mendukung proses pengelolaan data secara terintegrasi. Seluruh data surat masuk dan surat keluar disimpan dalam tabel-tabel yang saling berhubungan, seperti tabel surat masuk, surat keluar, disposisi, dan pengguna. Relasi antar tabel ini memungkinkan data dikelola secara konsisten dan menghindari terjadinya duplikasi. data
+Menurut
+ 
+(Marlina, 2026)
+ Fungsi utama
+ 
+database
+ 
+dalam
+ 
+sistem ini 
+meliputi:
+Penyimpanan data, yaitu menyimpan seluruh data surat secara aman dalam bentuk digital.
+Pengelolaan data, yaitu memudahkan proses penginputan, pengubahan, dan penghapusan data.
+Pencarian data, yaitu memungkinkan pengguna menemukan data surat dengan cepat berdasarkan kata kunci tertentu seperti nomor surat, tanggal, atau pengirim.
+Keamanan data, yaitu melindungi data dari akses yang tidak sah dengan sistem hak akses pengguna.
+Integritas data, yaitu menjaga konsistensi dan keakuratan data yang tersimpan dalam sistem.
+Dengan adanya database, sistem informasi arsip surat dapat berjalan secara lebih efektif dan efisien dibandingkan dengan sistem manual. Data yang sebelumnya disimpan dalam bentuk fisik kini dapat dikelola secara digital, sehingga meminimalisir risiko kehilangan, kerusakan, serta mempercepat proses pencarian data. Oleh karena itu, penggunaan database menjadi komponen utama dalam mendukung keberhasilan implementasi sistem informasi arsip surat berbasis web.
+3.11 UML 
+(Unified Modeling Language)
+Menurut (Pangestu & Voutama, 2024), Unified Modeling Language (UML) merupakan bahasa pemodelan yang digunakan untuk merancang dan menggambarkan sistem secara visual agar lebih mudah dipahami. UML digunakan dalam proses perancangan sistem untuk memberikan gambaran mengenai alur kerja, struktur, serta interaksi antar komponen dalam sistem. Dengan menggunakan UML, perancangan sistem menjadi lebih terstruktur dan dapat meminimalisir kesalahan dalam pengembangan sistem.
+Dalam sistem pengelolaan surat masuk dan surat keluar, UML digunakan untuk memodelkan proses pengolahan data surat mulai dari penerimaan, pencatatan, disposisi, hingga pengarsipan. Penggunaan UML membantu dalam menggambarkan bagaimana sistem bekerja serta bagaimana pengguna berinteraksi dengan sistem 
+tersebut. Dengan adanya pemodelan ini, alur sistem dapat dipahami secara lebih jelas sebelum sistem benar-benar diimplementasikan.
+Salah satu jenis diagram UML yang digunakan adalah Use Case Diagram. Menurut (Wayahdi & Ruziq, 2023) Use Case Diagram digunakan untuk menggambarkan hubungan antara pengguna (aktor) dengan sistem. Dalam sistem pengelolaan surat, aktor yang terlibat biasanya meliputi admin atau petugas tata usaha. Diagram ini menunjukkan aktivitas yang dapat dilakukan oleh pengguna, seperti mengelola data surat masuk, mengelola data surat keluar, melakukan pencatatan, serta melihat laporan. Dengan adanya Use Case Diagram, dapat diketahui fungsi-fungsi utama yang harus tersedia dalam sistem.
+Terdapat Activity Diagram yang digunakan untuk menggambarkan alur proses atau aktivitas dalam sistem. Activity Diagram dalam sistem pengelolaan surat menunjukkan langkah-langkah yang dilakukan dalam mengelola surat masuk dan surat keluar, mulai dari proses awal hingga akhir. Misalnya, pada surat masuk dimulai dari penerimaan surat, pencatatan, disposisi, hingga pengarsipan. Sedangkan pada surat keluar dimulai dari pembuatan surat, persetujuan, pencatatan, hingga pengiriman. Diagram ini membantu dalam memahami urutan proses secara detail dan sistematis.
+Jenis diagram lainnya adalah Class Diagram yang digunakan untuk menggambarkan struktur data dalam sistem. Class Diagram menunjukkan kelas-kelas yang terdapat dalam sistem beserta atribut dan hubungan antar kelas tersebut. Dalam sistem pengelolaan surat, kelas yang digunakan dapat berupa surat masuk, surat keluar, pengguna, dan arsip. 
+Setiap kelas memiliki atribut seperti nomor surat, tanggal, isi surat, serta hubungan dengan kelas lainnya. Dengan adanya Class Diagram, struktur database dan relasi antar data dapat dirancang dengan lebih jelas.
+Penggunaan UML dalam sistem pengelolaan surat masuk dan surat keluar sangat membantu dalam proses perancangan sistem karena dapat memberikan gambaran menyeluruh mengenai sistem yang akan dibangun. UML memudahkan pengembang dalam memahami kebutuhan sistem, memperjelas alur kerja, serta memastikan bahwa 
+sistem yang dibuat sesuai dengan tujuan yang diharapkan. Oleh karena itu, UML menjadi salah satu alat penting dalam pengembangan sistem informasi, khususnya dalam sistem pengelolaan surat yang membutuhkan pengolahan data secara terstruktur dan sistematis.
+3.11.1 
+Use Case Diagram
+Use Case DiagramUse Case Diagram digunakan untuk menggambarkan hubungan antara aktor dengan sistem. Aktor dalam sistem ini meliputi admin atau petugas yang bertugas mengelola data surat. Diagram ini menunjukkan fungsi utama sistem seperti mengelola surat masuk, mengelola surat keluar, melakukan disposisi, serta membuat laporan.
+Tabel 3.1
+ 
+Simbol-simbol Use Case Diagram
+Simbol
+Nama
+Keterangan
+Use Case 
+Aktivitas yang dapat dilakukan aktor pada sistem
+Actor
+Menspesifikasikan himpunan peran yang pengguna mainkan ketika berinteraksi dengan 
+Use Case 
+Dependency
+Hubungan dimana perubahan yang terjadi pada suatu elemen mandiri akan mempengaruhi elemen yang bergantu
+n
+gan padanya elemen yang tidak mandiri
+Generalization
+Menunjukkan spesialisasi aktor untuk dapat berpartisipasi dengan 
+Use Case 
+Include
+Menunjukkan bahwa suatu 
+Use Case 
+ seluruhnya merupakan fungsional dari 
+Use Case 
+ lainnya
+Extend
+Menunjukkan bahwa suatu 
+Use Case 
+ merupakan tambahan fungsional dari 
+Use Case 
+ lainnya jika suatu kondisi terpenuhi
+Association
+Yang menghubungkan antara objek satu dengan objek lainnya.
+Lanjutan
+ 
+Tabel 3.1
+ 
+Simbol-simbol Use Case Diagram
+Simbol
+Nama
+Keterangan
+System
+Merincikan paket yang menampilkan sistem secara terbatas
+Collaboration
+Interaksi aturan-aturan dan elemen lain yang bekerja sama untuk menyediakan perilaku yang lebih besar dari jumlah elemen elemennya
+Note
+Elemen fisik yang eksis saat aplikasi dijalankan dan mencerminkan suatu sumber daya komputasi
+3.11.2 
+Activity Diagram
+Activity DiagramActivity Diagram digunakan untuk menggambarkan alur aktivitas dalam sistem pengarsipan surat. Diagram ini menunjukkan proses mulai dari input data surat, penyimpanan data, hingga proses pencarian dan pembuatan laporan.
+Tabel 3.
+2
+ 
+Simbol-simbol 
+Activity Diagram
+Simbol
+Nama
+Keterangan
+Decision
+Menunjukkan dimana keputusan akan dibuat
+Initial
+Menunjukkan dimana aliran kerja dimulai
+Final
+Menujukkan dimana aliran kerja berakhir
+Lanjutan 
+Tabel 3.2
+ Simbol-simbol Activity Diagram
+Simbol
+Nama
+Keterangan
+Action
+ Langkah-langkah dalam sebuah 
+Activity
+Swimlane
+Mengelompokkan 
+Activity
+ 
+berdasarkan 
+actor
+3.11.3 
+Class Diagram
+Class DiagramClass Diagram menggambarkan struktur sistem dalam bentuk kelas yang memiliki atribut dan metode. Dalam sistem ini, class yang digunakan antara lain data surat masuk, surat keluar, pengguna, dan laporan, serta hubungan antar class tersebut.
+Tabel 3.
+4
+ 
+Simbol 
+Class diagram
+Simbol
+Nama
+Keterangan
+Nama
+ 
+Class
++atribut
++atribut
++method
++method
+Class
+Himpunan objek-objek dari berbagi atribut yang memiliki operasi yang sama
+Association
+Relasi antar kelas dengan makna umum dan biasanya disertai 
+multiplicity
+Directed Associ
+ation
+Relasi antar kelas dengan makna kelas yang satu digunakan oleh kelas lain
+Aggregation
+Mengindikasikan keseluruhan bagian relationship disebut sebagai relasi
+Composition
+Relasi 
+composition
+ terhadap 
+class
+ tempat dia bergantung
+Lanjutan 
+Tabel 3.4
+ Simbol Class diagram
+Simbol
+Nama
+Keterangan
+Dependency
+Menunjukkan operasi pada suatu 
+class 
+yang menggunakan 
+class
+ yang lain
+3.11.4 
+Sequence Diagram
+Sequence Diagram digunakan untuk menunjukkan urutan interaksi antar objek dalam sistem berdasarkan waktu. Diagram ini menggambarkan proses komunikasi antara pengguna dengan sistem saat melakukan aktivitas seperti menambahkan data surat atau mencetak laporan.
+Tabel 3.
+3
+ 
+Simbol 
+Sequence Diagram
+Gambar
+Nama
+Keterangan
+Actor
+Menggambarkan orang yang sedang berinteraksi dengan sistem
+Object
+Antarmuka yang saling berinteraksi
+A Focus of Control & A Life Line
+Menggambarkan tempat mulai dan berakhirnya massage
+A Massage
+Menggambarkan pengiriman pesan
+Object Massage
+Menggambarkan pesan antar objek, yang menunjukkan urutan kejadian yang terjadi
+Massage to Self
+Menggambarkan pesan objek itu sendiri, yang menunjukkan urutan kejadian yang terjadi
+Lanjutan 
+Tabel 3.3
+ Simbol Sequence Diagram
+Gambar
+Nama
+Keterangan
+Return Massage
+Menggambarkan pesan antar objek yang menunjukkan urutan kejadian yang terjadi
+3.11.5 
+Erd 
+(Entity Relationship Diagram)
+Entity Relationship Diagram (ERD) digunakan untuk memodelkan struktur database dalam sistem. ERD menggambarkan entitas (tabel), atribut, serta hubungan antar entitas yang digunakan untuk menyimpan data.
+Tabel 3.
+3
+ 
+Simbol 
+Erd (Entity Relationship Diagram)
+Gambar
+Nama
+Keterangan
+▭
+Entity
+Menunjukkan objek atau entitas yang datanya disimpan dalam database, seperti User, Surat Masuk, Surat Keluar, dan Disposisi.
+◇
+Relationship
+Menunjukkan hubungan antar entitas dalam database.
+○
+Attribute
+Menunjukkan karakteristik atau informasi yang dimiliki oleh suatu entitas.
+◎
+Key Attribute
+Menunjukkan atribut yang berfungsi sebagai Primary Key pada suatu entitas.
+◐
+Multivalued Attribute
+Menunjukkan atribut yang dapat memiliki lebih dari satu nilai.
+- - - ○
+Derived Attribute
+Menunjukkan atribut yang nilainya diperoleh dari atribut lain atau hasil perhitungan.
+Lanjutan 
+Tabel 3.
+3
+ 
+Simbol Erd
+ (Entity Relationship Diagram)
+Gambar
+Nama
+Keterangan
+─────
+Connection Line
+Menunjukkan hubungan antara entitas, atribut, dan relationship.
+1 : N
+One to Many
+Menunjukkan satu entitas dapat memiliki banyak relasi dengan entitas lain.
+1 : 1
+One to One
+Menunjukkan satu entitas hanya berhubungan dengan satu entitas lain.
+M : N
+Many to Many
+Menunjukkan banyak entitas dapat berhubungan dengan banyak entitas lainnya.
+3.12 Teknologi yang Digunakan
+3.12.1 Laravel
+Menurut (Tahari et al., 2025), Laravel merupakan framework PHP yang bersifat open source dan digunakan untuk membangun aplikasi web dengan lebih cepat, terstruktur, dan efisien. Laravel menerapakan konsep Modal-View-Controller (MVC) yang memisahkan antara logika bisnis (model), tampilan (View), dan pengendali aplikasi (Controller), sehingga kode program menjadi lebih rapi dan mudah dikelola. Laravel juga menyediakan berbagia fitur bawaan seperti routing, autentikasi, middleware, migration, ORM Eloquent, serta system keamanan yang membantu pengembang dalam membangun aplikasi web yang aman dan mudah dikembangkan. 
+Dalam penelitian ini, Laravel digunakan sebagai framework utama untuk membangun sisitem informasi arspi surat berbasis web sehingga proses pengembangan menjadi lebih efektif dan terstruktur.
+3.12.2 Figma
+Menurut (Indayanti et al., 2024), Figma merupakan aplikasi desain antarmuka (User Interface?/UI) dan pengalaman pengguna (User Experience/UX) yang berbasis clound sehingga dapat digunakan secara kolaboratif oleh banyak pengguna dalam waktu yang bersamaan. Figma menyediakan berbagi fitur seperti pembuat wireframe, prototype, komponen, dan desain responsif sehingga memudahkan proses perancangan tampilan system sebelum dilakukan proses pengkeodean. Dalam penelitian ini, Figma digunakan untuk merancang desain antarmuka system informasi arsip Surat agar tampilan aplikasi lebih menarik, mudah digunakan, dan sesuai dengan kebutuhan pengguna.
+3.12.3 HTML
+Menurut (Andhika et al., 2024), HTML (HyperText Markup Language) merupakan Bahasa markup standar yang digunakan untuk Menyusun struktur dan isi halaman web .HTML berfungsi sebagai kerangka dasar sebuah website dengan mendefiniskan berbagai eleman seperti judul, paragraf, table, formular, gambar, tombol, maupun tautan. HTML bekerja Bersama CSS dan JavaScript untuk menghasilkan halaman web yang interakitf. Dalam penelitian ini, HTML digunakan untuk membangun struktur halaman pada system informasi arsip Surat sehingga informasi dapat ditampilkan secara sistematis kepada pengguna.
+3.12.4 CSS
+Menurut (Tanjung et al., 2025), CSS (Cascading Style Sheets) merupakan Bahasa stylesheet yang digunakan untuk mengatur tampilan dan tata letak halaman web. CSS memungkinkan pengembang mengatur warna, jenis huruf, ukuran teks, posisi elemen, animasi, hingga desain responsife agar website dapat digunakan ditampilkan dengan baik pada berbagai ukuran layar. Dengan penggunaan CSS, tampilan website menjadi lebih menarik, konsisten, dan mudah digunakan. Dalam penelitian ini, CSS digunakan 
+untuk mempercantik tampilan Sistem informasi Arsip Surat sehingga memberikan pengalaman penggunaan yang lebih nyaman bagi pengguna.
+3.12.5 PHP
+Menurut (Rina Noviana, 2022) PHP (Hypertext Preprocessor) merupakan Bahasa pemrograman server-side yang digunakan unuk mengembangkan aplikasi web dinamis. PHP bekerja dengan memproses data. Pada server sebelum dikirimkan ke browser pengguna. Bahasa pemrograman ini mampu berinteraksi dengan berbagai system manajemen basis data, termasuk MySQL, sehingga banyak digunakan dalam pengembangan system informasi berbasis web. Dalam penelitian ini, PHP digunakan untuk mengelola logika aplikasi seperti proses login, pengelolaan data surat masuk dan surat keluar, validasi data, serta komunikasi antara aplikasi dengan database
+3.12.6 MySQL
+Menurut (Irwan et al., 2025), MYSQL merupakan Database Management System (DBMS) yang digunakan untuk menyimpan, mengelola, dan mengolah data secara terstruktur menggunakan Bahasa SQL (Structured Query Language). MYSQL memiliki kemampuan dalam mengelola data dalam jumlah besar dengan proses pencarian, penambahan, pengubahan, dan penghapusan data yang cepet serta mendukung keamanan data melalui pengaturan hak akses pengguna. Dalam penelitian ini MySQL digunakan sebagai basis data utama untuk menyimpan seluruh informasi pada Sistem informasi Arsip Surat, seperti data pengguna, surat masuk, surat keluar, disposisi, dan informasi pendukung lainnya sehingga data dapat dikelola secara efektif dan terintegrasi.
+3.13 Penelitian Terdahulu
+Penelitian terdahulu digunakan sebagai referensi dalam penelitian ini. Beberapa penelitian terkait menunjukan bahwa sistem informasi arsip surat berbasis web mampu meningkatkan efisiensi pengelolaan data. Perbedaan penelitian ini terletak pada objek penelitian yang digunakan, yaitu pada PT Bukit Asam Dermaga Kertapati.
+3.14 Kerangka Pemikiran
+Permasalahan yang terjadi pada pengelolaan arsip surat masih dilakukan secara manual sehingga kurang efektif dan berisiko kehilangan data. Solusi yang diusulkan berupa perancangan sistem informasi arsip surat masuk dan surat keluar berbasis web menggunakan Laravel dan database MySQL. Sistem tersebut diharapkan mampu meningkatkan efisiensi, efektivitas, serta kemudahan dalam pengelolaan data.
+BAB IV
+HASIL DAN PEMBAHASAN
+Gambaran Umum Sistem
+Perancangan sistem merupakan tahap yang dilakukan setelah proses analisis kebutuhan yang bertujuan untuk merancang dan mendesain sistem sesuai dengan kebutuhan pengguna. Menurut (A’yun & Ganggi, 2019) perancangan adalah proses untuk merancang dan membangun sistem baru, sedangkan (Sri Mulyani et al, 2022) menyatakan bahwa perancangan merupakan penentuan proses dan data yang diperlukan oleh sistem agar dapat memenuhi kebutuhan pengguna.
+Menurut (K. N. Musthofa & W. Haryono, 2023) Dalam pengembangan perangkat lunak, perancangan sistem juga merupakan bagian dari tahapan Software Development Life Cycle (SDLC) yang dilakukan setelah tahap analisis kebutuhan. Pada tahap ini, sistem sdirancang secara lebih rinci untuk menggambarkan struktur data, alur proses, serta komponen-komponen yang akan digunakan dalam pembangunan sistem. Hasil dari tahap perancangan ini berupa model sistem seperti diagram UML, perancangan database, serta desain antarmuka yang akan menjadi acuan dalam tahap implementasi
+Perancangan Sistem
+Perancangan sistem pada penelitian ini dilakukan untuk membangun Sistem Informasi Pengelolaan Arsip Surat Masuk dan Surat Keluar Berbasis Web pada PT Bukit Asam Dermaga Kertapati. Sistem ini dirancang sebagai solusi atas
+permasalahan dalam proses pengelolaan arsip surat yang sebelumnya masih dilakukan secara manual, sehingga berisiko terjadi kesalahan pencatatan, kehilangan data, dan
+keterlambatan dalam pencarian arsip.
+Sistem yang dibangun berbasis web agar dapat memudahkan admin dalam mengakses dan mengelola data surat secara fleksibel melalui perangkat komputer. Perancangan sistem ini mencakup beberapa fitur utama, yaitu pengelolaan surat masuk, pengelolaan surat keluar, disposisi surat, pengelolaan data pengguna, serta pembuatan laporan arsip surat.
+Dalam sistem ini, admin berperan sebagai aktor utama yang memiliki hak akses penuh, seperti melakukan login, menambah, mengubah, dan menghapus data surat masuk dan surat keluar, melihat detail surat, melakukan disposisi, serta
+mencetak laporan. Selain itu, sistem juga menyediakan menu pengaturan untuk mendukung pengelolaan sistem secara keseluruhan.
+Dengan dirancangnya sistem ini, diharapkan dapat meningkatkan efisiensi dan efektivitas dalam proses pengelolaan arsip surat di PT Bukit Asam Dermaga Kertapati serta meminimalisir kesalahan yang sering terjadi pada sistem manual.
+Use Case diagram
+Gambar
+ 
+4.1
+ 
+Use
+ 
+Diagram
+ 
+Sistem Pengelolaan
+ 
+Arsip 
+Surat
+Use case diagram di atas menggambarkan interaksi antara aktor yaitu admin dengan sistem pengelolalan arsip surat. Admin memiliki akses penuh terhadap sistem, seperti melakukan login, mengelola surat masuk dan surat keluar, melakukan disposisi surat, melihat laporan, mengelola data user, serta mengatur sistem.
+Pada proses kelola surat masuk dan kelola sura keluar terdapat relasi
+ 
+<<include>> yang menunjukkan bahwa di dalamnya mencakup beberapa aktivitas, seperti menambah, mengedit, menghapus, dan melihat detail data surat
+Activity Diagram
+Gambar
+ 
+4.
+2
+ 
+Activity Diagram
+Aktivitas diagram ini digunakan untuk menggambarkan alur proses yang terjadi dalam sistem pengelolaan arsip surat, mulai dari pengguna melakukan login hingga logout dari sistem.
+Aktor yang terlibat:
+User (pengguna)
+Sistem
+Database
+Alur aktivitas:
+Proses dimulai dari initial node (start) sebagai tanda awal aktivitas.
+User melakukan login dengan memasukkan username dan password ke dalam sistem.
+Sistem kemudian melakukan validasi data login yang telah dimasukkan oleh user.
+Setelah itu, istem akan melakukan pengecekan (decision) apakah data yang dimasukkan valid atau tidak:
+Jika data tidak valid, maka sistem akan menampilkan pesan error dan user diminta untuk menginput ulang data login.
+Jika data valid, maka user akan diarahkan masuk ke halaman dashboard.
+Setelah berhasil login, user dapat memilih menu yang tersedia dalam sistem.
+Sistem kemudian akan menjalankan proses CRUD (Create, Read, Update, Delete) sesuai dengan pilihan user.
+Dalam proses tersebut, sistem akan melakukan interaksi dengan database untuk:
+Menyimpan data
+Mengambil data
+Setelah proses selesai, sistem akan menampilkan hasil kepada user.
+User kemudian dapat melakukan logout untuk keluar dari sistem.
+Proses berakhir pada final node (end) sebagai tanda bahwa aktivitas telah selesai.
+Aktivity diagram ini menggambarkan alur kerja sistem secara berurutan, termasuk proses login, pengolahan data, hingga logout, serta menunjukkan adanya percabangan keputusan pada proses validasi login.
+Sequens diagram
+Gambar
+ 
+4.
+3
+ 
+Sequens Diagram
+Sequence diagram menggambarkan urutan interaksi antara aktor dan sistem dalam suatu proses berdasarkan waktu. Diagram ini menunjukkan bagaimana pesan atau perintah dikirim dari user ke sistem, kemudian diproses oleh sistem, dan dilanjutkan dengan interaksi ke database hingga menghasilkan respon kembali ke user.
+Pada sistem pengelolaan arsip surat, sequence diagram digunakan untuk memodelkan proses seperti login dan pengelolaan data surat (tambah, ubah, hapus, dan lihat data). Dalam proses login, user mengirimkan data username dan password ke sistem, kemudian sistem melakukan validasi ke database. Jika data sesuai, sistem akan mengirimkan respon berhasil dan menampilkan dashboard.
+Sedangkan pada proses pengelolaan surat, user memberikan perintah (misalnya
+ 
+menambah data surat), kemudian sistem memproses data tersebut dan
+ 
+menyimpannya
+ 
+ke database, lalu menampilkan hasil kepada user.
+ 
+Dengan demikian, sequence diagram membantu memahami alur komunikasi antar komponen sistem secara detail dan berurutan.
+Class Diagram
+Gambar
+ 
+4.
+4 
+Class Diagram
+Class diagram digunakan untuk menggambarkan struktur statis dari sistem dalam bentuk kelas (class), atribut, metode, serta hubungan antar kelas. Diagram ini menunjukkan bagaimana data dan fungsi dalam sistem diorganisasikan. Pada sistem pengelolaan arsip surat, terdapat beberapa kelas utama seperti User, SuratMasuk, SuratKeluar, dan Disposisi.
+Kelas User menyimpan data pengguna seperti username, password, dan hak akses.
+Kelas SuratMasuk dan SuratKeluar digunakan untuk mengelola data surat yang masuk dan keluar.
+Kelas Disposisi digunakan untuk mencatat tindak lanjut atau arahan terhadap surat.
+Relasi antar kelas dapat berupa asosiasi, misalnya satu user dapat mengelola
+ 
+banyak data surat, atau satu surat dapat memiliki beberapa disposisi.
+ 
+Class diagram
+ 
+ini berfungsi sebagai dasar dalam perancangan sistem dan implementasi program karena menggambarkan struktur logika aplikasi secara keseluruhan.
+ERD 
+(Entity Relationship Diagram)
+Gambar
+ 
+4.
+5 
+ERD 
+(Entity Relationship Diagram)
+Entity Relationship Diagram (ERD) digunakan untuk memodelkan struktur database dalam sistem. ERD menggambarkan entitas (tabel), atribut, serta hubungan antar entitas yang digunakan untuk menyimpan data.
+Dalam sistem pengelolaan arsip surat, terdapat beberapa entitas utama yaitu:
+user → menyimpan data pengguna
+surat_masuk → menyimpan data surat yang diterima
+surat_keluar → menyimpan data surat yang dikirim
+disposisi → menyimpan data tindak lanjut surat Relasi antar entitas, misalnya:
+Satu user dapat mengelola banyak surat
+Satu surat masuk dapat memiliki beberapa disposisi
+Disposisi terhubung dengan surat masuk sebagai referensi
+ERD membantu dalam merancang database yang terstruktur, sehingga memudahkan dalam pengelolaan data dan pengembangan sistem.
+Struktur Tabel
+Struktur tabel digunakan untuk menjelaskan detail dari setiap tabel yang terdapat dalam database sistem. Struktur ini meliputi nama field, tipe data, serta keterangan dari masing-masing field yang digunakan untuk menyimpan data.
+Tabel User
+Tabel 4.1 
+Tabel User
+Field
+Tipe
+ 
+Data
+Keterangan
+Id_user
+int 
+(PK)
+ID
+ 
+user
+username
+Varchar(50)
+Nama
+ pengguna
+Password
+Varchar(100)
+Kata
+ sandi
+role
+Varchar(20)
+Hak
+ 
+akses
+ 
+user
+Tabel Surat Masuk
+Tabel 4.2 
+Surat Masuk
+Field
+Tipe
+ 
+Data
+Keterangan
+id_surat
+Int(PK)
+ID
+ 
+surat
+nomor_surat
+Varchar(50)
+Nomor
+ 
+surat
+Tanggal_surat
+Date
+Tanggal_surat
+Pengirim
+Varchar(100)
+Arsip
+perihal
+Varchar(255)
+Isi/tujuan 
+surat
+file
+Varchar(225)
+File
+ surat
+Id_user
+Int(FK)
+User
+ 
+yang
+ input
+Tabel Surat Keluar
+Tabel 4.3 
+Surat Keluar
+Field
+Tipe
+ 
+Data
+Keterangan
+Id_surat
+Int(PK)
+ID
+ 
+surat
+Nomor_surat
+Varchar(50)
+Nomor
+ 
+surat
+Tanggal_surat
+Date
+Tanggal
+ 
+surat
+Tujuan
+Varchar(100)
+Tujuan
+ 
+surat
+Perihal
+Varchar(255)
+Isi 
+surat
+file
+Varchar(255)
+File
+ 
+surat
+Id_user
+Int(PK)
+User
+ 
+yang
+ 
+membuat
+Tabel Disposisi
+Tabel 4.4 
+ Disposisi
+Field
+Tipe
+ 
+Data
+Keterangan
+Id_disposisi
+Int(PK)
+ID
+ 
+disposisi
+Id_surat
+Int(FK)
+Relasi
+ke
+surat 
+masuk
+Tujuan
+Varchar(100)
+Tujuan
+ 
+disposisi
+Isi
+Text
+Isi
+ 
+disposisi
+Lanjutan
+ 
+ Tabel 4.4 
+ Disposisi
+Field
+Tipe Data
+K
+eterangan
+tujuan
+date
+Tanggal
+ 
+disposisi
+Struktur tabel digunakan untuk menjelaskan susunan database yang terdiri dari beberapa tabel seperti user, surat masuk, surat keluar, dan disposisi. Setiap tabel memiliki field dengan tipe data tertentu serta relasi antar tabel menggunakan primary key dan foreign key.
+R
+ancangan Tampilan 
+Wireframe
+Wireframe digunakan untuk menggambarkan tampilan awal antarmuka system. Desain ini dibuat menggunakan Figma sebagai gambaran dalam visual awal mengenai struktur halaman, tata letak komponen, serta alur interaksi pengguna dengan sistem sebelum masuk ke tahap desain antarmuka secara detail.
+Halaman Login
+Wireframe ini menampilkan halaman awal sistem yang berfungsi sebagai gerbang autentikasi pengguna sebelum masuk ke dalam sistem. Pada halaman ini tersedia form input username dan password yang harus diisi oleh pengguna sesuai dengan akun yang telah terdaftar. Desain halaman login dibuat sederhana dan fokus pada fungsi utama, yaitu memastikan hanya pengguna yang memiliki hak akses yang dapat masuk ke dalam sistem. Apabila proses login berhasil, pengguna akan diarahkan ke halaman dashboard sesuai dengan peran yang dimilikinya.
+Gambar 4.6 
+Wireframe Halaman Login
+4.2.2  Halaman Dashboard 
+Wireframe Halaman Dashboard ini menampilkan halaman utama sistem setelah admin berhasil masuk, yang berfungsi sebagai pusat pemantauan operasional wisma secara real-time. Pada halaman ini tersedia menu navigasi di sisi kiri untuk mempermudah admin mengakses berbagai fitur utama dan menu administrasi. Desain dashboard dibuat informatif dan terstruktur dengan menyajikan
+ 
+kartu ringkasan status kamar, daftar tamu yang menunggu check-in hari ini, serta log aktivitas terbaru, sehingga memudahkan admin dalam mengelola data dan mengambil tindakan operasional dengan cepat dan efisien.
+Gambar 4.7 
+Wireframe Halaman Dashboard
+Daftar Surat Masuk
+Wireframe Halaman Daftar Surat Masuk menampilkan daftar seluruh surat masuk yang telah tersimpan dalam sistem. Halaman ini berfungsi untuk memudahkan admin dalam mengelola, mencari, serta memantau data surat masuk secara terstruktur. Tersedia fitur pencarian (search), penyaringan (filter), dan tombol Tambah Surat Masuk untuk memasukan data surat bar uke dalam sistem.
+Gambar 4.8 
+Wireframe Halaman Surat Masuk
+Detail Surat Masuk
+Wireframe
+ Halaman Detail Surat Masuk menampilkan informasi secara lengkap mengenai surat masuk yang dipilih oleh pengguna. Halaman ini berfungsi untuk memudahkan admin dalam melihat rincian surat beserta informasi pendukung tanpa perlu membuka data secara terpisah. Selain itu, tesedia tombol Kembali untuk memudahkan pengguna Kembali kehalaman daftar surat masuk.
+Desain halaman disusun secara terstrukturdengan menampilkan informasi utama surat, seperti Nomor Surat, Tanggal. Asal Surat, Perihal, Lampiran, dan Status. Pada sisi kanan terdapat area untuk menampilkan dokumen atau hasil pemindaian (scan) surat, sedangkan bagian Isi Surat digunakan untuk menampilkan isi atau ringkasan surat secara lengkap. Di bagian bawah halaman juga disediakan table Riwayat Disposisi yang berisi informasi mengenai tanggal disposisi, pengirim, penerima,isi 
+disposisi, dan status disposisi. Dengan tampilan tersebut, pengguna dapat melihat seluruh informasi surat masuk secara lengkap, sehingga prosespengelolaan dan penelusuran arsip surat menjadi lebih efektif dan efisien.
+Gambar 4.8 
+Wireframe Halaman Detail Surat Masuk
+4.2.5 Daftar Surat Keluar
+Wireframe Halaman Daftar Surat Keluar Manampilkan seluruh data surat keluar Yang telah dibuat dan tersimpan di dalam mengelola, mencari serta memantau arsip surat Keluar secara terstruktur . Tersedia fitur pencarian (search), filter, dan tombol Tambah Surat Keluar yang digunakan untuk menambahkan data surat keluar baru ke dalam sistem
+Gambar 4.9 
+Wireframe Halaman Surat Keluar
+Desain halaman dibuat sederhana dan informatif dengan menyajikan data dalam
+ 
+Tabel yang memuat beberapa informasi penting, seperti Nomor, Tanggal, Nomor Surat,
+ 
+Tujuan, Perihal Status, serta Aksi, pada kolom Aksi, pengguna dapat melakukan operasi sesuai kebutuhan, seperti melihat detail, mengubah, atau menghapus data surat keluar. Selain itu, terdapat fitur pagination pada bagian bawah tabel yang memudahkan
+ 
+pengguna dalam berpindah halaman Ketika jumlah data surat keluar cukup banyak.Dengan tampilan tersebut, proses pengelolaan arsip surat keluar menjadi lebih terorganisir, cepat dan efisien.
+4.2.6  Tambah Surat Keluar
+Wireframe Halaman Tambah Surat Keluar digunakan untuk menambahkan data surat keluar ke dalam sistem. Halaman ini memudahkan admin dalam melakukan pencatatan surat keluar secara lengkap dan terstruktur sehingga data yang disimpan 
+menjadi lebih rapi dan mudah dikelola. Selain itu, tersedia tombol Kembali untuk memudahkan pengguna Kembali kehalamn daftar surat keluar tanpa menyimpan 
+perubahan
+Gambar 4.10 
+Wireframe Halaman Tambah Surat Keluar
+Desain halaman dibuat sederhana dan mudah dipahami dengan menampilkan form yang terdiri dari Nomor Surat, Tanggal Surat, Tujuan, Perihal, Lampiran, Klasifikasi, dan Isi Surat. Setiap kolom harus diisi dengan sesuai data surat keluar yang akan dicatat. Pada bagian Lampiran, pengguna dapat mengunggah dokumen surat dalam bentuk file digital, sedangkan pada kolom Klasifikasi pengguna dapat memilih kategori
+ 
+surat yang seuai. Di bagian bawah halaman terdapat tombol Simpan untuk menyimpan data surat keluar ke dalam database dan tombol Batal untuk membatalkan proses penginputan apabila pengguna tidak ingin menyimpan data yang telah diisi.
+4.2.7  Disposisi
+Wireframe Halaman Disposisi digunakan untuk mengelola dan memantau proses tindak lanjut terhadap surat masuk yang telah diterima. Halaman ini memudahkan 
+admin dalam melihat status disposisi surat, baik yang belum ditindaklanjuti, maupun yang sudah ditindaklajuti, Sehingga proses pengelolaan surat menjadi lebih terorganisir. Selain itu, tersedia fitur pencarian dan filter untuk memudahkan pengguna 
+menemukan data disposisi berdasarkan kriteria tertentu.
+Gambar 4.11 
+Wireframe Halaman Disposisi
+Desain halaman dibuat sederhana dan informatif dengan menampilkan tabel data disposisi yang berisi Nomor, Tanggal, Nomor Surat, Perihal, Dari, Penerima, dan Aksi.
+ 
+Pada bagian atas tabel terdapat tab Belum Ditindaklanjuti dan
+ 
+Sesudah Ditindaklanjuti untuk memisahkan data berdasarkan status disposisinya.
+ 
+Fitur Cari Disposisi digunakan untuk mencari data secara cepat, sedangakan tombol Filter berfungsi menyaring data sesuai kebutuhan pengguna. Dibagian bawah halaman terdapat pagination yang memungkinkan pengguna berpindah halaman Ketika jumlah data
+ 
+disposisi cukup banyak, sehingga proses pencarian dan pengelolaan data menjadi lebih mudah dan efisien.
+Tampilan Website
+4.
+3
+.1  Halaman Login
+Halaman Login merupakan halaman awal yang digunakan pengguna untuk masuk ke dalam sistem dengan memasukkan username dan password. Sistem akan melakukan validasi data sebelum pengguna dapat mengakses halaman utama.jika data yang dimasukkan benar, maka pengguna akan diarahkan ke dashboard, sedangkan jika salah akan muncul notifikasi kesalahan.
+Gambar 4.12 
+Tampilan Halaman Login
+4.
+3
+.2  Halaman Dashboard 
+Halaman dasboard menampilkan infromasi ringkasan sistem seperti jumlah surat masuk, surat keluar, arsip surat, dan disposisi. Selain itu, halaman ini juga menyediakan navigasi menu untuk mengakses fitur lainnya dalam sistem.dasboard dirancang agar user friendly sehingga pengguna dapat dengan mudah memahami kondisi data secara keseluruhan.
+Gambar 4.13 
+Tampilan Dashboard
+4.
+3
+.3  
+Halaman 
+Surat Masuk
+Halaman ini digunakan untuk mengelola data surat masuk. Fitur yang tersedia antara lain:
+Menambahkan data surat masuk
+Mengedit data
+Menghapus data
+Melihat detail surat
+Data yang dikelola meliputi nomor surat, tanggal surat, pengirim, perihal, dan file lampiran.
+Gambar 4.14 
+Tampilan Surat Masuk
+4.
+3
+.4  
+Halaman Tambah 
+Surat Masuk
+Halaman tambah surat masuk digunakan untuk menambahkan data surat masuk ke dalam sistem. Pada halaman ini, pengguna diminta untuk mengisi beberapa
+ 
+data seperti tanggal surat, nomor surat, pengirim, perihal, sifat surat, tujuan surat, klasifikasi, serta mengunggah file surat.Form ini dirancang agar memudahkan pengguna dalam melakukan input data secara lengkap dan terstruktur. Selain itu, sistem juga dilengkapi dengan validasi input untuk memastikan data yang dimasukkan sesuai dengan ketentuan.
+Gambar 4.15 
+Tampilan Tambah Surat Masuk
+4.
+3
+.5 
+ Halaman 
+Surat Keluar
+Halaman ini digunakan untuk mengelola data surat keluar dengan fitur yang hampir sama dengan surat masuk, yaitu:
+Menambahkan data surat keluar
+Mengedit data
+Menghapus data
+Melihat data
+Gambar 4.16 
+Tampilan Surat Keluar
+4.
+3
+.6  
+Halaman 
+Tambah Surat Keluar
+Halaman tambah surat keluar digunakan untuk menambahkan data surat keluar ke dalam sistem. Pada halaman ini, pengguna diminta untuk mengisi beberapa data seperti tanggal surat, nomor surat, tujuan surat, perihal, serta mengunggah file surat.
+ 
+Form ini dirancang agar memudahkan pengguna dalam melakukan input data secara lengkap dan terstruktur. Sistem juga dilengkapi dengan validasi input untuk memastikan data yang dimasukkan sesuai dengan ketentuan.
+Gambar 4.17 
+Tampilan Tambah Surat Keluar
+4.
+3
+.7  
+Halaman Arsip Surat
+Halaman arsip surat digunakan untuk menyimpan seluruh data surat baik masuk maupun keluar yang telah diproses. Arsip ini memudahkan pencarian data lama dengan cepat menggunakan fitur pencarian.
+Gambar 4.18 
+Tampilan Arsip Surat
+4.3.8  Halaman Disposisi
+Halaman disposisi digunakan untuk mengelola tindak lanjut dari surat masuk. Pengguna dapat memberikan intruksi atau catatan terhadap surat tertentu untuk diproses lebih lanjut
+Gambar 4.18 
+Tampilan Disposisi
+4.3.9 Halaman Tambah Disposisi Surat
+Halaman Tambah Disposisi Surat digunakan untuk membuat dan mengelola disposisi terhadap surat masuk yang telah diterima oleh perusahaan. Melalui halaman ini, pengguna dapat memilih surat yang akan ditindaklanjuti, menentukan pihak atau jabatan yang bertanggung jawab untuk menangani surat tersebut, serta memberikan instruksi atau arahan yang harus dilaksanakan. Selain itu, pengguna juga dapat menetapkan sifat instruksi dan status progres disposisi sehingga proses tindak lanjut surat dapat dipantau dengan lebih mudah.
+Fitur ini berperan penting dalam mendukung alur pengelolaan surat masuk karena setiap surat yang memerlukan tindakan lanjutan dapat diteruskan secara terstruktur kepada pihak yang berwenang. Informasi disposisi yang tersimpan dalam sistem menjadi dokumentasi resmi yang memudahkan pengawasan, pelacakan, dan evaluasi 
+terhadap penyelesaian surat. Dengan adanya halaman ini, proses penyampaian instruksi dari pimpinan kepada staf dapat dilakukan secara lebih cepat, terdokumentasi dengan baik, serta mengurangi risiko terjadinya keterlambatan atau kehilangan informasi 
+terkait tindak lanjut surat.
+Gambar 4.19 
+Tampilan Tambah Disposisi Surat
+4.3.10 Halaman Data User
+Halaman ini digunakan untuk mengelola data pengguna sistem, seperti:
+Menambahkan user baru
+Mengedit data user
+Mengahapus user
+Mengatur hak akses pengguna
+Gambar 4.20 
+Tampilan Data User
+4.3.11 Halaman Registrasi Tambah Data User
+Halaman registrasi data user merupakan salah satu fitur penting dalam sistem pengelolaan arsip surat yang digunakan untuk menambahkan akun pengguna baru, khususnya pegawai yang akan mengakses sistem. Halaman ini hanya dapat diakses oleh admin atau pihak yang memiliki hak akses tertentu.
+Pada halaman ini terdapat beberapa form input yang harus diisi, yaitu:
+Nama Lengkap Pegawai
+Field ini digunakan untuk menginput nama lengkap pegawai sesuai dengan identitas resmi. Data ini penting untuk mengetahui siapa pengguna dari akun yang dibuat.
+Username untuk Login
+Username digunakan sebagai identitas unik saat pengguna melakukan login ke dalam sistem.
+ 
+Setiap username harus berbeda agar tidak terjadi konflik data.
+Email Resmi Perusahaan
+Email digunakan sebagai identitas tambahan serta dapat digunakan untuk kebutuhan verifikasi atau komunikasi dalam sistem.
+Penggunaan email resmi bertujuan agar data pengguna lebih valid.
+Password Awal
+Password digunakan sebagai kunci keamanan akun. Dalam sistem ini, password minimal terdiri dari 6 karakter untuk menjaga keamanan data pengguna.
+Jabatan Dinas
+Pada bagian ini, admin dapat memilih jabatan dari pegawai, misalnya staf, admin, atau jabatan lainnya. Jabatan ini berfungsi untuk mengelompokkan pengguna sesuai dengan perannya di instansi.
+Level Hak Akses Akun
+Fitur ini digunakan untuk menentukan hak akses pengguna dalam sistem. Contohnya:
+Staf: hanya dapat melihat data surat
+Admin: dapat mengelola (tambah, edit, hapus) data surat dan
+ 
+pengguna
+Tombol Simpan dan Daftarkan Akun
+Tombol ini digunakan untuk menyimpan seluruh data yang telah diinput ke dalam database. Setelah disimpan, akun pengguna akan langsung aktif dan dapat digunakan untuk login.
+Tombol Batal
+Tombol ini berfungsi untuk membatalkan proses registrasi jika data yang diinput tidak jadi disimpan.
+Dengan adanya fitur registrasi user ini, pengelolaan pengguna dalam sistem menjadi lebih terstruktur dan aman. Admin dapat mengontrol siapa saja yang dapat mengakses sistem serta menentukan batasan akses sesuai dengan peran masing-masing pengguna.Selain itu, sistem ini juga membantu dalam meningkatkan keamanan data karena setiap pengguna memiliki akun masingmasing, sehingga aktivitas dalam sistem dapat lebih mudah dipantau dan dikontrol.
+Gambar 4.21 
+Tampilan Registrasi Tambah Data User
+4.3.12 Halaman Laporan 
+Halaman laporan digunakan untuk menampilkan data dalam bentuk laporan yang dapat dicetak. Laporan dapat berupa:
+Laporan surat masuk
+Laporan surat keluar
+Gambar 4.22 
+Tampilan Halaman Laporan
+4.3.13 Halaman Pengaturan
+Halaman ini digunakan untuk mengatur sistem seperti konfigurasi akun, password, dan pengaturan lainnya yang beraitan dengan sistem.
+Gambar 4.23 
+Tampilan Halaman Pengaturan
+Implementasi Sistem
+Sistem ini dibangun menggunakan framework Laravel yang berbasis bahasa pemrograman PHP. Laravel dipilih karena memiliki struktur yang rapi serta mendukung konsep MVC (Model-View-controller) sehingga memudahkan dalam pengembangan dan pengelolaan kode program.
+Dalam pengembangannya, sistem ini juga menggunakan:
+HTML dan CSS untuk tampilan antarmuka
+MySQL sebagai database untuk penyimpanan data
+Laravel blade sebagai template engine
+JavaScript untuk interaksi pengguna
+Fitur-fitur utama yang diimplementasikan dalam sistem ini antara lain:
+Sistem autentikasi login
+Dasboard infromasi
+Pengelolaan data surat masuk
+Pengelolaan data surat keluar
+Arsip surat
+Disposisi surat
+Laporan data
+Implementasi Arsitektur Laravel (MVC)
+4.
+5
+.1 
+Model
+Model berfungsi sebagai penghubung antara sistem dengan database. Model digunakan untuk mengelola data seperti surat masuk dan surat keluar.
+Contoh:
+Model SuratMasuk
+ModelSuratKeluar
+Model ini bertanggung jawab dalam proses:
+Mengambil data dari database
+Menyimpan data ke database
+Memproses data
+4.5.2 View
+View merupakan bagian yang bertanggung jawab dalam menampikan data kepada pengguna. Pada laravel, view menggunakan Blade Template Engine.
+Contoh:
+Halaman login
+Halaman dashboard
+Halaman surat masuk
+Halaman surat keluar
+View menampilkan data yang dikirim dari controller dalam bentuk tampilan web.
+4.5.3 Controller
+Controller berfungsi sebagai penghubung antara Model dan View. Controller menerima input dari pengguna, memprosesnya, lalu mengirimkan hasil ke view.
+Fungsi controller:
+Menampilkan data surat
+Menyimpan data baru
+Mengupdate data
+Menghapus data
+Routing pada Laravel
+Routing digunakan untuk mengatur jalur akses dalam sistem. Setiap halaman memiliki route yang menghubungkan URL dengan controller tertentu.
+Contoh:
+login → menuju halaman login
+dashboard → menuju dashboard
+surat-masuk → menampilkan data surat masuk
+surat-keluar → menampilkan data surat keluar
+Routing mempermudah dalam pengelolaan navigasi sistem agar lebih terstruktur
+Pengujian Sistem
+Pengujian dilakukan untuk memastikan bahwa sistem berjalan sesuai dengan yang diharapkan. Pengujian dilakukan pada fitur utama seperti:
+Login sistem
+Tambah data
+Edit data
+Hapus data
+Navigasi menu
+Hasil pengujian menunjukkan bahwa seluruh fitur berjalan dengan baik tanpa adanya error yang signifikan.
+Kelebihan dan Kekurangan Sistem
+Kelebihan
+Kekurangan
+Menggunakan
+ 
+framework
+ 
+Laravel 
+yang modern dan terstruktur
+Belum
+ 
+tersedia
+ 
+fitur
+ 
+export
+ 
+data 
+(PDF/Excel)
+Sistem
+ 
+lebih
+ 
+aman
+dengan
+fitur
+ 
+bawaan Laravel
+Sistem
+ 
+belum
+ 
+sepenuhnya
+ 
+responsif pada perangkat mobile
+Mempermudah
+ 
+pengelolaan
+ 
+arsip surat
+Fitur
+ 
+masih
+ 
+terbatas
+ 
+pada
+ 
+pengelolaan data dasar
+Tampilan
+ 
+sederhana
+ 
+dan
+ 
+user-
+friendly
+Analisis Sistem
+Berdasarkan hasil implementasi dan pengujian, sistem yang dibangun telah mampu memenuhi tujuan utama yaitu mempermudah pengelolaan arsip surat secara digital. Penggunaan framework Laravel dengan konsep MVC membuat sistem lebih terstruktur, mudah dikembangkan, serta lebih aman dibandingkan dengan sistem tanpa framework.
+Pembahasan Teknis Tambahan
+Dalam pengembangan sistem ini, Laravel memberikan berbagai kemudahan seperti:
+Struktur folder yang terorganisir
+Fitur ORM (Eloquent) untuk pengelolaan database
+Sistem routing yang fleksibel
+Blade template untuk mempermudah pembuatan tampilan
+Dengan adanya fitur tersebut, proses pengembangan menjadi lebih cepat dan efisien dibandingkan menggunakan PHP native.
+BAB 
+V
+KESIMPULAN DAN SARAN
+5.1  Kesimpulan
+Berdasarkan hasil perancangan dan implementasi sistem pengelolaan arsip surat berbasis web pada PT Bukit Asam Unit Dermaga Kertapati, maka dapat diambil beberapa kesimpulan sebagai berikut:
+Sistem yang dibangun menggunakan framework Laravel berhasil membantu proses pengelolaan surat masuk dan surat keluar menjadi lebih terstruktur dan efisien.
+Fitur-fitur yang tersedia seperti login, dashboard, pengelolaan surat, arsip, disposisi, dan laporan telah berjalan dengan baik sesuai dengan kebutuhan pengguna.
+Penerapan konsep MVC (Model-View-Controller) pada Laravel mempermudah dalam pengembangan serta pemeliharaan sistem.
+Sistem ini mampu meningkatkan efektivitas kerja dalam pengolahan data surat dibandingkan dengan sistem manual.
+Hasil pengujian menunjukkan bahwa sistem dapat berjalan dengan baik tanpa adanya error yang signifikan.
+5
+.2
+  
+Saran
+Berdasarkan hasil perancangan Informasi Arsip Surat Masuk dan Surat Keluar berbasis web pada PT Bukit Asam Tbk Unit Kertapati Port, penulis memberikan beberapa saran sebagai berikut:
+Sistem yang telah dirancang diharapkan dapat diimplementasikan secara optimal sehingga proses pengelolaan arsip surat masuk dan surat keluar menjadi lebih efektif, efisien, serta mengurangi resiko kehilangan dokumen.
+Pengembangan system di masa mendatang dapat menambahkan fitur notifikasi disposisi surat, tanda tangan digital, serta pencarian dokumen yang lebih canggih agar proses administrasi menjadi lebih cepat dan praktis.
+Perlu dilakukan pencadangan (backup) data secara berkala serta meningkatkan sistem keamanan, seperti pengaturan hak akses pengguna dan enkripsi data, untuk menjaga kerahasiaan dan keamanan arsip surat.
+Sebelum sistem digunakan secara penuh,sebaiknya dilakukan pelatihan kepada seluruh pengguna agar mampu mengoprasikan sistem dengan baik dan memanfaatkan seluruh fitur yang tersedia secara maksimal.
+Sistem dapat dikembangkan lebih lanjut agar terintegrasi dengan sistem informasi lain yang digunakan di PT Bukit Asam Tbk, sehingga pertukaran data dapat berlangsung lebih efektif dan mendukung proses administrasi perusahaan secara menyeluruh.
+Diharapkan penelitian selanjutnya dapat mengembangkan sistem dengan menambahkan fitur pelaporan yang lebih lengkap, dashboard statistik, serta akses berbasis perangkat mobile agar system semakin fleksibel dan mudah digunakan.
+DAFTAR PUSTAKA

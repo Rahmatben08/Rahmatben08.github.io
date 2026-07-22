@@ -1,0 +1,558 @@
+GHALI RAHMAT BEN BELA
+D4 
+Manajemen
+ 
+Informatika
+  |
+  
+Politeknik
+ Negeri Sriwijaya
+✉ ghalirahmat094@gmail.com   |   🔗
+www.linkedin.com/in/ghali-rahmat-9a9271304
+|   📷 @ghalirahmat
+KONTAK
+Email
+ghalirahmat094@gmail.com
+LinkedIn
+www.linkedin.com/in/ghali-rahmat-9a9271304
+Instagram
+@ghalirahmat
+Portfolio
+rahmatben08.github.io
+PENDIDIKAN
+Politeknik
+ Negeri Sriwijaya
+D4 
+Manajemen
+ 
+Informatika
+2024 – 
+Sekarang
+KEMAMPUAN
+Hard Skills
+• 
+PHP 8 / Laravel 11
+• 
+Kotlin / Android Native
+• 
+JavaScript / Alpine.js / ES6+
+• 
+MySQL / SQLite / PDO
+• 
+Bootstrap 5 / Tailwind CSS
+• 
+Figma / UI-UX Design
+• 
+REST API Development
+• 
+Jetpack Compose / Material 3
+• 
+Git & Version Control
+• 
+CodeIgniter 4 / MVC Framework
+• 
+Room DB & Local Persistence
+• 
+Sensor Integration (GPS & Camera)
+• 
+Python / Web Scraping (Selenium)
+• 
+Machine Learning & Data Analysis
+Soft Skills
+• 
+Problem Solving
+• 
+Manajemen
+ 
+Proyek
+• 
+Komunikasi
+ Tim
+• 
+Adaptif
+ & Fast Learner
+BAHASA
+• 
+Bahasa Indonesia (
+Aktif
+)
+• 
+Bahasa 
+Inggris
+ (
+Pasif
+)
+PELATIHAN & SERTIFIKASI
+Belajar
+ Dasar Data Science
+Dicoding
+ Indonesia · 
+Okt
+ 2025
+Belajar
+ Dasar AI
+Dicoding
+ Indonesia · 
+Okt
+ 2025
+Belajar
+ 
+Penggunaan
+ Generative AI
+Dicoding
+ Indonesia · Sep 2025
+Prompt Engineering 
+untuk
+ Software Developer
+Dicoding
+ Indonesia · Sep 2025
+Belajar
+ Dasar 
+Visualisasi
+ Data
+Dicoding
+ Indonesia · Nov 2025
+Belajar
+ Dasar Structured Query Language (SQL)
+Dicoding
+ Indonesia · 
+Okt
+ 2025
+Introduction to Financial Literacy
+Dicoding
+ Indonesia · Mar 2026
+PROFIL
+Mahasiswa
+ 
+aktif
+ D4 
+Manajemen
+ 
+Informatika
+ di 
+Politeknik
+ Negeri Sriwijaya 
+dengan
+ 
+rekam
+ 
+jejak
+ solid 
+dalam
+ 
+pengembangan
+ 
+produk
+ 
+teknologi
+ yang 
+komprehensif
+. 
+Memiliki
+ 
+keahlian
+ 
+mendalam
+ 
+dalam
+ Full-Stack Web/Mobile Development 
+serta
+ 
+implementasi
+ Machine Learning dan AI Engineering. 
+Terbiasa
+ 
+membangun
+ 
+arsitektur
+ basis data yang 
+andal
+ dan 
+solusi
+ digital yang 
+berorientasi
+ pada 
+kebutuhan
+ 
+klien
+.
+PENGALAMAN KERJA
+Officer
+PT Expro Gio Nusantara
+   |   Mei 2026 – 
+Sekarang
+• 
+Mengelola
+ 
+operasional
+ 
+harian
+ dan 
+administrasi
+ 
+teknis
+ 
+perusahaan
+ guna 
+memastikan
+ 
+validitas
+ data dan 
+kelancaran
+ 
+alur
+ 
+kerja
+ internal.
+• 
+Memfasilitasi
+ 
+koordinasi
+ 
+lintas
+ divisi 
+untuk
+ 
+mempercepat
+ 
+penyelesaian
+ proses 
+bisnis
+ internal 
+secara
+ 
+efisien
+ dan 
+tepat
+ 
+waktu
+.
+Staff 
+Administrasi
+Lembaga 
+Sertifikasi
+ 
+Edutech
+ 
+Cendikia
+ Nusantara
+   |   Mei 2026 – 
+Sekarang
+• 
+Mengatur
+ 
+dokumentasi
+ 
+operasional
+ dan 
+administrasi
+ 
+sertifikasi
+ 
+secara
+ 
+sistematis
+ guna 
+memastikan
+ 
+akurasi
+ data 
+seluruh
+ 
+peserta
+.
+• 
+Menjadi
+ 
+narahubung
+ 
+utama
+ 
+dalam
+ 
+menyinkronkan
+ 
+jadwal
+ 
+serta
+ 
+kebutuhan
+ 
+antara
+ 
+peserta
+ 
+pelatihan
+, 
+tenaga
+ 
+pengajar
+, dan 
+lembaga
+ 
+selama
+ proses 
+sertifikasi
+ 
+berlangsung
+.
+PENGALAMAN PROYEK
+Web Developer — 
+Sistem
+ 
+Pendukung
+ Keputusan (SPK) 
+Konseling
+ PKBI
+• 
+Membangun
+ 
+aplikasi
+ SPK 
+berbasis
+ web 
+menggunakan
+ PHP dan Laravel 
+untuk
+ 
+membantu
+ proses 
+pengambilan
+ 
+keputusan
+ 
+konseling
+ 
+secara
+ 
+lebih
+ 
+objektif
+ dan 
+terstruktur
+.
+Web Developer — Website 
+Jurusan
+ 
+Manajemen
+ 
+Informatika
+ POLSRI
+• 
+Mengembangkan
+ dan 
+merancang
+ 
+ulang
+ website 
+resmi
+ 
+jurusan
+ 
+menggunakan
+ PHP/Laravel guna 
+meningkatkan
+ 
+aksesibilitas
+ 
+informasi
+ 
+akademik
+ 
+serta
+ 
+memberikan
+ 
+antarmuka
+ yang 
+lebih
+ 
+responsif
+ 
+bagi
+ civitas 
+akademika
+.
+Full-Stack Developer — 
+Sistem
+ B2B Inventory & POS "Kopi Miring"
+• 
+Membangun
+ 
+sistem
+ 
+integrasi
+ Point of Sales (POS) dan 
+manajemen
+ 
+inventaris
+ 
+berbasis
+ B2B 
+menggunakan
+ 
+kombinasi
+ framework modern 
+untuk
+ 
+memantau
+ 
+stok
+ dan 
+transaksi
+ 
+harian
+ 
+secara
+ real-time.
+Interactive UI & Prototype Engineer — 
+Sistem
+ B2B Kopi Miring
+• 
+Merancang
+ 
+arsitektur
+ 
+antarmuka
+ (UI/UX) dan high-fidelity prototype 
+interaktif
+ 
+menggunakan
+ Figma 
+untuk
+ 
+memetakan
+ 
+alur
+ 
+kerja
+ 
+pengguna
+ (user-flow) yang 
+efisien
+ 
+sebelum
+ 
+tahap
+ 
+pengkodean
+.
+PENGEMBANGAN APLIKASI MOBILE
+Android Developer — Aplikasi 
+Bimbingan
+ Akademik & 
+Pendaftaran
+ 
+Sidang
+ 
+Skripsi
+• 
+Mengembangkan
+ 
+aplikasi
+ mobile 
+menggunakan
+ Kotlin/Android Native yang 
+memfasilitasi
+ 
+mahasiswa
+ 
+dalam
+ 
+penjadwalan
+ 
+bimbingan
+ 
+serta
+ 
+digitalisasi
+ 
+berkas
+ 
+pendaftaran
+ 
+sidang
+ 
+skripsi
+.
+Android Developer — Aplikasi 
+Penjadwalan
+ Kuliah 
+Interaktif
+• 
+Mengembangkan
+ 
+aplikasi
+ Android 
+menggunakan
+ Kotlin dan Jetpack Compose 
+untuk
+ 
+membantu
+ 
+mahasiswa
+ 
+mengelola
+ 
+jadwal
+ 
+perkuliahan
+ 
+secara
+ 
+interaktif
+ 
+dilengkapi
+ 
+fitur
+ 
+notifikasi
+ 
+pengingat
+ 
+otomatis
+.
+Android Developer — Aplikasi 
+Pencatatan
+ Bukti 
+Pengiriman
+ Logistik
+• 
+Membangun
+ 
+aplikasi
+ mobile 
+logistik
+ 
+terintegrasi
+ 
+untuk
+ 
+mendokumentasikan
+ 
+serta
+ 
+melacak
+ 
+bukti
+ 
+pengiriman
+ 
+barang
+ 
+secara
+ digital, 
+memanfaatkan
+ 
+integrasi
+ sensor 
+kamera
+ dan GPS 
+untuk
+ 
+memastikan
+ 
+validitas
+ data 
+lapangan
+.
