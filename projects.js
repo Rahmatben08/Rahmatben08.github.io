@@ -20,21 +20,20 @@ const projectsData = [
   {
     id: "fincorp-enterprise",
     githubUrl: "https://github.com/Rahmatben08/fincorp-enterprise",
-    title: "Sistem Keuangan & Portal Karyawan PT Expro Gio Nusantara",
+    title: "Sistem Keuangan Perusahaan PT Expro Gio Nusantara",
     role: "Full-Stack Developer",
     category: "web",
-    techStack: ["React", "Java Spring Boot", "Go", "PostgreSQL", "Keycloak SSO", "Docker"],
-    shortDescription: "Aplikasi portal keuangan internal terintegrasi dan sistem ERP untuk operasional PT Expro Gio Nusantara.",
-    fullDescription: "Sistem ERP keuangan terintegrasi berskala enterprise yang dirancang untuk PT Expro Gio Nusantara guna mengotomatisasi operasional finansial internal, payroll karyawan, invoicing, dan approval transaksi. Aplikasi ini mengimplementasikan arsitektur microservices terdistribusi yang memisahkan core business logic (Java Spring Boot), modul penggajian (Go Payroll Service), dan otentikasi tunggal (Keycloak SSO), diorkestrasi menggunakan Docker Compose.",
+    techStack: ["React.js", "Laravel", "PostgreSQL", "Chart.js", "Tailwind CSS"],
+    shortDescription: "Sistem tata kelola keuangan perusahaan berbasis web untuk memantau arus kas dan menyusun laporan otomatis.",
+    fullDescription: "Sistem tata kelola keuangan perusahaan (web-based financial management system) yang dirancang khusus untuk PT Expro Gio Nusantara. Berfokus pada keamanan data, akurasi pencatatan, integrasi antar modul, dan kemudahan navigasi bagi tim internal untuk mencatat transaksi, memantau cash flow secara real-time, serta menyusun laporan keuangan secara otomatis.",
     features: [
-      "Integrasi Single Sign-On (SSO) menggunakan Keycloak terenkripsi OAuth2/OIDC untuk otentikasi terpusat.",
-      "Arsitektur Microservices yang memisahkan API core (Java Spring Boot) dan payroll engine (Go Payroll Service) untuk performa modular.",
-      "Sistem Multi-Role Approval di mana pengeluaran operasional besar (> Rp50 juta) wajib disetujui Manajer secara real-time.",
-      "Manajemen Payroll terotomatisasi berdasarkan rekam kehadiran, tunjangan divisi, potongan BPJS, dan visualisasi capaian target KPI.",
-      "Audit Trail & Logging terstruktur yang melacak dan mencatat kronologi aksi pengguna secara real-time untuk keperluan transparansi audit.",
-      "Kontainerisasi penuh menggunakan Docker Compose untuk mengorkestrasi PostgreSQL, Keycloak, Spring Boot, Go, dan React."
+      "Role-Based Access Control (RBAC) dengan 4 tingkat kewenangan: Superadmin, Admin, Manajer, dan Staff.",
+      "Otentikasi ganda dengan Two-Factor Authentication (2FA) untuk pengamanan akses ekstra.",
+      "Modul pencatatan keuangan yang terintegrasi (Pendapatan, Pengeluaran, Payroll, Invoicing & Billing).",
+      "Dashboard analitik interaktif untuk visualisasi tren, metrik arus kas, dan notifikasi tagihan jatuh tempo.",
+      "Sistem Audit Trail terstruktur untuk melacak dan mencatat otomatis setiap perubahan data keuangan."
     ],
-    architecture: "Menggunakan pola arsitektur Microservices terdistribusi dengan API Gateway. Validasi token JWT dilakukan secara terdesentralisasi di setiap service via Keycloak Identity Provider. PostgreSQL bertindak sebagai database relasional utama dengan skema relasi yang terindeks."
+    architecture: "Menggunakan framework Laravel sebagai fondasi backend yang tangguh dengan keamanan bawaan, dikombinasikan dengan React.js untuk antarmuka dashboard yang interaktif. Mengimplementasikan PostgreSQL dengan kepatuhan ACID yang ketat untuk memastikan integritas transaksi data keuangan, serta enkripsi SSL/TLS."
   },
   {
     id: "spk-konseling-pkbi",

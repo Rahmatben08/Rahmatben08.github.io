@@ -1,0 +1,120 @@
+BLUEPRINT PENGEMBANGAN
+Web Sistem Keuangan Perusahaan
+Roadmap • Flowchart Alur Website • Struktur Database (ERD)
+1. Ringkasan Eksekutif
+Dokumen ini merangkum rencana pengembangan web sistem tata kelola keuangan perusahaan berbasis web (web-based financial management system). Fokus utama pengembangan adalah keamanan data, akurasi pencatatan, integrasi antar modul, dan kemudahan navigasi bagi pengguna.
+Sistem dirancang untuk penggunaan internal — digunakan oleh manajemen, tim akuntansi, dan staf untuk mencatat transaksi, memantau arus kas (cash flow), serta menyusun laporan keuangan secara otomatis.
+Target pengguna (4 tingkat akses / RBAC)
+Superadmin — kontrol penuh sistem, termasuk konfigurasi & manajemen role
+Admin — mengelola data master dan akun pengguna (user management)
+Manajer / Direktur — approval transaksi besar dan akses laporan strategis
+Staff — mencatat transaksi harian: pendapatan, pengeluaran, klaim reimbursement
+2. Roadmap Proyek
+Proyek dibagi menjadi lima fase utama dengan total durasi 12 minggu, dari analisis kebutuhan hingga deployment ke server produksi.
+Gambar 1. Roadmap pengembangan (5 fase, 12 minggu)
+Fase
+Durasi
+Output utama
+1. Analisis & UI/UX
+Minggu 1-2
+Wireframe dashboard, proses bisnis
+2. Perancangan database
+Minggu 3
+ERD relasi tabel transaksi
+3. Pengembangan (coding)
+Minggu 4-10
+Backend API, frontend, modul utama
+4. Testing & keamanan
+Minggu 11
+UAT, penetration testing
+5. Launching & evaluasi
+Minggu 12
+Deploy produksi, pelatihan staf
+3. Arsitektur & Fitur Utama
+A. Modul otentikasi & keamanan
+Role-Based Access Control (RBAC) — 4 tingkat: superadmin, admin, manajer/direktur, staff
+Two-Factor Authentication (2FA) — pengamanan ekstra saat login
+Audit trail — mencatat otomatis setiap perubahan data keuangan
+Manajemen user & role — khusus superadmin dan admin
+B. Dashboard utama
+Visualisasi tren pendapatan vs pengeluaran
+Metrik likuiditas / arus kas terkini
+Notifikasi tagihan jatuh tempo & jadwal payroll
+C. Fitur core pencatatan keuangan
+Pendapatan — pencatatan seluruh pemasukan usaha
+Pengeluaran — pencatatan biaya operasional harian
+Payroll — penggajian karyawan (gaji pokok, tunjangan, potongan, gaji bersih)
+Invoicing & billing — pembuatan faktur otomatis dan pelacakan status pembayaran
+Manajemen arus kas (cash flow) real-time
+Laporan keuangan otomatis: laba rugi, neraca, perubahan modal, slip gaji
+4. Flowchart Alur Website
+4.1 Hierarki akses (RBAC)
+Alur navigasi dimulai dari landing page, login dengan verifikasi dua faktor, lalu dashboard mendeteksi role pengguna dan bercabang ke empat tingkat akses: superadmin, admin, manajer/direktur, dan staff. Masing-masing memiliki batas kewenangan berbeda sebelum masuk ke modul.
+Gambar 2. Flowchart hierarki akses (RBAC) — 4 tingkat
+Keterangan warna: hijau menandai alur proses utama (login, autentikasi, dashboard), ungu menandai empat tingkat akses/role.
+4.2 Modul pencatatan keuangan
+Setelah melewati RBAC, pengguna mengakses modul sesuai kewenangannya. Modul inti mencakup pendapatan, pengeluaran, payroll (gaji karyawan), dan invoicing — seluruhnya bermuara ke laporan dan audit trail.
+Gambar 3. Flowchart modul pencatatan keuangan
+Keterangan warna: teal menandai empat modul pencatatan, amber menandai laporan & audit trail sebagai titik akhir setiap alur.
+4.3 Detail alur: proses invoicing
+Sebagai contoh alur detail salah satu modul, berikut proses invoicing dari pembuatan faktur hingga pelunasan, lengkap dengan percabangan status pembayaran dan mekanisme reminder otomatis.
+Gambar 4. Flowchart detail proses invoicing
+Jika klien belum membayar sampai jatuh tempo, sistem mengirim reminder otomatis secara berulang. Begitu status berubah menjadi lunas, sistem memperbarui cash flow dan mencatatnya ke audit trail.
+5. Rencana Teknologi (Tech Stack)
+Komponen
+Pilihan teknologi
+Alasan
+Backend
+Laravel (PHP) / Node.js (Express)
+Ekosistem matang, keamanan bawaan kuat
+Frontend
+React.js / Vue.js
+Dashboard dinamis, interaktif, responsif
+Database
+PostgreSQL / MySQL
+ACID compliance ketat untuk integritas transaksi
+Visualisasi
+Chart.js / ApexCharts
+Grafik tren keuangan di dashboard
+Hosting
+AWS / DigitalOcean / GCP
+Enkripsi data & skalabilitas tinggi
+6. Keamanan Data (Security Baseline)
+SSL/TLS encryption — HTTPS untuk seluruh komunikasi data
+Data encryption — enkripsi data sensitif di dalam database
+Automated backup — pencadangan database berkala ke server terpisah
+7. Struktur Database (ERD)
+Struktur data pendukung seluruh alur di atas terdiri dari sembilan entitas: role (4 tingkat akses), user, transaksi, approval, invoice, pembayaran, employee, payroll, dan audit log.
+Gambar 5. Entity Relationship Diagram (ERD) database keuangan
+Entitas
+Relasi
+Keterangan
+ROLES → USERS
+1 ke N
+Satu role dimiliki banyak user (RBAC)
+USERS → TRANSACTIONS
+1 ke N
+Satu user membuat banyak transaksi
+TRANSACTIONS → APPROVALS
+1 ke N
+Setiap transaksi memerlukan approval
+USERS → INVOICES
+1 ke N
+Satu user menerbitkan banyak invoice
+INVOICES → PAYMENTS
+1 ke N
+Satu invoice bisa memiliki beberapa pembayaran
+USERS → AUDIT_LOGS
+1 ke N
+Setiap aksi user tercatat pada log
+EMPLOYEES → PAYROLL
+1 ke N
+Satu karyawan menerima banyak periode payroll
+USERS → PAYROLL
+1 ke N
+Payroll diproses oleh user (staff/admin)
+8. Langkah Selanjutnya
+Konfirmasi fokus utama: penggunaan internal atau pelaporan investor
+Review dan persetujuan roadmap serta alokasi tim per fase
+Penyusunan query SQL (DDL) berdasarkan ERD untuk memulai Fase 2
+Pembuatan wireframe/mockup halaman dashboard dan modul utama
