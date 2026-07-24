@@ -27,7 +27,7 @@ const projectsData = [
     shortDescription: "Sistem tata kelola keuangan perusahaan berbasis web untuk memantau arus kas dan menyusun laporan otomatis.",
     fullDescription: "Sistem tata kelola keuangan perusahaan (web-based financial management system) yang dirancang khusus untuk PT Expro Gio Nusantara. Berfokus pada keamanan data, akurasi pencatatan, integrasi antar modul, dan kemudahan navigasi bagi tim internal untuk mencatat transaksi, memantau cash flow secara real-time, serta menyusun laporan keuangan secara otomatis.",
     features: [
-      "Role-Based Access Control (RBAC) dengan 4 tingkat kewenangan: Superadmin, Admin, Manajer, dan Staff.",
+      "Role-Based Access Control (RBAC) dengan 5 tingkat kewenangan: Superadmin, Admin, Manajer, Staff, dan Investor.",
       "Otentikasi ganda dengan Two-Factor Authentication (2FA) untuk pengamanan akses ekstra.",
       "Modul pencatatan keuangan yang terintegrasi (Pendapatan, Pengeluaran, Payroll, Invoicing & Billing).",
       "Dashboard analitik interaktif untuk visualisasi tren, metrik arus kas, dan notifikasi tagihan jatuh tempo.",
