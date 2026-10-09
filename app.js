@@ -159,7 +159,7 @@ function renderBentoTools() {
   const bentoGrid = document.getElementById('bentoTechIconsGrid');
   if (!bentoGrid) return;
 
-  const tools = ["PHP", "JavaScript", "Kotlin", "Python", "Laravel", "MySQL", "Tailwind", "Figma"];
+  const tools = ["PHP", "JavaScript", "Kotlin", "Python", "Laravel", "MySQL", "Tailwind", "Figma", "ArcGIS", "SPSS", "React", "Docker"];
 
   bentoGrid.innerHTML = '';
   tools.forEach(tool => {
